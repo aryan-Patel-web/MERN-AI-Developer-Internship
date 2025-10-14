@@ -1,0 +1,403 @@
+{
+  "session_id": "session_1760463408759",
+  "created_at": "2025-10-14T23:07:28.140571",
+  "messages": [
+    {
+      "filename": "Horizon Capital.pdf",
+      "status": "success",
+      "data": {
+        "fund_overview": {
+          "general_partner": {
+            "extracted_value": "Horizon Capital Partners I Limited",
+            "confidence": 1.0,
+            "source_page": 1,
+            "notes": "Identified as the General Partner in the letter header."
+          },
+          "fund_name": {
+            "extracted_value": "Horizon Growth Fund I L.P.",
+            "confidence": 1.0,
+            "source_page": 1,
+            "notes": "Mentioned in the letter salutation and throughout the document."
+          },
+          "fund_currency": {
+            "extracted_value": "USD",
+            "confidence": 1.0,
+            "source_page": 2,
+            "notes": "All monetary values are denominated in US dollars (e.g., 'US$ (in millions)')."
+          },
+          "registered_address": {
+            "extracted_value": {
+              "street": "PO Box 123, Ocean House, Azure Islands",
+              "correspondence_address": "789 Lakefront Avenue, Email #22-05 Azure Tower"
+            },
+            "confidence": 1.0,
+            "source_page": 1,
+            "notes": "Extracted from the letterhead."
+          },
+          "reporting_period": {
+            "extracted_value": {
+              "quarter": "Q1 2024",
+              "end_date": "2024-03-31"
+            },
+            "confidence": 1.0,
+            "source_page": 1,
+            "notes": "Report title and financial statements are dated as of 31 March 2024."
+          },
+          "contact_person": {
+            "extracted_value": {
+              "name": "Evelyn Reed",
+              "phone": "6543 2123"
+            },
+            "confidence": 1.0,
+            "source_page": 1,
+            "notes": "Mentioned as the contact for questions in the letter."
+          }
+        },
+        "financial_summary": {
+          "total_commitments": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not explicitly stated in the document."
+          },
+          "total_drawdowns": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not explicitly stated; only invested capital per company is provided."
+          },
+          "remaining_commitments": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not calculable without total commitments or drawdowns."
+          },
+          "total_distributions": {
+            "extracted_value": 0,
+            "confidence": 1.0,
+            "source_page": 8,
+            "notes": "Realised Value for all investments is 0 per the performance table (Page 8)."
+          },
+          "dividend_income": {
+            "extracted_value": 1250000,
+            "confidence": 1.0,
+            "source_page": 6,
+            "notes": "Reported in the Income Statement for Q1 2024."
+          },
+          "management_fees": {
+            "extracted_value": {
+              "fund_level": 1500000,
+              "master_fund_level": 2000000
+            },
+            "confidence": 1.0,
+            "source_page": [
+              6,
+              7
+            ],
+            "notes": "Separate fees reported for Horizon Growth Fund I L.P. (Page 6) and Horizon Capital Master Fund Limited (Page 7)."
+          },
+          "net_assets": {
+            "extracted_value": 785117530.86,
+            "confidence": 1.0,
+            "source_page": 6,
+            "notes": "Reported in the Statement of Financial Position as 'Net assets'."
+          },
+          "investments_at_fair_value": {
+            "extracted_value": 785122000,
+            "confidence": 1.0,
+            "source_page": 7,
+            "notes": "Reported in the Master Fund's Statement of Financial Position."
+          },
+          "unrealised_gain": {
+            "extracted_value": 5800000,
+            "confidence": 1.0,
+            "source_page": [
+              6,
+              7
+            ],
+            "notes": "Consistent unrealised gain reported in both fund and master fund income statements."
+          },
+          "total_comprehensive_income": {
+            "extracted_value": {
+              "fund_level": 5399500,
+              "master_fund_level": 3799874.5
+            },
+            "confidence": 1.0,
+            "source_page": [
+              6,
+              7
+            ],
+            "notes": "Reported separately for the fund (Page 6) and master fund (Page 7)."
+          }
+        },
+        "performance_metrics": {
+          "dpi": {
+            "extracted_value": 0.0,
+            "confidence": 1.0,
+            "source_page": 8,
+            "notes": "Calculated as Total Distributions (0) / Total Invested Capital (75000 + 60000 = 135000)."
+          },
+          "rvpi": {
+            "extracted_value": 0.8519,
+            "confidence": 1.0,
+            "source_page": 8,
+            "notes": "Calculated as Total Unrealised Value (115000) / Total Invested Capital (135000)."
+          },
+          "tvpi": {
+            "extracted_value": 0.8519,
+            "confidence": 1.0,
+            "source_page": 8,
+            "notes": "Sum of DPI (0) and RVPI (0.8519)."
+          },
+          "net_irr": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not provided; only Gross IRR is reported."
+          },
+          "gross_irr": {
+            "extracted_value": 0.25,
+            "confidence": 1.0,
+            "source_page": 8,
+            "notes": "Reported as 25.0% in the performance table."
+          },
+          "multiple_of_invested_capital": {
+            "extracted_value": 1.53,
+            "confidence": 1.0,
+            "source_page": 8,
+            "notes": "Reported as '1.53x' for the total fund."
+          }
+        },
+        "portfolio_companies": [
+          {
+            "company_name": {
+              "extracted_value": "Zenith Innovations Ltd.",
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Header of the company section."
+            },
+            "investment_date": {
+              "extracted_value": "2021-12-01",
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Listed as 'Date of Inv: December 2021'."
+            },
+            "industry": {
+              "extracted_value": "Cloud Software Solutions",
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Listed as 'Primary Industry'."
+            },
+            "invested_capital": {
+              "extracted_value": 75000000,
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Listed as '75' in US$ millions."
+            },
+            "ownership_percentage": {
+              "extracted_value": 0.65,
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Listed as '65%'."
+            },
+            "current_value": {
+              "extracted_value": 115000000,
+              "confidence": 1.0,
+              "source_page": 8,
+              "notes": "Reported as 'Unrealised Value' in the performance table."
+            },
+            "status": {
+              "extracted_value": "Active",
+              "confidence": 1.0,
+              "source_page": 8,
+              "notes": "Listed as 'Active' in the performance table."
+            },
+            "location": {
+              "extracted_value": "New York",
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Listed under 'Location'."
+            },
+            "investment_type": {
+              "extracted_value": "Equity-Control",
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Listed as 'Inv Type'."
+            },
+            "revenue_cagr_3yr": {
+              "extracted_value": 0.295,
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Reported as '29.5%' for 3-year Revenue CAGR."
+            },
+            "ebitda_cagr_3yr": {
+              "extracted_value": 0.351,
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Reported as '35.1%' for 3-year EBITDA CAGR."
+            },
+            "latest_ebitda_margin": {
+              "extracted_value": 0.384,
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Reported as '38.4%' for FY 2023."
+            },
+            "q1_2024_revenue": {
+              "extracted_value": 17800000,
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Reported as '$17.8 million' for Q1 2024."
+            },
+            "q1_2024_ebitda": {
+              "extracted_value": 7000000,
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Reported as '$7.0 million' for Q1 2024."
+            },
+            "website": {
+              "extracted_value": "http://www.zenith-innovations.com",
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Listed under 'Co Website'."
+            },
+            "deal_team": {
+              "extracted_value": [
+                "Evelyn Reed",
+                "Marcus Chen",
+                "Sophia Lee"
+              ],
+              "confidence": 1.0,
+              "source_page": 2,
+              "notes": "Listed under 'Deal Team'."
+            }
+          },
+          {
+            "company_name": {
+              "extracted_value": "EcoHarvest Solutions Inc.",
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Header of the company section."
+            },
+            "investment_date": {
+              "extracted_value": "2022-04-01",
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Listed as 'Date of Inv: April 2022'."
+            },
+            "industry": {
+              "extracted_value": "Sustainable Agri Technology",
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Listed as 'Primary Industry'."
+            },
+            "invested_capital": {
+              "extracted_value": 60000000,
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Listed as '60' in US$ millions."
+            },
+            "ownership_percentage": {
+              "extracted_value": 0.7,
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Listed as '70%'."
+            },
+            "current_value": {
+              "extracted_value": null,
+              "confidence": 0.0,
+              "source_page": null,
+              "notes": "Not explicitly reported in the performance table (Page 8). Only Zenith's value is shown."
+            },
+            "status": {
+              "extracted_value": "Active",
+              "confidence": 0.9,
+              "source_page": 4,
+              "notes": "Implied by 'Latest Quarter: Q3 2024' and no exit date; not confirmed in performance table."
+            },
+            "location": {
+              "extracted_value": "California",
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Listed under 'Location'."
+            },
+            "investment_type": {
+              "extracted_value": "Equity-Control",
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Listed as 'Inv Type'."
+            },
+            "revenue_cagr_3yr": {
+              "extracted_value": 0.333,
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Reported as '33.3%' for 3-year Revenue CAGR."
+            },
+            "ebitda_cagr_3yr": {
+              "extracted_value": 0.493,
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Reported as '49.3%' for 3-year EBITDA CAGR."
+            },
+            "latest_ebitda_margin": {
+              "extracted_value": 0.35,
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Reported as '35.0%' for FY 2023."
+            },
+            "ytd_2024_revenue": {
+              "extracted_value": 40500000,
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Reported as '$40.5 million' YTD 2024."
+            },
+            "ytd_2024_ebitda": {
+              "extracted_value": 14000000,
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Reported as '$14.0 million' YTD 2024."
+            },
+            "website": {
+              "extracted_value": "http://www.eh-solutions.com",
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Listed under 'Co Website'."
+            },
+            "deal_team": {
+              "extracted_value": [
+                "Daniel Stone",
+                "Olivia Kim",
+                "Benjamin Wright"
+              ],
+              "confidence": 1.0,
+              "source_page": 4,
+              "notes": "Listed under 'Deal Team'."
+            }
+          }
+        ],
+        "metadata": {
+          "extraction_date": "2025-10-14T23:06:59.108155",
+          "total_fields_extracted": 0,
+          "average_confidence": 0,
+          "notes": [
+            "Only Zenith Innovations Ltd. is included in the performance table (Page 8); EcoHarvest's current value is missing.",
+            "All monetary values converted to numeric format (e.g., '75' million USD \u2192 75000000).",
+            "Percentages converted to decimals (e.g., 25% \u2192 0.25).",
+            "DPI, RVPI, and TVPI calculated manually due to lack of direct reporting.",
+            "Master Fund data (Page 7) is distinct from the main fund (Page 6) but included for context."
+          ],
+          "document_timestamp": {
+            "report_date": "2024-04-15",
+            "financials_as_of": "2024-03-31"
+          }
+        },
+        "_llm_model": "mistral-large-latest",
+        "_retry_count": 0
+      },
+      "extraction_info": {
+        "method": "pdfplumber",
+        "char_count": 9188
+      },
+      "llm_model": "mistral-large-latest"
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "session_id": "session_1760464027335",
+  "created_at": "2025-10-14T23:17:21.938334",
+  "messages": [
+    {
+      "filename": "Best-Practices-Fund II - ouput.xlsx - Google Sheets.pdf",
+      "status": "success",
+      "data": {
+        "fund_overview": {
+          "General Partner": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not explicitly mentioned in the provided document pages. The term 'General Partner' is referenced in context but no name or identifier is provided."
+          },
+          "Fund Name": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Document references 'Private Equity Funds' generically on Page 2 but no specific fund name is provided."
+          },
+          "Fund Currency": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "No currency information is present in the provided pages."
+          },
+          "Total Commitments": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the provided document text."
+          },
+          "Total Drawdowns": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the provided document text."
+          },
+          "Remaining Commitments": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the provided document text."
+          },
+          "Total Distributions": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the provided document text."
+          }
+        },
+        "financial_summary": {
+          "Number of Investments": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Referenced in the template under 'portfolio' but no numerical value is provided in the document."
+          },
+          "Active Portfolio Companies": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Referenced in the template but no list or count is provided in the document."
+          }
+        },
+        "performance_metrics": {
+          "DPI": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the provided document text."
+          },
+          "RVPI": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the provided document text."
+          },
+          "TVPI": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the provided document text."
+          },
+          "Net IRR": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the provided document text."
+          },
+          "Gross IRR": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the provided document text."
+          }
+        },
+        "portfolio_companies": [],
+        "metadata": {
+          "extraction_date": "2025-10-14T23:17:13.602965",
+          "total_fields_extracted": 0,
+          "average_confidence": 0,
+          "notes": "The provided document text (Pages 1-2) is a table of contents and a generic description of a 'Schedule of Investments' section. **No actual financial data, fund details, or portfolio company information is present in these pages.** For meaningful extraction, the full document (especially Pages 2 'Schedule of Investments', 6 'Portfolio Companies Profile', and 7 'Portfolio Companies Financials') would be required. All fields are marked as `null` with `confidence: 0.0` due to absence of extractable data."
+        },
+        "_llm_model": "mistral-large-latest",
+        "_retry_count": 0
+      },
+      "extraction_info": {
+        "method": "pdfplumber",
+        "char_count": 592
+      },
+      "llm_model": "mistral-large-latest"
+    }
+  ]
+}

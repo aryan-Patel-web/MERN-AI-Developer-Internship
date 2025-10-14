@@ -1,0 +1,115 @@
+{
+  "session_id": "session_1760463463274",
+  "created_at": "2025-10-14T23:10:59.576353",
+  "messages": [
+    {
+      "filename": "Best-Practices-Fund II.pdf",
+      "status": "success",
+      "data": {
+        "fund_overview": {
+          "General Partner": {
+            "extracted_value": "Institutional Limited Partners Association",
+            "confidence": 0.8,
+            "source_page": 1,
+            "notes": "Extracted from the document title"
+          },
+          "Fund Name": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          },
+          "Fund Currency": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          },
+          "Total Commitments": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          },
+          "Total Drawdowns": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          },
+          "Remaining Commitments": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          },
+          "Total Distributions": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          }
+        },
+        "financial_summary": {
+          "Management Fee": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          },
+          "Other Fees": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          }
+        },
+        "performance_metrics": {
+          "DPI": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          },
+          "RVPI": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          },
+          "TVPI": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          },
+          "Net IRR": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          },
+          "Gross IRR": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in the document"
+          }
+        },
+        "portfolio_companies": [],
+        "metadata": {
+          "extraction_date": "2025-10-14T23:10:56.556603",
+          "total_fields_extracted": 0,
+          "average_confidence": 0
+        },
+        "_llm_model": "llama-3.3-70b-versatile",
+        "_retry_count": 0
+      },
+      "extraction_info": {
+        "method": "pdfplumber",
+        "char_count": 72160
+      },
+      "llm_model": "llama-3.3-70b-versatile"
+    }
+  ]
+}

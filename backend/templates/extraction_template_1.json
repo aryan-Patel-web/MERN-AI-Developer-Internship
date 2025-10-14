@@ -1,0 +1,35 @@
+{
+  "name": "Private Equity Fund Template",
+  "description": "Extract comprehensive private equity fund data",
+  "fields": {
+    "fund_info": [
+      "General Partner",
+      "Fund Name",
+      "Fund Currency",
+      "Total Commitments",
+      "Total Drawdowns",
+      "Remaining Commitments",
+      "Total Distributions"
+    ],
+    "performance": [
+      "DPI",
+      "RVPI",
+      "TVPI",
+      "Net IRR",
+      "Gross IRR"
+    ],
+    "portfolio": [
+      "Number of Investments",
+      "Active Portfolio Companies"
+    ],
+    "companies": [
+      "Company Name",
+      "Investment Date",
+      "Industry",
+      "Invested Capital",
+      "Ownership %",
+      "Current Value",
+      "Status"
+    ]
+  }
+}

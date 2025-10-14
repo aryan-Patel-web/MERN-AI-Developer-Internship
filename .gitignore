@@ -1,0 +1,59 @@
+# =========================
+# 🔒 Root .gitignore
+# For React (frontend) + Flask/Node (backend)
+# =========================
+
+# --- FRONTEND (React + Vite) ---
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# Env files
+frontend/.env
+frontend/.env.local
+frontend/.env.development
+frontend/.env.production
+
+# Logs
+frontend/*.log
+
+# Editor junk
+frontend/.vscode/
+frontend/.idea/
+frontend/.DS_Store
+
+# --- BACKEND (Flask / Express / FastAPI) ---
+backend/__pycache__/
+backend/node_modules/
+backend/venv/
+backend/env/
+backend/.venv/
+
+# Env files
+backend/.env
+backend/.env.local
+backend/*.env
+
+# Logs and temp files
+backend/*.log
+backend/tmp/
+backend/instance/
+backend/*.sqlite3
+
+# --- Common OS / IDE / Cache ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.pid
+*.bak
+backend/.env
+frontend/.env
+
+
+env
+/env
+.env
+
+/.env

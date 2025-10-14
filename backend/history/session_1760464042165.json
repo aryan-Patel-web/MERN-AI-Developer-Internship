@@ -1,0 +1,342 @@
+{
+  "session_id": "session_1760464042165",
+  "created_at": "2025-10-14T23:19:50.304047",
+  "messages": [
+    {
+      "filename": "Linolex Fund LP (1).pdf",
+      "status": "success",
+      "data": {
+        "fund_overview": {
+          "General Partner": {
+            "extracted_value": "Linolex GP",
+            "confidence": 1.0,
+            "source_page": 4,
+            "notes": "Found in Letter to Limited Partners"
+          },
+          "Fund Name": {
+            "extracted_value": "Linolex Fund LP",
+            "confidence": 1.0,
+            "source_page": 1,
+            "notes": "Found in document title"
+          },
+          "Fund Currency": {
+            "extracted_value": "USD",
+            "confidence": 0.8,
+            "source_page": 5,
+            "notes": "Inferred from monetary values"
+          },
+          "Total Commitments": {
+            "extracted_value": 750000000,
+            "confidence": 1.0,
+            "source_page": 5,
+            "notes": "Found in Summary section"
+          },
+          "Total Drawdowns": {
+            "extracted_value": 700000000,
+            "confidence": 1.0,
+            "source_page": 5,
+            "notes": "Found in Summary section, referred to as Paid-in Capital"
+          },
+          "Remaining Commitments": {
+            "extracted_value": 50000000,
+            "confidence": 0.9,
+            "source_page": 5,
+            "notes": "Calculated as Total Commitments - Total Drawdowns"
+          },
+          "Total Distributions": {
+            "extracted_value": 980000000,
+            "confidence": 1.0,
+            "source_page": 5,
+            "notes": "Found in Summary section"
+          }
+        },
+        "financial_summary": {
+          "Total Value": {
+            "extracted_value": 1190000000,
+            "confidence": 1.0,
+            "source_page": 5,
+            "notes": "Found in Summary section"
+          },
+          "Investment Return": {
+            "extracted_value": 1.78,
+            "confidence": 1.0,
+            "source_page": 5,
+            "notes": "Found in Summary section"
+          },
+          "Investment IRR": {
+            "extracted_value": 0.146,
+            "confidence": 1.0,
+            "source_page": 5,
+            "notes": "Found in Summary section"
+          }
+        },
+        "performance_metrics": {
+          "DPI": {
+            "extracted_value": 1.4,
+            "confidence": 1.0,
+            "source_page": 5,
+            "notes": "Found in Summary section"
+          },
+          "RVPI": {
+            "extracted_value": 0.3,
+            "confidence": 1.0,
+            "source_page": 5,
+            "notes": "Found in Summary section"
+          },
+          "TVPI": {
+            "extracted_value": 1.7,
+            "confidence": 1.0,
+            "source_page": 5,
+            "notes": "Found in Summary section"
+          },
+          "Net IRR": {
+            "extracted_value": 0.132,
+            "confidence": 1.0,
+            "source_page": 5,
+            "notes": "Found in Summary section, referred to as Net IRR to Limited Partners"
+          },
+          "Gross IRR": {
+            "extracted_value": null,
+            "confidence": 0.0,
+            "source_page": null,
+            "notes": "Not found in document"
+          }
+        },
+        "portfolio_companies": [
+          {
+            "Company Name": {
+              "extracted_value": "Medivanta HealthTech Ltd.",
+              "confidence": 1.0,
+              "source_page": 6,
+              "notes": "Found in Portfolio Information section"
+            },
+            "Investment Date": {
+              "extracted_value": "15/09/2022",
+              "confidence": 1.0,
+              "source_page": 6,
+              "notes": "Found in Investment Highlights section"
+            },
+            "Industry": {
+              "extracted_value": "Healthcare Technology",
+              "confidence": 1.0,
+              "source_page": 6,
+              "notes": "Found in Company Description section"
+            },
+            "Invested Capital": {
+              "extracted_value": 12000000,
+              "confidence": 1.0,
+              "source_page": 6,
+              "notes": "Found in Investment Highlights section"
+            },
+            "Ownership %": {
+              "extracted_value": 0.167,
+              "confidence": 1.0,
+              "source_page": 6,
+              "notes": "Found in Investment Highlights section, referred to as Current Ownership"
+            },
+            "Current Value": {
+              "extracted_value": 22800000,
+              "confidence": 1.0,
+              "source_page": 6,
+              "notes": "Found in Investment Highlights section, referred to as Total Fair Value"
+            },
+            "Status": {
+              "extracted_value": "Active",
+              "confidence": 0.8,
+              "source_page": 6,
+              "notes": "Inferred from presence in Portfolio Information section"
+            }
+          },
+          {
+            "Company Name": {
+              "extracted_value": "NeuroNova Diagnostics Ltd.",
+              "confidence": 1.0,
+              "source_page": 7,
+              "notes": "Found in Portfolio Information section"
+            },
+            "Investment Date": {
+              "extracted_value": "21/02/2025",
+              "confidence": 1.0,
+              "source_page": 7,
+              "notes": "Found in Investment Highlights section"
+            },
+            "Industry": {
+              "extracted_value": "Healthcare",
+              "confidence": 1.0,
+              "source_page": 7,
+              "notes": "Found in Company Description section"
+            },
+            "Invested Capital": {
+              "extracted_value": 11500000,
+              "confidence": 1.0,
+              "source_page": 7,
+              "notes": "Found in Investment Highlights section"
+            },
+            "Ownership %": {
+              "extracted_value": 0.095,
+              "confidence": 1.0,
+              "source_page": 7,
+              "notes": "Found in Investment Highlights section, referred to as Current Ownership"
+            },
+            "Current Value": {
+              "extracted_value": 18700000,
+              "confidence": 1.0,
+              "source_page": 7,
+              "notes": "Found in Investment Highlights section, referred to as Total Fair Value"
+            },
+            "Status": {
+              "extracted_value": "Active",
+              "confidence": 0.8,
+              "source_page": 7,
+              "notes": "Inferred from presence in Portfolio Information section"
+            }
+          },
+          {
+            "Company Name": {
+              "extracted_value": "Agronova Biotech Pte Ltd.",
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Investment Date": {
+              "extracted_value": "08/06/2023",
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Industry": {
+              "extracted_value": null,
+              "confidence": 0.0,
+              "source_page": null,
+              "notes": "Not found in document"
+            },
+            "Invested Capital": {
+              "extracted_value": 9000000,
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Ownership %": {
+              "extracted_value": 0.12,
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Current Value": {
+              "extracted_value": 7500000,
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Status": {
+              "extracted_value": "Active",
+              "confidence": 0.8,
+              "source_page": 9,
+              "notes": "Inferred from presence in Schedule of Investments section"
+            }
+          },
+          {
+            "Company Name": {
+              "extracted_value": "Finlink Digital Ltd.",
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Investment Date": {
+              "extracted_value": "01/11/2021",
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Industry": {
+              "extracted_value": null,
+              "confidence": 0.0,
+              "source_page": null,
+              "notes": "Not found in document"
+            },
+            "Invested Capital": {
+              "extracted_value": 7000000,
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Ownership %": {
+              "extracted_value": 0.065,
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Current Value": {
+              "extracted_value": 5300000,
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Status": {
+              "extracted_value": "Active",
+              "confidence": 0.8,
+              "source_page": 9,
+              "notes": "Inferred from presence in Schedule of Investments section"
+            }
+          },
+          {
+            "Company Name": {
+              "extracted_value": "Helix Robotics Inc.",
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Investment Date": {
+              "extracted_value": "19/04/2020",
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Industry": {
+              "extracted_value": null,
+              "confidence": 0.0,
+              "source_page": null,
+              "notes": "Not found in document"
+            },
+            "Invested Capital": {
+              "extracted_value": 14500000,
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Ownership %": {
+              "extracted_value": 0.103,
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Current Value": {
+              "extracted_value": 18200000,
+              "confidence": 1.0,
+              "source_page": 9,
+              "notes": "Found in Schedule of Investments section"
+            },
+            "Status": {
+              "extracted_value": "Active",
+              "confidence": 0.8,
+              "source_page": 9,
+              "notes": "Inferred from presence in Schedule of Investments section"
+            }
+          }
+        ],
+        "metadata": {
+          "extraction_date": "2025-10-14T23:19:44.923632",
+          "total_fields_extracted": 0,
+          "average_confidence": 0
+        },
+        "_llm_model": "llama-3.3-70b-versatile",
+        "_retry_count": 0
+      },
+      "extraction_info": {
+        "method": "pdfplumber",
+        "char_count": 7109
+      },
+      "llm_model": "llama-3.3-70b-versatile"
+    }
+  ]
+}

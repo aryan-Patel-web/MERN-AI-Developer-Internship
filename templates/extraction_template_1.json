@@ -1,0 +1,248 @@
+{
+  "template_id": "extraction_template_1",
+  "name": "Private Equity Fund Quarterly Report Template",
+  "description": "Template for extracting data from private equity fund quarterly reports following ILPA standards",
+  "schema": {
+    "general_partner": {
+      "type": "string",
+      "description": "Name of the General Partner"
+    },
+    "fund_name": {
+      "type": "string",
+      "description": "Official name of the fund"
+    },
+    "fund_currency": {
+      "type": "string",
+      "description": "Primary currency (e.g., USD, EUR)"
+    },
+    "reporting_period": {
+      "type": "string",
+      "description": "Reporting period (e.g., Q1 2024, 2023)"
+    },
+    "report_date": {
+      "type": "string",
+      "description": "Report date in ISO format"
+    },
+    "assets_under_management": {
+      "type": "number",
+      "description": "Total assets under management"
+    },
+    "active_funds": {
+      "type": "integer",
+      "description": "Number of active funds"
+    },
+    "active_portfolio_companies": {
+      "type": "integer",
+      "description": "Number of active portfolio companies"
+    },
+    "total_commitments": {
+      "type": "number",
+      "description": "Total capital commitments"
+    },
+    "total_drawdowns": {
+      "type": "number",
+      "description": "Total capital drawn down (paid-in capital)"
+    },
+    "remaining_commitments": {
+      "type": "number",
+      "description": "Remaining unfunded commitments"
+    },
+    "total_number_of_investments": {
+      "type": "integer",
+      "description": "Total number of investments made"
+    },
+    "total_distributions": {
+      "type": "number",
+      "description": "Total distributions to partners"
+    },
+    "dpi": {
+      "type": "string",
+      "description": "Distribution to Paid-in Capital ratio"
+    },
+    "rvpi": {
+      "type": "string",
+      "description": "Residual Value to Paid-in Capital ratio"
+    },
+    "tvpi": {
+      "type": "string",
+      "description": "Total Value to Paid-in Capital ratio"
+    },
+    "net_irr": {
+      "type": "string",
+      "description": "Net Internal Rate of Return"
+    },
+    "gross_irr": {
+      "type": "string",
+      "description": "Gross Internal Rate of Return"
+    },
+    "portfolio_companies": {
+      "type": "array",
+      "description": "List of portfolio companies",
+      "items": {
+        "company_name": "string",
+        "address": "string",
+        "website": "string",
+        "business_sector": "string",
+        "primary_industry": "string",
+        "initial_investment_stage": "string",
+        "region": "string",
+        "date_of_investment": "string",
+        "invested_capital": "number",
+        "currency": "string",
+        "capital_returned": "number",
+        "location": "string",
+        "ownership_percent": "string",
+        "investment_type": "string",
+        "latest_audited_fy": "string",
+        "latest_quarter": "string",
+        "company_description": "string",
+        "investment_thesis": "string",
+        "deal_team": "string",
+        "board_representation": "string",
+        "historical_performance": {
+          "years": ["string"],
+          "revenue": ["number"],
+          "ebitda": ["number"],
+          "ebitda_margin": ["string"],
+          "capex": ["number"],
+          "net_debt": ["number"],
+          "three_year_cagr": "string"
+        },
+        "recent_performance": {
+          "quarter": "string",
+          "revenue": "number",
+          "revenue_change": "string",
+          "ebitda": "number",
+          "ebitda_change": "string",
+          "ebitda_margin": "string",
+          "highlights": ["string"]
+        },
+        "operating_initiatives": ["string"]
+      }
+    },
+    "investments": {
+      "type": "array",
+      "description": "Schedule of investments",
+      "items": {
+        "company_name": "string",
+        "security_type": "string",
+        "number_of_shares": "string",
+        "fund_ownership_percent": "string",
+        "initial_investment_date": "string",
+        "exit_date": "string",
+        "investment_status": "string",
+        "fund_commitment": "number",
+        "total_invested": "number",
+        "current_cost": "number",
+        "reported_value": "number",
+        "realized_proceeds": "number",
+        "unrealized_gain_loss": "number",
+        "total_value": "number",
+        "multiple_of_invested_capital": "string",
+        "gross_irr": "string"
+      }
+    },
+    "income_statement": {
+      "type": "object",
+      "description": "Statement of operations data",
+      "properties": {
+        "dividend_income": "number",
+        "interest_income": "number",
+        "other_income": "number",
+        "total_income": "number",
+        "management_fees": "number",
+        "fund_expenses": "number",
+        "other_expenses": "number",
+        "total_expenses": "number",
+        "net_unrealized_gain": "number",
+        "total_comprehensive_income": "number"
+      }
+    },
+    "balance_sheet": {
+      "type": "object",
+      "description": "Balance sheet data",
+      "properties": {
+        "investments_fair_value": "number",
+        "investments_cost": "number",
+        "cash_and_equivalents": "number",
+        "due_from_lps": "number",
+        "other_assets": "number",
+        "total_assets": "number",
+        "due_to_related_party": "number",
+        "other_payables": "number",
+        "total_liabilities": "number",
+        "partners_capital": "number"
+      }
+    },
+    "partners_capital": {
+      "type": "object",
+      "description": "Partners capital account information",
+      "properties": {
+        "total_commitments": "number",
+        "contributed_capital": "number",
+        "net_operating_loss": "number",
+        "total_partners_capital": "number",
+        "limited_partners_allocation": "number",
+        "general_partner_allocation": "number"
+      }
+    },
+    "footnotes": {
+      "type": "array",
+      "description": "Footnotes and disclosures",
+      "items": {
+        "note_number": "string",
+        "title": "string",
+        "content": "string"
+      }
+    }
+  },
+  "guidelines": {
+    "general": [
+      "Extract all numerical values as numbers, not strings with currency symbols",
+      "Extract percentages as strings with the % symbol",
+      "Extract dates in ISO format (YYYY-MM-DD) when possible",
+      "For missing values, use null",
+      "Preserve exact company names and addresses",
+      "Extract all portfolio companies mentioned in the document"
+    ],
+    "financial_data": [
+      "Ensure consistency between balance sheet and income statement",
+      "Verify that DPI = Distributions / Paid-in Capital",
+      "Verify that TVPI = (Distributions + Residual Value) / Paid-in Capital",
+      "Extract both realized and unrealized gains/losses"
+    ],
+    "portfolio_companies": [
+      "Create separate entries for each portfolio company",
+      "Extract complete historical performance tables",
+      "Include all quarterly/recent performance metrics",
+      "Capture investment thesis and operating initiatives"
+    ]
+  },
+  "excel_sheets": [
+    {
+      "name": "Executive Summary",
+      "type": "executive_summary",
+      "description": "High-level fund metrics and summary"
+    },
+    {
+      "name": "Schedule of Investments",
+      "type": "schedule_of_investments",
+      "description": "Detailed listing of all investments"
+    },
+    {
+      "name": "Portfolio Companies",
+      "type": "portfolio_companies",
+      "description": "Detailed portfolio company profiles"
+    },
+    {
+      "name": "Financial Statements",
+      "type": "financial_statements",
+      "description": "Income statement, balance sheet, and cash flow"
+    },
+    {
+      "name": "Footnotes",
+      "type": "footnotes",
+      "description": "Footnotes and disclosures"
+    }
+  ]
+}

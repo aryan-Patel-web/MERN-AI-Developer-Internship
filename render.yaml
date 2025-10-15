@@ -1,3 +1,12 @@
-build:
-  environment:
-    PYTHON_VERSION: 3.11
+services:
+  - type: web
+    name: agentic-backend
+    env: python
+    buildCommand: >
+      python -m pip install --upgrade pip setuptools wheel &&
+      pip install "pandas<2.2" "numpy<2.1" --only-binary=:all: &&
+      pip install -r requirements.txt
+    startCommand: gunicorn app:app --timeout 0 --workers 4
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9

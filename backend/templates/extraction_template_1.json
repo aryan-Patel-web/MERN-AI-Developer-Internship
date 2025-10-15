@@ -1,35 +1,52 @@
 {
-  "name": "Private Equity Fund Template",
-  "description": "Extract comprehensive private equity fund data",
+  "name": "Private Equity Fund Data Extraction Template",
+  "version": "2.0",
   "fields": {
     "fund_info": [
       "General Partner",
       "Fund Name",
       "Fund Currency",
+      "Reporting Period",
       "Total Commitments",
-      "Total Drawdowns",
+      "Total Drawdowns/Paid-in Capital",
       "Remaining Commitments",
-      "Total Distributions"
+      "Total Distributions",
+      "Assets Under Management"
     ],
-    "performance": [
-      "DPI",
-      "RVPI",
-      "TVPI",
-      "Net IRR",
+    "performance_metrics": [
+      "DPI (Distributions to Paid-in Capital)",
+      "RVPI (Residual Value to Paid-in Capital)",
+      "TVPI (Total Value to Paid-in Capital)",
+      "Net IRR to Limited Partners",
       "Gross IRR"
     ],
-    "portfolio": [
-      "Number of Investments",
-      "Active Portfolio Companies"
+    "portfolio_summary": [
+      "Number of Active Investments",
+      "Number of Portfolio Companies",
+      "Number of Exits/Divestments"
     ],
-    "companies": [
-      "Company Name",
-      "Investment Date",
-      "Industry",
-      "Invested Capital",
-      "Ownership %",
-      "Current Value",
-      "Status"
+    "portfolio_companies": [
+      {
+        "fields": [
+          "Company Name",
+          "Primary Industry/Sector",
+          "Date of Investment",
+          "Invested Capital (Fund's Share)",
+          "Ownership Percentage (Fully Diluted)",
+          "Location/Region",
+          "Current Fair Value",
+          "Investment Status",
+          "Brief Company Description"
+        ]
+      }
+    ],
+    "geographic_breakdown": [
+      "Region",
+      "Percentage/Amount"
+    ],
+    "industry_breakdown": [
+      "Industry Sector",
+      "Percentage/Amount"
     ]
   }
 }

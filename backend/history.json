@@ -23995,5 +23995,115 @@
         ]
       }
     ]
+  },
+  {
+    "session_id": "c8b383e4-6cea-4e82-bf75-c505ad1979d6",
+    "timestamp": "2025-10-16T21:58:42.209061",
+    "template_id": "template1",
+    "files": [
+      "Horizon Capital.pdf"
+    ],
+    "output_file": "extracted_data_c8b383e4-6cea-4e82-bf75-c505ad1979d6.xlsx",
+    "processing_time": 84.0060601234436
+  },
+  {
+    "session_id": "faf3195b-42a4-43ec-b4ad-2293cd750c46",
+    "timestamp": "2025-10-16T21:59:28.604775",
+    "template_id": "template1",
+    "files": [
+      "Horizon Capital.pdf"
+    ],
+    "output_file": "extracted_data_faf3195b-42a4-43ec-b4ad-2293cd750c46.xlsx",
+    "processing_time": 45.99932026863098
+  },
+  {
+    "session_id": "02d72626",
+    "created_at": "2025-10-16T23:41:06.146257",
+    "template": "template_1",
+    "files": [
+      "Horizon Capital.pdf"
+    ],
+    "output_file": "extraction_template_1_02d72626_20251016_234105.xlsx",
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "\u2705 **Extraction Complete!**\n\n\u2022 Files: 1/1 extracted\n\u2022 Time: 57.82s\n\u2022 Accuracy: 63.01%\n\u2022 Confidence: 68.00999999999999%\n\n\ud83d\udca1 You can now download the Excel or ask questions!",
+        "timestamp": "2025-10-16T23:41:06.146257",
+        "excelFile": "extraction_template_1_02d72626_20251016_234105.xlsx",
+        "summary": {
+          "successful": 1,
+          "files_processed": 1,
+          "processing_time": 57.82,
+          "excel_file": "extraction_template_1_02d72626_20251016_234105.xlsx",
+          "pdf_names": [
+            "Horizon Capital.pdf"
+          ],
+          "session_name": "Horizon Capital.pdf...",
+          "accuracy": 63.01,
+          "confidence": 68.00999999999999
+        },
+        "isResult": true
+      }
+    ]
+  },
+  {
+    "session_id": "548b324c",
+    "created_at": "2025-10-16T23:43:08.256912",
+    "template": "template_1",
+    "files": [
+      "Linolex Fund LP (1).pdf"
+    ],
+    "output_file": "extraction_template_1_548b324c_20251016_234307.xlsx",
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "\u2705 **Extraction Complete!**\n\n\u2022 Files: 1/1 extracted\n\u2022 Time: 76.31s\n\u2022 Accuracy: 77.33%\n\u2022 Confidence: 82.33%\n\n\ud83d\udca1 You can now download the Excel or ask questions!",
+        "timestamp": "2025-10-16T23:43:08.256912",
+        "excelFile": "extraction_template_1_548b324c_20251016_234307.xlsx",
+        "summary": {
+          "successful": 1,
+          "files_processed": 1,
+          "processing_time": 76.31,
+          "excel_file": "extraction_template_1_548b324c_20251016_234307.xlsx",
+          "pdf_names": [
+            "Linolex Fund LP (1).pdf"
+          ],
+          "session_name": "Linolex Fund LP (1).pdf...",
+          "accuracy": 77.33,
+          "confidence": 82.33
+        },
+        "isResult": true
+      }
+    ]
+  },
+  {
+    "session_id": "a29bc441",
+    "created_at": "2025-10-16T23:46:11.218880",
+    "template": "template_2",
+    "files": [
+      "Best-Practices-Fund II.pdf"
+    ],
+    "output_file": "extraction_template_2_a29bc441_20251016_234610.xlsx",
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "\u2705 **Extraction Complete!**\n\n\u2022 Files: 1/1 extracted\n\u2022 Time: 145.06s\n\u2022 Accuracy: 92.88%\n\u2022 Confidence: 97.88%\n\n\ud83d\udca1 You can now download the Excel or ask questions!",
+        "timestamp": "2025-10-16T23:46:11.218880",
+        "excelFile": "extraction_template_2_a29bc441_20251016_234610.xlsx",
+        "summary": {
+          "successful": 1,
+          "files_processed": 1,
+          "processing_time": 145.06,
+          "excel_file": "extraction_template_2_a29bc441_20251016_234610.xlsx",
+          "pdf_names": [
+            "Best-Practices-Fund II.pdf"
+          ],
+          "session_name": "Best-Practices-Fund II.pdf...",
+          "accuracy": 92.88,
+          "confidence": 97.88
+        },
+        "isResult": true
+      }
+    ]
   }
 ]

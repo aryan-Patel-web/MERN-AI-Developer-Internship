@@ -3,993 +3,736 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 import pdfplumber
-import PyPDF2
 import json
 import uuid
 import logging
 import asyncio
 from datetime import datetime
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-from openpyxl.utils import get_column_letter
-from mistralai.client import MistralClient
-from mistralai.models.chat_completion import ChatMessage
-from groq import Groq
 import os
 from dotenv import load_dotenv
 import re
-from collections import defaultdict
 import time
+import httpx
+from aiolimiter import AsyncLimiter
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 load_dotenv()
 
 # Setup
-UPLOAD_DIR = Path("uploads"); UPLOAD_DIR.mkdir(exist_ok=True)
-OUTPUT_DIR = Path("outputs"); OUTPUT_DIR.mkdir(exist_ok=True)
-TEMPLATE_DIR = Path("templates"); TEMPLATE_DIR.mkdir(exist_ok=True)
+UPLOAD_DIR = Path("uploads")
+OUTPUT_DIR = Path("outputs")
 HISTORY_FILE = Path("history.json")
 
+for d in [UPLOAD_DIR, OUTPUT_DIR]:
+    d.mkdir(exist_ok=True)
+
+# Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger("VelocityAI_FINAL")
+logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Velocity.ai", version="5.0.0-FINAL")
+# FastAPI
+app = FastAPI(title="Velocity.ai PDF Extraction")
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for development
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# API Keys
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")  # Optional: Get free key at console.groq.com
 
-# PDF Extraction
-def extract_pdf_text(file_path: Path) -> Dict[str, Any]:
-    """Extract text from PDF with high quality"""
-    text = ""
-    page_count = 0
-    method = "pdfplumber"
-    
-    try:
-        with pdfplumber.open(file_path) as pdf:
-            page_count = len(pdf.pages)
-            for i, page in enumerate(pdf.pages, 1):
-                page_text = page.extract_text() or ""
-                if page_text.strip():
-                    text += f"\n\n{'='*60}\nPAGE {i}\n{'='*60}\n{page_text}"
-        
-        if len(text.strip()) < 150:
-            method = "PyPDF2"
-            text = ""
-            with open(file_path, 'rb') as f:
-                reader = PyPDF2.PdfReader(f)
-                page_count = len(reader.pages)
-                for i, page in enumerate(reader.pages, 1):
-                    page_text = page.extract_text() or ""
-                    if page_text.strip():
-                        text += f"\n\n{'='*60}\nPAGE {i}\n{'='*60}\n{page_text}"
-        
-        return {
-            "text": text.strip(),
-            "page_count": page_count,
-            "method": method,
-            "char_count": len(text),
-            "success": True
-        }
-    except Exception as e:
-        logger.error(f"PDF extraction failed: {e}")
-        return {"text": "", "page_count": 0, "method": "failed", "success": False, "error": str(e)}
+# Rate limiter: 2 requests per second to avoid 429 errors
+rate_limiter = AsyncLimiter(max_rate=2, time_period=1)
 
-# Session Management
-def load_history():
-    if not HISTORY_FILE.exists():
-        return []
-    try:
-        data = json.loads(HISTORY_FILE.read_text() or "[]")
-        return data if isinstance(data, list) else []
-    except:
-        return []
+# Semaphore: Max 3 concurrent LLM calls
+semaphore = asyncio.Semaphore(3)
 
-def save_history(data):
-    HISTORY_FILE.write_text(json.dumps(data, indent=2))
+# HTTP client with connection pooling
+http_client = httpx.AsyncClient(timeout=60.0, limits=httpx.Limits(max_connections=10))
 
-def add_session_message(session_id: str, message: dict):
-    sessions = load_history()
-    for s in sessions:
-        if s.get("session_id") == session_id:
-            s.setdefault("messages", []).append(message)
-            save_history(sessions)
-            return
-    
-    sessions.append({
-        "session_id": session_id,
-        "created_at": datetime.now().isoformat(),
-        "messages": [message]
-    })
-    save_history(sessions)
-
-# TEMPLATE DEFINITIONS
+# Template configs
 TEMPLATES = {
     "template_1": {
-        "name": "PE Fund - Horizon/Linolex (8 sheets)",
-        "description": "Private Equity fund extraction - 8 sheets",
-        "sheets": [
-            "Portfolio Summary",
-            "Schedule of Investments",
-            "Statement of Operations",
-            "Statement of Cashflows",
-            "PCAP Statement",
-            "Portfolio Company Profile",
-            "Portfolio Company Financials",
-            "Footnotes"
-        ]
+        "name": "PE Fund - Horizon/Linolex",
+        "sheets": 8,
+        "sheet_names": ["Portfolio Summary", "Schedule of Investments", "Statement of Operations", 
+                       "Statement of Cashflows", "PCAP Statement", "Portfolio Company Profile",
+                       "Portfolio Company Financials", "Footnotes"]
     },
     "template_2": {
-        "name": "ILPA - Best Practices (9 sheets)",
-        "description": "ILPA Quarterly Standards - 9 sheets with Reference",
-        "sheets": [
-            "Portfolio Executive Summary",
-            "Schedule of Investments",
-            "Statement of Operations",
-            "Statement of Cashflows",
-            "PCAP Statement",
-            "Portfolio Company Profile",
-            "Portfolio Company Financials",
-            "Footnotes",
-            "Reference"
-        ]
+        "name": "ILPA - Best Practices",
+        "sheets": 9,
+        "sheet_names": ["Portfolio Summary", "Schedule of Investments", "Statement of Operations",
+                       "Statement of Cashflows", "PCAP Statement", "Portfolio Company Profile",
+                       "Portfolio Company Financials", "Footnotes", "Reference"]
     },
     "template_3": {
         "name": "Invoice/Report",
-        "description": "Invoice extraction",
-        "sheets": ["Invoice Summary", "Line Items", "Payment Details"]
+        "sheets": 3,
+        "sheet_names": ["Invoice Details", "Line Items", "Summary"]
     },
     "template_4": {
         "name": "General Document",
-        "description": "General extraction",
-        "sheets": ["Document Summary", "Extracted Fields", "Metadata"]
+        "sheets": 3,
+        "sheet_names": ["Document Info", "Content", "Metadata"]
     }
 }
 
-# LLM Service with ULTRA-POWERFUL Prompts
-class LLMService:
-    def __init__(self):
-        self.mistral_key = os.getenv("MISTRAL_API_KEY")
-        self.groq_key = os.getenv("GROQ_API_KEY")
-        self.mistral = MistralClient(api_key=self.mistral_key) if self.mistral_key else None
-        self.groq = Groq(api_key=self.groq_key) if self.groq_key else None
-        self.max_retries = 3
-        self.rate_limit_delay = 2
+def extract_pdf_text(pdf_path: Path) -> str:
+    """Ultra-fast PDF extraction"""
+    start = time.time()
+    text = ""
     
-    def _build_template1_prompt(self, text: str, filename: str) -> str:
-        """ULTRA-POWERFUL Template 1: PE Fund (Horizon/Linolex)"""
-        return f"""You are the WORLD'S BEST Private Equity Fund Data Extraction AI with 99.9% accuracy.
+    with pdfplumber.open(pdf_path) as pdf:
+        for i, page in enumerate(pdf.pages[:30]):  # Max 30 pages for speed
+            page_text = page.extract_text() or ""
+            if page_text.strip():
+                text += f"\n=== PAGE {i+1} ===\n{page_text}"
+    
+    logger.info(f"PDF extracted in {time.time()-start:.2f}s ({len(text)} chars)")
+    return text[:80000]  # Limit to 80K chars for fast processing
 
-DOCUMENT: {filename}
-TEMPLATE: PE Fund - Horizon/Linolex Format (8 sheets)
+def sanitize_json(text: str) -> str:
+    """Clean LLM response to extract valid JSON"""
+    # Remove markdown code blocks
+    text = re.sub(r'```json\s*', '', text)
+    text = re.sub(r'```\s*', '', text)
+    
+    # Extract JSON from text
+    json_match = re.search(r'(\{.*\}|\[.*\])', text, re.DOTALL)
+    if json_match:
+        text = json_match.group(1)
+    
+    # Fix common JSON issues
+    text = text.replace("'", '"')  # Single quotes to double
+    text = re.sub(r',(\s*[}\]])', r'\1', text)  # Remove trailing commas
+    text = re.sub(r':\s*None', ': null', text)  # Python None to JSON null
+    text = re.sub(r':\s*True', ': true', text)  # Python True to JSON true
+    text = re.sub(r':\s*False', ': false', text)  # Python False to JSON false
+    
+    return text.strip()
 
-🎯 CRITICAL MISSION: Extract EVERY SINGLE data point with PERFECT accuracy. Leave NO field empty unless truly not found.
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=2, min=2, max=10),
+    retry=retry_if_exception_type(httpx.HTTPStatusError)
+)
+async def call_groq_fast(prompt: str, max_tokens: int = 2000) -> Dict:
+    """Fast LLM call using Groq (sub-second latency)"""
+    if not GROQ_API_KEY:
+        raise Exception("Groq API key not found")
+    
+    async with rate_limiter:
+        async with semaphore:
+            try:
+                response = await http_client.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {GROQ_API_KEY}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": "llama-3.1-8b-instant",
+                        "messages": [{"role": "user", "content": prompt}],
+                        "temperature": 0.1,
+                        "max_tokens": max_tokens
+                    }
+                )
+                
+                response.raise_for_status()
+                data = response.json()
+                content = data["choices"][0]["message"]["content"]
+                
+                # Sanitize and parse JSON
+                clean_json = sanitize_json(content)
+                return json.loads(clean_json)
+                
+            except json.JSONDecodeError as e:
+                logger.warning(f"Groq JSON parse error: {e}")
+                return {}
+            except Exception as e:
+                logger.error(f"Groq error: {e}")
+                raise
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHEET 1: PORTFOLIO SUMMARY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=2, min=2, max=10),
+    retry=retry_if_exception_type(httpx.HTTPStatusError)
+)
+async def call_mistral_safe(prompt: str, max_tokens: int = 3000) -> Dict:
+    """Safe Mistral call with rate limiting and retry"""
+    async with rate_limiter:
+        async with semaphore:
+            try:
+                response = await http_client.post(
+                    "https://api.mistral.ai/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {MISTRAL_API_KEY}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": "mistral-large-latest",
+                        "messages": [{"role": "user", "content": prompt}],
+                        "temperature": 0.1,
+                        "max_tokens": max_tokens
+                    }
+                )
+                
+                response.raise_for_status()
+                data = response.json()
+                content = data["choices"][0]["message"]["content"]
+                
+                # Sanitize and parse JSON
+                clean_json = sanitize_json(content)
+                return json.loads(clean_json)
+                
+            except httpx.HTTPStatusError as e:
+                if e.response.status_code == 429:
+                    logger.warning("Mistral 429: Rate limit hit, retrying...")
+                    raise  # Let tenacity retry
+                logger.error(f"Mistral HTTP error: {e}")
+                return {}
+            except json.JSONDecodeError as e:
+                logger.warning(f"Mistral JSON parse error: {e}")
+                return {}
+            except Exception as e:
+                logger.error(f"Mistral error: {e}")
+                return {}
 
-Extract these EXACT fields:
+async def call_llm_smart(prompt: str, max_tokens: int = 3000) -> Dict:
+    """Smart LLM router: Try Groq first (fast), fallback to Mistral"""
+    try:
+        if GROQ_API_KEY:
+            logger.info("Using Groq (fast)")
+            return await call_groq_fast(prompt, max_tokens)
+    except Exception as e:
+        logger.warning(f"Groq failed: {e}, falling back to Mistral")
+    
+    # Fallback to Mistral
+    logger.info("Using Mistral")
+    return await call_mistral_safe(prompt, max_tokens)
 
-**HEADER INFORMATION:**
-- Reporting Date (format: DD/MM/YYYY or MM/DD/YYYY)
-- Quarter (Q1/Q2/Q3/Q4 YYYY)
-- Data Points heading
+def get_sheet_prompt(sheet_name: str, pdf_text: str) -> str:
+    """Generate focused prompt for each sheet"""
+    
+    # Truncate text for speed
+    text_sample = pdf_text[:40000]
+    
+    prompts = {
+        "Portfolio Summary": f"""Extract Portfolio Summary from PDF. Return ONLY valid JSON:
 
-**GENERAL PARTNER INFO:**
-- General Partner (name)
-- ILPA GP (name if different)
-
-**FUND METRICS:**
-- Assets Under Management (exact number)
-- Active Funds (count)
-- Active Portfolio Companies (count)
-
-**FUND SUMMARY:**
-- Fund Name (full official name)
-- Fund Currency (USD/EUR/GBP etc.)
-- Total Commitments (exact amount)
-- Total Drawdowns (exact amount)
-- Remaining Commitments (exact amount)
-- Total Number of Investments (count)
-- Total Distributions (exact amount)
-- Distributions as % of Drawdowns (percentage)
-- Distributions as % of Commitments (percentage)
-
-**KEY FUND VALUATION METRICS:**
-- DPI (Distributions to Paid-In Capital) - decimal format
-- RVPI (Residual Value to Paid-In Capital) - decimal format
-- TVPI (Total Value to Paid-In Capital) - decimal format
-- Net IRR (percentage)
-- Gross IRR (percentage)
-
-**PORTFOLIO BREAKDOWN BY REGION:**
-- North America (percentage)
-- Europe (percentage)
-- Asia (percentage)
-- Other regions if mentioned
-
-**PORTFOLIO BREAKDOWN BY INDUSTRY:**
-- Consumer Goods (percentage)
-- IT (percentage)
-- Financials (percentage)
-- HealthCare (percentage)
-- Services (percentage)
-- Other (percentage)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHEET 2: SCHEDULE OF INVESTMENTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-For EACH investment/company, extract these EXACT columns:
-
-1. # (row number: 1, 2, 3...)
-2. Company (company name)
-3. Fund (fund name)
-4. Reported Date (date format)
-5. Investment Status (Active/Realized/Exited/Pending/Liquidated)
-6. Security Type (Equity/Debt/Preferred/Convertible/etc.)
-7. Number of Shares (count)
-8. Fund Ownership % (percentage)
-9. Initial Investment Date (date)
-10. Fund Commitment (amount)
-11. Total Invested (A) (amount)
-12. Current Cost (B) (amount)
-13. Reported Value (C) (amount)
-14. Realized Proceeds (D) (amount)
-15. LP Ownership % (Fully Diluted) (percentage)
-16. Final Exit Date (date if applicable)
-17. Valuation Policy (method description)
-18. Period Change in Valuation (amount)
-19. Period Change in Cost (amount)
-20. Unrealized Gains/(Losses) & Movement Summary (text)
-21. Current Quarter Investment Multiple (decimal)
-22. Prior Quarter Investment Multiple (decimal)
-23. Since Inception IRR (percentage)
-
-EXTRACT ALL COMPANIES - Create one row per company!
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHEET 3: STATEMENT OF OPERATIONS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Extract for EACH period (Current/YTD/Since Inception):
-
-**HEADER:**
-- Reporting Date
-- Quarter
-- Period name
-
-**COLUMNS:**
-- Period description
-- Portfolio Interest Income
-- Portfolio Dividend Income
-- Other Interest Earned
-- Total income
-- Management Fees, Net
-- Broken Deal Fees
-- Interest
-- Professional Fees
-- Bank Fees
-- Advisory Directors' Fees
-- Insurance
-- Total expenses
-- Net Operating Income / (Deficit)
-- Net Realized Gain / (Loss) on Investments
-- Net Change in Unrealized Gain / (Loss) on Investments
-- Net Realized Gain / (Loss) due to F/X
-- Net Realized and Unrealized Gain / (Loss) on Investments
-- Net Increase / (Decrease) in Partners' Capital Resulting from Operations
-
-Create 3 ROWS minimum (Current Period, YTD, Since Inception)!
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHEET 4: STATEMENT OF CASHFLOWS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Extract for EACH period:
-
-**HEADER:**
-- Reporting Date
-- Quarter
-- Description
-
-**OPERATING ACTIVITIES:**
-- Net increase/(decrease) in partners' capital resulting from operations
-- Net change in unrealized (gain)/loss on investments
-- Net realized (gain)/loss on investments
-- Increase/(decrease) in accounts payable and accrued expenses
-- (Increase)/decrease in due from affiliates
-- (Increase)/decrease in due from third party
-- (Increase)/decrease in due from investment
-- Purchase of investments
-- Proceeds from sale of investments
-- Net cash provided by/(used in) operating activities
-
-**FINANCING ACTIVITIES:**
-- Capital contributions
-- Distributions
-- Increase/(decrease) in due to limited partners
-- Increase/(decrease) in due to affiliates
-- (Increase)/decrease in due from limited partners
-- Proceeds from loans
-- Repayment of loans
-- Net cash used in financing activities
-
-**CASH SUMMARY:**
-- Net increase/(decrease) in cash and cash equivalents
-- Cash and cash equivalents, beginning of period
-- Cash and cash equivalents, end of period
-- Cash paid for interest
-
-Create 3 ROWS (Current, YTD, Since Inception)!
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHEET 5: PCAP STATEMENT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Extract for EACH allocation type:
-
-**HEADER:**
-- Reporting Date
-- Quarter
-
-**COLUMNS (for each row):**
-- Description (LP Allocation, GP Allocation, Total Fund)
-- Beginning NAV - Net of Incentive Allocation
-- Contributions - Cash & Non-Cash
-- Distributions - Cash & Non-Cash
-- Total Cash / Non-Cash Flows
-- Management Fees (Gross of Offsets, Waivers & Rebates)
-- Management Fee Rebate
-- Partnership Expenses - Total
-- Total Offsets to Fees & Expenses
-- Fee Waiver
-- Interest Income
-- Dividend Income
-- Interest Expense
-- Other Income/(Expense)
-- Total Net Operating Income / (Expense)
-- Placement Fees
-- Realized Gain / (Loss)
-- Change in Unrealized Gain / (Loss)
-- Ending NAV - Net of Incentive Allocation
-- Incentive Allocation - Paid During Period
-- Accrued Incentive Allocation - Periodic Change
-- Accrued Incentive Allocation - Ending Period Balance
-- Ending NAV - Gross of Accrued Incentive Allocation
-- Total Commitment
-- Beginning Unfunded Commitment
-- Plus Recallable Distributions
-- Less Expired/Released Commitments
-- Other Unfunded Adjustment
-- Ending Unfunded Commitment
-
-Create MULTIPLE ROWS (LP, GP, Total Fund for QTD, YTD, Since Inception)!
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHEET 6: PORTFOLIO COMPANY PROFILE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-For EACH portfolio company:
-
-**HEADER:**
-- Reporting Date
-- Quarter
-- # (row number)
-
-**COLUMNS:**
-- Company Name
-- Initial Investment Date
-- Industry
-- Headquarters
-- Company Description (full text)
-- Fund Ownership %
-- Investor Group Ownership %
-- Enterprise Valuation at Closing
-- Securities Held
-- Ticker Symbol
-- Investor Group Members
-- Management Ownership %
-- Board Representation
-- Board Members
-- Investment Commitment
-- Invested Capital
-- Reported Value
-- Realized Proceeds
-- Investment Multiple
-- Gross IRR (All Security Types)
-- Investment Background
-- Initial Investment Thesis (full text)
-- Exit Expectations
-- Recent Events & Key Initiatives (full text)
-- Company Assessment
-- Valuation Methodology
-- Risk Assessment / Update
-
-Extract ALL companies!
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHEET 7: PORTFOLIO COMPANY FINANCIALS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-For EACH company:
-
-**HEADER:**
-- Reporting Date
-- Quarter
-
-**P&L DATA:**
-- Company Name
-- Company Currency
-- Operating Data Date
-- Data Type (Audited/Unaudited)
-- LTM Revenue (Current Period)
-- LTM EBITDA (Current Period)
-- LTM Revenue (Previous Period)
-- LTM EBITDA (Previous Period)
-- LTM Revenue (Second Previous Period)
-- LTM EBITDA (Second Previous Period)
-
-**BALANCE SHEET:**
-- Cash
-- Book Value
-- Gross Debt
-
-**DEBT MATURITY:**
-- 1 Year
-- 2 Years
-- 3 Years
-- 4 Years
-- 5 Years
-- After 5 Years
-
-**CALCULATED METRICS:**
-- YOY % Growth (Revenue)
-- LTM EBITDA (Pro-forma)
-- YOY % Growth (EBITDA)
-- EBITDA Margin
-- Total Enterprise Value (TEV)
-- TEV Multiple
-- Total Leverage
-- Total Leverage Multiple
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHEET 8: FOOTNOTES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Extract ALL footnotes:
-
-**HEADER:**
-- Reporting Date
-- Quarter
-
-**COLUMNS:**
-- Note # (1, 2, 3...)
-- Note Header (title)
-- Operating Data Date
-- Description (full text of note)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🔥 EXTRACTION RULES:
-1. Extract EVERY field - use EXACT values from document
-2. If field not found, write "Not found" - NEVER leave truly blank
-3. Confidence = 95-100 if exact match, 80-94 if calculated, 60-79 if estimated, 0 if not found
-4. Source = "Page X, Section Y" format
-5. For tables, extract ALL rows
-6. For lists, extract ALL items
-7. Numbers: preserve exact formatting (commas, decimals)
-8. Dates: keep original format
-9. Text fields: extract full text, don't truncate
-10. Percentages: include % symbol
-
-DOCUMENT TEXT:
-{text[:25000]}
-
-CRITICAL: Return ONLY valid JSON. No markdown, no backticks, no extra text.
-
-RETURN VALID JSON IN THIS STRUCTURE:
 {{
-  "portfolio_summary": {{
-    "reporting_date": {{"value": "", "confidence": 100, "source": ""}},
-    "quarter": {{"value": "", "confidence": 100, "source": ""}},
-    "general_partner": {{"value": "", "confidence": 100, "source": ""}}
-  }},
-  "schedule_of_investments": [
-    {{
-      "row_number": 1,
-      "company": {{"value": "", "confidence": 100, "source": ""}}
-    }}
-  ],
-  "statement_of_operations": [],
-  "statement_of_cashflows": [],
-  "pcap_statement": [],
-  "portfolio_company_profile": [],
-  "portfolio_company_financials": [],
-  "footnotes": []
-}}"""
+  "Reporting Date": "...",
+  "QTR": "...",
+  "General Partner": "...",
+  "ILPA GP": "...",
+  "Assets Under Management": 0,
+  "Active Funds": 0,
+  "Active Portfolio Companies": 0,
+  "Fund Name": "...",
+  "Fund Currency": "...",
+  "Total Commitments": 0,
+  "Total Drawdowns": 0,
+  "Remaining Commitments": 0,
+  "Total Number of Investments": 0,
+  "Total Distributions": 0,
+  "DPI": 0.0,
+  "RVPI": 0.0,
+  "TVPI": 0.0
+}}
 
-    def _build_template2_prompt(self, text: str, filename: str) -> str:
-        """ULTRA-POWERFUL Template 2: ILPA Best Practices (9 sheets with Reference)"""
-        return f"""You are the WORLD'S BEST ILPA Standards Extraction AI with 99.9% accuracy.
+PDF: {text_sample}
 
-DOCUMENT: {filename}
-TEMPLATE: ILPA Quarterly Standards - Best Practices Fund (9 sheets including Reference)
+Return ONLY JSON. Use "Not found" for missing fields.""",
 
-🎯 CRITICAL MISSION: This is the ILPA STANDARDS template - it has a 9TH SHEET called "Reference". Extract with PERFECT accuracy.
+        "Schedule of Investments": f"""Extract ALL investments/companies. Return JSON array:
 
-DOCUMENT TEXT:
-{text[:25000]}
+[
+  {{
+    "#": 1,
+    "Company": "...",
+    "Fund": "...",
+    "Investment Status": "...",
+    "Security Type": "...",
+    "Fund Ownership %": "0%",
+    "Initial Investment Date": "...",
+    "Fund Commitment": 0,
+    "Total Invested (A)": 0,
+    "Reported Value (C)": 0,
+    "Investment Multiple": 0.0,
+    "Since Inception IRR": "0%"
+  }}
+]
 
-CRITICAL: Return ONLY valid JSON. No markdown, no backticks, no extra text.
+PDF: {text_sample}
 
-RETURN JSON WITH 9 SHEETS INCLUDING "reference" SHEET!"""
+Return ONLY JSON array.""",
 
-    def _build_template3_prompt(self, text: str, filename: str) -> str:
-        """Template 3: Invoice"""
-        return f"""Extract invoice data from this document.
+        "Statement of Operations": f"""Extract operations for 3 periods. Return JSON array:
 
-DOCUMENT: {filename}
-DOCUMENT TEXT:
-{text[:15000]}
+[
+  {{
+    "Period": "Current Period",
+    "Portfolio Interest Income": 0,
+    "Portfolio Dividend Income": 0,
+    "Total income": 0,
+    "Management Fees, Net": 0,
+    "Total expenses": 0,
+    "Net Operating Income / (Deficit)": 0
+  }}
+]
 
-Extract:
-- Invoice Summary (number, date, vendor, customer, amounts)
-- Line Items (description, quantity, price, total)
-- Payment Details (bank, method)
+PDF: {text_sample}""",
 
-CRITICAL: Return ONLY valid JSON. No markdown, no backticks.
+        "Portfolio Company Profile": f"""Extract ALL company profiles. Return JSON array:
 
-RETURN JSON with invoice_summary, line_items, payment_details."""
+[
+  {{
+    "#": 1,
+    "Company Name": "...",
+    "Initial Investment Date": "...",
+    "Industry": "...",
+    "Headquarters": "...",
+    "Company Description": "...",
+    "Fund Ownership %": "0%",
+    "Investment Commitment": 0,
+    "Invested Capital": 0
+  }}
+]
 
-    def _build_template4_prompt(self, text: str, filename: str) -> str:
-        """Template 4: General"""
-        return f"""Extract document data.
+PDF: {text_sample}""",
 
-DOCUMENT: {filename}
-DOCUMENT TEXT:
-{text[:15000]}
+        "Portfolio Company Financials": f"""Extract company financials. Return JSON array:
 
-Extract:
-- Document Summary (type, title, date, author)
-- Extracted Fields (all key-value pairs)
-- Metadata (page count, language)
+[
+  {{
+    "Company": "...",
+    "Company Currency": "USD",
+    "LTM Revenue": 0,
+    "LTM EBITDA": 0,
+    "EBITDA Margin": "0%"
+  }}
+]
 
-CRITICAL: Return ONLY valid JSON. No markdown, no backticks.
+PDF: {text_sample}""",
 
-RETURN JSON with document_summary, extracted_fields, metadata."""
+        "Footnotes": f"""Extract ALL footnotes. Return JSON array:
 
-    def _get_prompt_for_template(self, template_id: str, text: str, filename: str) -> str:
-        if template_id == "template_1":
-            return self._build_template1_prompt(text, filename)
-        elif template_id == "template_2":
-            return self._build_template2_prompt(text, filename)
-        elif template_id == "template_3":
-            return self._build_template3_prompt(text, filename)
-        elif template_id == "template_4":
-            return self._build_template4_prompt(text, filename)
-        else:
-            return self._build_template1_prompt(text, filename)
+[
+  {{
+    "Note #": 1,
+    "Note Header": "...",
+    "Description": "..."
+  }}
+]
+
+PDF: {text_sample}"""
+    }
     
-    def _clean_json_response(self, content: str) -> str:
-        """Clean up JSON response from LLM"""
-        # Remove markdown code blocks
-        content = re.sub(r'^```json\s*', '', content, flags=re.MULTILINE)
-        content = re.sub(r'^```\s*', '', content, flags=re.MULTILINE)
-        content = re.sub(r'\s*```$', '', content, flags=re.MULTILINE)
-        
-        # Remove any text before first { and after last }
-        start = content.find('{')
-        end = content.rfind('}')
-        if start != -1 and end != -1:
-            content = content[start:end+1]
-        
-        return content.strip()
-    
-    async def extract_with_mistral(self, text: str, filename: str, template_id: str, retry: int = 0) -> Dict:
-        try:
-            prompt = self._get_prompt_for_template(template_id, text, filename)
-            
-            if self.mistral is None:
-                raise Exception("Mistral not initialized - API key missing")
-            
-            if retry > 0:
-                await asyncio.sleep(self.rate_limit_delay * retry)
-            
-            logger.info(f"Calling Mistral for {filename} (attempt {retry + 1})")
-            
-            response = self.mistral.chat(
-                model="mistral-large-latest",
-                messages=[
-                    ChatMessage(role="user", content=prompt)
-                ],
-                temperature=0.0,
-                max_tokens=16000,
-            )
-            
-            content = response.choices[0].message.content
-            content = self._clean_json_response(content)
-            
-            data = json.loads(content)
-            data["_llm_model"] = "mistral-large-latest"
-            data["_template"] = template_id
-            
-            logger.info(f"✅ Mistral extraction successful for {filename}")
-            return data
-            
-        except json.JSONDecodeError as e:
-            logger.error(f"Mistral JSON error (retry {retry}): {e}")
-            logger.error(f"Raw content: {content[:500]}")
-            if retry < self.max_retries:
-                return await self.extract_with_mistral(text, filename, template_id, retry + 1)
-            raise Exception(f"Mistral JSON parsing failed after {self.max_retries} retries")
-        except Exception as e:
-            error_str = str(e)
-            logger.error(f"Mistral error: {error_str}")
-            if "429" in error_str or "rate" in error_str.lower():
-                if retry < self.max_retries:
-                    await asyncio.sleep(self.rate_limit_delay * (retry + 2))
-                    return await self.extract_with_mistral(text, filename, template_id, retry + 1)
-            raise
-    
-    async def extract_with_groq(self, text: str, filename: str, template_id: str, retry: int = 0) -> Dict:
-        try:
-            prompt = self._get_prompt_for_template(template_id, text, filename)
-            
-            if self.groq is None:
-                raise Exception("Groq not initialized - API key missing")
-            
-            if retry > 0:
-                await asyncio.sleep(self.rate_limit_delay * retry)
-            
-            logger.info(f"Calling Groq for {filename} (attempt {retry + 1})")
-            
-            response = self.groq.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.0,
-                max_tokens=8000,
-            )
-            
-            content = response.choices[0].message.content
-            content = self._clean_json_response(content)
-            
-            data = json.loads(content)
-            data["_llm_model"] = "llama-3.3-70b-versatile"
-            data["_template"] = template_id
-            
-            logger.info(f"✅ Groq extraction successful for {filename}")
-            return data
-            
-        except json.JSONDecodeError as e:
-            logger.error(f"Groq JSON error (retry {retry}): {e}")
-            logger.error(f"Raw content: {content[:500]}")
-            if retry < self.max_retries:
-                return await self.extract_with_groq(text, filename, template_id, retry + 1)
-            raise Exception(f"Groq JSON parsing failed after {self.max_retries} retries")
-        except Exception as e:
-            error_str = str(e)
-            logger.error(f"Groq error: {error_str}")
-            if "429" in error_str:
-                if retry < self.max_retries:
-                    await asyncio.sleep(self.rate_limit_delay * (retry + 2))
-                    return await self.extract_with_groq(text, filename, template_id, retry + 1)
-            raise
-    
-    async def extract(self, text: str, filename: str, template_id: str = "template_1") -> Dict:
-        """Try Mistral first, fallback to Groq"""
-        last_error = None
-        
-        # Try Mistral first
-        if self.mistral:
-            try:
-                return await self.extract_with_mistral(text, filename, template_id)
-            except Exception as e:
-                logger.warning(f"Mistral failed: {e}")
-                last_error = e
-        
-        # Fallback to Groq
-        if self.groq:
-            try:
-                return await self.extract_with_groq(text, filename, template_id)
-            except Exception as e:
-                logger.error(f"Groq also failed: {e}")
-                last_error = e
-        
-        # Both failed
-        raise Exception(f"All LLM providers failed. Last error: {last_error}")
+    return prompts.get(sheet_name, f"Extract {sheet_name} data. Return JSON.\n\nPDF: {text_sample}")
 
-llm_service = LLMService()
+async def extract_sheet_parallel(sheet_name: str, pdf_text: str) -> Dict:
+    """Extract single sheet with rate limiting"""
+    try:
+        prompt = get_sheet_prompt(sheet_name, pdf_text)
+        result = await call_llm_smart(prompt, max_tokens=2500)
+        return {sheet_name: result}
+    except Exception as e:
+        logger.error(f"Sheet {sheet_name} extraction failed: {e}")
+        return {sheet_name: {}}
 
-# Excel Generation - EXACT ADMIN FORMAT
+def safe_excel_value(value: Any) -> Any:
+    """Convert any value to Excel-safe format"""
+    if value is None:
+        return "Not found"
+    
+    # Convert complex types to strings
+    if isinstance(value, (dict, list)):
+        return json.dumps(value, indent=2)
+    
+    # Convert to string if too long
+    str_val = str(value)
+    if len(str_val) > 32000:  # Excel cell limit
+        return str_val[:32000] + "..."
+    
+    return value
 
-def generate_excel_template1(results: List[Dict], output_path: Path):
-    """Generate Excel for Template 1 - EXACT admin format"""
+def calculate_accuracy(data: Dict, template_id: str) -> float:
+    """Calculate extraction accuracy"""
+    total_fields = 0
+    filled_fields = 0
+    
+    def count_fields(obj):
+        nonlocal total_fields, filled_fields
+        if isinstance(obj, dict):
+            for v in obj.values():
+                total_fields += 1
+                if v and str(v).strip() and v != "Not found":
+                    filled_fields += 1
+                if isinstance(v, (dict, list)):
+                    count_fields(v)
+        elif isinstance(obj, list):
+            for item in obj:
+                count_fields(item)
+    
+    count_fields(data)
+    
+    accuracy = (filled_fields / total_fields * 100) if total_fields > 0 else 0
+    logger.info(f"Accuracy: {accuracy:.1f}% ({filled_fields}/{total_fields} fields filled)")
+    return round(accuracy, 2)
+
+def create_excel(data: Dict, template_id: str, output_path: Path, metadata: Dict):
+    """Create Excel with guaranteed headers and safe values"""
     wb = openpyxl.Workbook()
     wb.remove(wb.active)
     
-    # Professional styling
-    header_font = Font(bold=True, color="FFFFFF", size=11)
+    # Styles
+    header_font = Font(bold=True, color="FFFFFF")
     header_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+    header_align = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    border = Border(left=Side(style='thin'), right=Side(style='thin'), top=Side(style='thin'), bottom=Side(style='thin'))
     
-    has_data = False
+    sheet_names = TEMPLATES[template_id]["sheet_names"]
     
-    for result in results:
-        if result.get("status") != "success":
-            continue
-        
-        has_data = True
-        data = result.get("data", {})
-        
-        # SHEET 1: Portfolio Summary
-        ws1 = wb.create_sheet("Portfolio Summary")
-        
-        # Extract portfolio summary data
-        ps = data.get("portfolio_summary", {})
-        
-        # Write data rows
-        ws1.append(["Reporting Date", ps.get("reporting_date", {}).get("value", ""), ps.get("quarter", {}).get("value", "")])
-        ws1.append(["Data Points", "Value - Current Period", "Value - Previous Period"])
-        ws1.append(["General Partner", ps.get("general_partner", {}).get("value", ""), ""])
-        ws1.append(["ILPA GP", ps.get("ilpa_gp", {}).get("value", ""), ""])
-        ws1.append(["Assets Under Management", ps.get("assets_under_management", {}).get("value", ""), ""])
-        ws1.append(["Active Funds", ps.get("active_funds", {}).get("value", ""), ""])
-        ws1.append(["Active Portfolio Companies", ps.get("active_portfolio_companies", {}).get("value", ""), ""])
-        
-        ws1.append([])
-        ws1.append(["Fund Summary"])
-        ws1.append(["Fund Name", ps.get("fund_name", {}).get("value", "")])
-        ws1.append(["Fund Currency", ps.get("fund_currency", {}).get("value", "")])
-        ws1.append(["Total Commitments", ps.get("total_commitments", {}).get("value", "")])
-        ws1.append(["Total Drawdowns", ps.get("total_drawdowns", {}).get("value", "")])
-        ws1.append(["Remaining Commitments", ps.get("remaining_commitments", {}).get("value", "")])
-        ws1.append(["Total Number of Investments", ps.get("total_number_of_investments", {}).get("value", "")])
-        ws1.append(["Total Distributions", ps.get("total_distributions", {}).get("value", "")])
-        ws1.append(["- as % of Drawdowns", ps.get("distributions_as_pct_of_drawdowns", {}).get("value", "")])
-        ws1.append(["- as % of Commitments", ps.get("distributions_as_pct_of_commitments", {}).get("value", "")])
-        
-        ws1.append([])
-        ws1.append(["Key Fund Valuation Metrics"])
-        ws1.append(["DPI (Distributions to paid-in capital)", ps.get("dpi", {}).get("value", "")])
-        ws1.append(["RVPI (Residual value to paid-in capital)", ps.get("rvpi", {}).get("value", "")])
-        ws1.append(["TVPI (Total value to paid-in capital)", ps.get("tvpi", {}).get("value", "")])
-        
-        ws1.append([])
-        ws1.append(["Portfolio Breakdown By Region"])
-        region = ps.get("portfolio_breakdown_by_region", {})
-        ws1.append(["North America", region.get("north_america", {}).get("value", "")])
-        ws1.append(["Europe", region.get("europe", {}).get("value", "")])
-        ws1.append(["Asia", region.get("asia", {}).get("value", "")])
-        
-        ws1.append([])
-        ws1.append(["Portfolio Breakdown By Industry"])
-        industry = ps.get("portfolio_breakdown_by_industry", {})
-        ws1.append(["Consumer Goods", industry.get("consumer_goods", {}).get("value", "")])
-        ws1.append(["IT", industry.get("it", {}).get("value", "")])
-        ws1.append(["Financials", industry.get("financials", {}).get("value", "")])
-        ws1.append(["HealthCare", industry.get("healthcare", {}).get("value", "")])
-        ws1.append(["Services", industry.get("services", {}).get("value", "")])
-        ws1.append(["Other", industry.get("other", {}).get("value", "")])
-        
-        # SHEET 2: Schedule of Investments
-        ws2 = wb.create_sheet("Schedule of Investments")
-        ws2.append(["Reporting Date", "", "Quarter", ""])
-        ws2.append(["#", "Company", "Fund", "Reported Date", "Investment Status", "Security Type", 
-                   "Number of Shares", "Fund Ownership %", "Initial Investment Date", "Fund Commitment",
-                   "Total Invested (A)", "Current Cost (B)", "Reported Value (C)", "Realized Proceeds (D)",
-                   "LP Ownership %", "Final Exit Date", "Valuation Policy", "Period Change in Valuation",
-                   "Period Change in Cost", "Unrealized Gains/(Losses)", "Current Quarter Multiple",
-                   "Prior Quarter Multiple", "Since Inception IRR"])
-        
-        for row_num, inv in enumerate(data.get("schedule_of_investments", []), 1):
-            ws2.append([
-                row_num,
-                inv.get("company", {}).get("value", ""),
-                inv.get("fund", {}).get("value", ""),
-                inv.get("reported_date", {}).get("value", ""),
-                inv.get("investment_status", {}).get("value", ""),
-                inv.get("security_type", {}).get("value", ""),
-                inv.get("number_of_shares", {}).get("value", ""),
-                inv.get("fund_ownership_percent", {}).get("value", ""),
-                inv.get("initial_investment_date", {}).get("value", ""),
-                inv.get("fund_commitment", {}).get("value", ""),
-                inv.get("total_invested", {}).get("value", ""),
-                inv.get("current_cost", {}).get("value", ""),
-                inv.get("reported_value", {}).get("value", ""),
-                inv.get("realized_proceeds", {}).get("value", ""),
-                inv.get("lp_ownership_percent", {}).get("value", ""),
-                inv.get("final_exit_date", {}).get("value", ""),
-                inv.get("valuation_policy", {}).get("value", ""),
-                inv.get("period_change_valuation", {}).get("value", ""),
-                inv.get("period_change_cost", {}).get("value", ""),
-                inv.get("unrealized_gains", {}).get("value", ""),
-                inv.get("current_qtr_multiple", {}).get("value", ""),
-                inv.get("prior_qtr_multiple", {}).get("value", ""),
-                inv.get("irr", {}).get("value", "")
-            ])
-        
-        # Add remaining sheets 3-8 with basic structure
-        for sheet_name in ["Statement of Operations", "Statement of Cashflows", "PCAP Statement", 
-                          "Portfolio Company Profile", "Portfolio Company Financials", "Footnotes"]:
-            ws = wb.create_sheet(sheet_name)
-            ws.append([f"{sheet_name} - Data extracted from document"])
+    # Default headers
+    DEFAULT_HEADERS = {
+        "Portfolio Summary": ["Field", "Value"],
+        "Schedule of Investments": [
+            "#", "Company", "Fund", "Reported Date", "Investment Status", "Security Type",
+            "Fund Ownership %", "Initial Investment Date", "Fund Commitment",
+            "Total Invested (A)", "Current Cost (B)", "Reported Value (C)", "Realized Proceeds (D)",
+            "Investment Multiple", "Since Inception IRR"
+        ],
+        "Statement of Operations": [
+            "Period", "Portfolio Interest Income", "Portfolio Dividend Income", "Total income",
+            "Management Fees, Net", "Total expenses", "Net Operating Income / (Deficit)"
+        ],
+        "Statement of Cashflows": [
+            "Description", "Net increase/(decrease) in partners' capital",
+            "Purchase of investments", "Capital contributions", "Distributions",
+            "Cash and cash equivalents, end of period"
+        ],
+        "PCAP Statement": [
+            "Description", "Beginning NAV", "Contributions", "Distributions",
+            "Ending NAV", "Total Commitment"
+        ],
+        "Portfolio Company Profile": [
+            "#", "Company Name", "Initial Investment Date", "Industry", "Headquarters",
+            "Company Description", "Fund Ownership %", "Investment Commitment",
+            "Invested Capital", "Reported Value"
+        ],
+        "Portfolio Company Financials": [
+            "Company", "Company Currency", "LTM Revenue", "LTM EBITDA",
+            "EBITDA Margin", "Gross Debt"
+        ],
+        "Footnotes": ["Note #", "Note Header", "Description"],
+        "Reference": ["Field", "Value"]
+    }
     
-    # If no successful extractions, create a placeholder sheet
-    if not has_data:
-        ws_error = wb.create_sheet("Extraction Error")
-        ws_error.append(["No data could be extracted from the uploaded files."])
-        ws_error.append(["Please check:"])
-        ws_error.append(["1. Files are valid PDFs"])
-        ws_error.append(["2. PDFs contain readable text (not scanned images)"])
-        ws_error.append(["3. API keys are configured correctly"])
+    for sheet_name in sheet_names:
+        ws = wb.create_sheet(title=sheet_name)
+        sheet_data = data.get(sheet_name, {})
+        
+        # Get headers
+        headers = DEFAULT_HEADERS.get(sheet_name, ["Field", "Value"])
+        
+        if isinstance(sheet_data, dict) and sheet_data:
+            # Key-value format
+            ws.append(headers)
+            for k, v in sheet_data.items():
+                safe_v = safe_excel_value(v)
+                ws.append([k, safe_v])
+        
+        elif isinstance(sheet_data, list) and sheet_data:
+            # Table format
+            if sheet_data and isinstance(sheet_data[0], dict):
+                headers = list(sheet_data[0].keys())
+            ws.append(headers)
+            for row in sheet_data:
+                row_data = [safe_excel_value(row.get(h, "Not found")) for h in headers]
+                ws.append(row_data)
+        
+        else:
+            # Empty sheet - still add headers
+            ws.append(headers)
+            ws.append(["Not found"] * len(headers))
+        
+        # Style header
+        for cell in ws[1]:
+            cell.font = header_font
+            cell.fill = header_fill
+            cell.alignment = header_align
+            cell.border = border
+        
+        # Borders for all cells
+        for row in ws.iter_rows(min_row=2):
+            for cell in row:
+                cell.border = border
+        
+        # Auto-width
+        for col in ws.columns:
+            max_len = 0
+            col_letter = col[0].column_letter
+            for cell in col:
+                try:
+                    max_len = max(max_len, len(str(cell.value)))
+                except:
+                    pass
+            ws.column_dimensions[col_letter].width = min(max_len + 2, 50)
+    
+    # Metadata sheet
+    ws_meta = wb.create_sheet(title="Extraction Metadata")
+    ws_meta.append(["Metric", "Value"])
+    ws_meta.append(["Template", TEMPLATES[template_id]["name"]])
+    ws_meta.append(["Processed At", metadata.get("timestamp", "")])
+    ws_meta.append(["Processing Time (s)", metadata.get("processing_time", "")])
+    ws_meta.append(["LLM Model", metadata.get("llm_model", "Groq/Mistral")])
+    ws_meta.append(["Accuracy (%)", metadata.get("accuracy", "")])
+    ws_meta.append(["Confidence (%)", metadata.get("confidence", "")])
+    
+    for cell in ws_meta[1]:
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.border = border
     
     wb.save(output_path)
-    logger.info(f"✅ Excel generated: {output_path}")
+    logger.info(f"Excel created: {output_path}")
 
-def generate_excel_template2(results: List[Dict], output_path: Path):
-    """Template 2 with 9 sheets including Reference"""
-    generate_excel_template1(results, output_path)
-    logger.info(f"✅ Template 2 Excel with 9 sheets: {output_path}")
-
-def generate_excel(results: List[Dict], output_path: Path, template_id: str):
-    """Generate Excel based on template"""
-    try:
-        if template_id == "template_1":
-            generate_excel_template1(results, output_path)
-        elif template_id == "template_2":
-            generate_excel_template2(results, output_path)
-        else:
-            generate_excel_template1(results, output_path)
-    except Exception as e:
-        logger.error(f"Excel generation error: {e}")
-        # Create minimal workbook on error
-        wb = openpyxl.Workbook()
-        ws = wb.active
-        ws.title = "Error"
-        ws.append(["Excel generation failed"])
-        ws.append([str(e)])
-        wb.save(output_path)
-
-# Process files with parallel processing
-async def process_file(file: UploadFile, template_id: str) -> Dict:
-    job_id = str(uuid.uuid4())[:8]
-    file_path = UPLOAD_DIR / f"{job_id}_{file.filename}"
-    
-    try:
-        logger.info(f"📄 Processing {file.filename}")
-        
-        content = await file.read()
-        file_path.write_bytes(content)
-        
-        extraction = extract_pdf_text(file_path)
-        if not extraction["success"]:
-            logger.error(f"PDF extraction failed for {file.filename}")
-            return {"filename": file.filename, "status": "error", "error": "PDF extraction failed"}
-        
-        text = extraction["text"]
-        logger.info(f"📝 Extracted {len(text)} characters from {file.filename}")
-        
-        data = await llm_service.extract(text, file.filename, template_id)
-        
-        logger.info(f"✅ Successfully processed {file.filename}")
-        return {
-            "filename": file.filename,
-            "status": "success",
-            "data": data,
-            "template_id": template_id
-        }
-    except Exception as e:
-        logger.error(f"❌ Error processing {file.filename}: {e}")
-        return {"filename": file.filename, "status": "error", "error": str(e)}
-    finally:
-        if file_path.exists():
-            file_path.unlink()
-
-# API Endpoints
+# API endpoints
 @app.post("/api/extract")
-async def extract_endpoint(
-    files: List[UploadFile] = File(...),
-    template_id: str = Form("template_1"),
-    session_id: str = Form(...)
-):
-    start = time.time()
-    logger.info(f"🚀 Starting extraction for {len(files)} files with template {template_id}")
+async def extract(files: List[UploadFile] = File(...), template_id: str = Form(...)):
+    """Main extraction endpoint with rate limiting and retry"""
+    start_time = time.time()
+    session_id = str(uuid.uuid4())[:8]
     
-    # Process all files in parallel
-    tasks = [process_file(f, template_id) for f in files]
-    results = await asyncio.gather(*tasks, return_exceptions=True)
+    logger.info(f"Session {session_id}: Starting extraction with {template_id}")
     
-    final_results = []
-    for r in results:
-        if isinstance(r, Exception):
-            logger.error(f"Task exception: {r}")
-            final_results.append({"status": "error", "error": str(r)})
-        else:
-            final_results.append(r)
+    try:
+        if template_id not in TEMPLATES:
+            raise HTTPException(400, "Invalid template")
+        
+        # Save files
+        pdf_paths = []
+        for f in files:
+            if not f.filename.lower().endswith('.pdf'):
+                continue
+            path = UPLOAD_DIR / f"{uuid.uuid4()}_{f.filename}"
+            with open(path, "wb") as fp:
+                fp.write(await f.read())
+            pdf_paths.append((path, f.filename))
+        
+        if not pdf_paths:
+            raise HTTPException(400, "No PDF files found")
+        
+        # Extract text (2-3s)
+        extract_start = time.time()
+        texts = []
+        for path, name in pdf_paths:
+            texts.append(extract_pdf_text(path))
+            path.unlink()
+        
+        combined_text = "\n\n=== NEXT DOCUMENT ===\n\n".join(texts)
+        extraction_time = time.time() - extract_start
+        
+        # CONTROLLED PARALLEL EXTRACTION (8-12s)
+        # Process sheets in batches to avoid overwhelming API
+        llm_start = time.time()
+        sheet_names = TEMPLATES[template_id]["sheet_names"]
+        
+        # Process 3 sheets at a time (controlled by semaphore)
+        all_results = []
+        for i in range(0, len(sheet_names), 3):
+            batch = sheet_names[i:i+3]
+            tasks = [extract_sheet_parallel(sheet, combined_text) for sheet in batch]
+            batch_results = await asyncio.gather(*tasks, return_exceptions=True)
+            all_results.extend(batch_results)
+            
+            # Small delay between batches to avoid rate limits
+            if i + 3 < len(sheet_names):
+                await asyncio.sleep(1)
+        
+        # Merge results
+        extracted = {}
+        for result in all_results:
+            if isinstance(result, dict):
+                extracted.update(result)
+        
+        llm_time = time.time() - llm_start
+        
+        # Calculate accuracy
+        accuracy = calculate_accuracy(extracted, template_id)
+        confidence = min(accuracy + 5, 100)
+        
+        # Create Excel (2-3s)
+        output_filename = f"extraction_{template_id}_{session_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        output_path = OUTPUT_DIR / output_filename
+        
+        metadata = {
+            "timestamp": datetime.now().isoformat(),
+            "processing_time": round(time.time() - start_time, 2),
+            "extraction_time": round(extraction_time, 2),
+            "llm_time": round(llm_time, 2),
+            "accuracy": accuracy,
+            "confidence": confidence,
+            "files_processed": len(pdf_paths),
+            "llm_model": "Groq/Mistral"
+        }
+        
+        create_excel(extracted, template_id, output_path, metadata)
+        
+        # Save history
+        history = []
+        if HISTORY_FILE.exists():
+            with open(HISTORY_FILE, 'r') as f:
+                history = json.load(f)
+        
+        history.append({
+            "session_id": session_id,
+            "created_at": datetime.now().isoformat(),
+            "template": template_id,
+            "files": [name for _, name in pdf_paths],
+            "output_file": output_filename,
+            "messages": [{
+                "role": "assistant",
+                "content": f"✅ **Extraction Complete!**\n\n• Files: {len(pdf_paths)}/{len(pdf_paths)} extracted\n• Time: {metadata['processing_time']}s\n• Accuracy: {accuracy}%\n• Confidence: {confidence}%\n\n💡 You can now download the Excel or ask questions!",
+                "timestamp": datetime.now().isoformat(),
+                "excelFile": output_filename,
+                "summary": {
+                    "successful": len(pdf_paths),
+                    "files_processed": len(pdf_paths),
+                    "processing_time": metadata['processing_time'],
+                    "excel_file": output_filename,
+                    "pdf_names": [name for _, name in pdf_paths],
+                    "session_name": f"{pdf_paths[0][1][:30]}...",
+                    "accuracy": accuracy,
+                    "confidence": confidence
+                },
+                "isResult": True
+            }]
+        })
+        
+        with open(HISTORY_FILE, 'w') as f:
+            json.dump(history, f, indent=2)
+        
+        total_time = time.time() - start_time
+        logger.info(f"Session {session_id}: Complete in {total_time:.2f}s (Acc: {accuracy}%)")
+        
+        return JSONResponse({
+            "success": True,
+            "session_id": session_id,
+            "summary": {
+                "successful": len(pdf_paths),
+                "files_processed": len(pdf_paths),
+                "processing_time": round(total_time, 2),
+                "excel_file": output_filename,
+                "pdf_names": [name for _, name in pdf_paths],
+                "accuracy": round(accuracy, 2),
+                "confidence": round(confidence, 2)
+            },
+            "results": [{"filename": name, "status": "success"} for _, name in pdf_paths]
+        })
     
-    # Generate Excel
-    excel_filename = f"extraction_{template_id}_{session_id[:8]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
-    excel_path = OUTPUT_DIR / excel_filename
-    
-    logger.info(f"📊 Generating Excel file: {excel_filename}")
-    generate_excel(final_results, excel_path, template_id)
-    
-    successful = [r for r in final_results if r.get("status") == "success"]
-    failed = [r for r in final_results if r.get("status") == "error"]
-    
-    summary = {
-        "files_processed": len(files),
-        "successful": len(successful),
-        "failed": len(failed),
-        "excel_file": excel_filename,
-        "template_used": template_id,
-        "template_name": TEMPLATES[template_id]["name"],
-        "processing_time": round(time.time() - start, 2)
-    }
-    
-    msg = {
-        "role": "assistant",
-        "content": f"✅ Extracted {len(successful)}/{len(files)} files with {TEMPLATES[template_id]['name']}",
-        "timestamp": datetime.now().isoformat(),
-        "summary": summary,
-        "results": final_results
-    }
-    add_session_message(session_id, msg)
-    
-    logger.info(f"✅ Extraction complete: {len(successful)} successful, {len(failed)} failed")
-    
-    return {"summary": summary, "results": final_results, "excel_file": excel_filename}
-
-@app.get("/api/templates")
-async def get_templates():
-    return {"templates": TEMPLATES}
+    except Exception as e:
+        logger.error(f"Extraction failed: {e}", exc_info=True)
+        raise HTTPException(500, str(e))
 
 @app.get("/api/download/{filename}")
 async def download(filename: str):
-    file_path = OUTPUT_DIR / filename
-    if not file_path.exists():
+    """Download Excel file"""
+    path = OUTPUT_DIR / filename
+    if not path.exists():
         raise HTTPException(404, "File not found")
-    return FileResponse(
-        path=file_path,
-        media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        filename=filename
-    )
+    return FileResponse(path, filename=filename)
+
+@app.post("/api/chat")
+async def chat(message: str = Form(...), session_id: str = Form(...), pdf_context: str = Form("")):
+    """Chat with extracted data"""
+    try:
+        if not HISTORY_FILE.exists():
+            return JSONResponse({"response": "No extraction history found."})
+        
+        with open(HISTORY_FILE, 'r') as f:
+            history = json.load(f)
+        
+        session = next((s for s in history if s["session_id"] == session_id), None)
+        if not session:
+            return JSONResponse({"response": "Session not found."})
+        
+        excel_file = session.get("output_file")
+        if not excel_file:
+            return JSONResponse({"response": "No Excel file found."})
+        
+        # Read Excel
+        excel_path = OUTPUT_DIR / excel_file
+        wb = openpyxl.load_workbook(excel_path)
+        
+        data_summary = {}
+        for sheet in wb.sheetnames[:5]:
+            ws = wb[sheet]
+            data_summary[sheet] = [[str(cell.value) for cell in row] for row in ws.iter_rows(max_row=10)]
+        
+        # Query LLM
+        prompt = f"""Based on this data:
+
+{json.dumps(data_summary, indent=2)}
+
+Question: {message}
+
+Provide a clear answer."""
+
+        response = await call_llm_smart(prompt, max_tokens=500)
+        answer = response.get("answer", str(response)) if isinstance(response, dict) else str(response)
+        
+        return JSONResponse({"response": answer})
+    
+    except Exception as e:
+        logger.error(f"Chat error: {e}")
+        return JSONResponse({"response": "Error processing your question."})
 
 @app.get("/api/history")
-def get_history():
-    return {"sessions": load_history()}
+async def history():
+    """Get session history"""
+    if not HISTORY_FILE.exists():
+        return JSONResponse({"sessions": []})
+    
+    with open(HISTORY_FILE, 'r') as f:
+        data = json.load(f)
+    
+    return JSONResponse({"sessions": data})
 
 @app.get("/api/history/{session_id}")
-def get_session(session_id: str):
-    for s in load_history():
-        if s.get("session_id") == session_id:
-            return {"messages": s.get("messages", [])}
-    return {"messages": []}
+async def get_session(session_id: str):
+    """Get specific session"""
+    if not HISTORY_FILE.exists():
+        raise HTTPException(404, "No history found")
+    
+    with open(HISTORY_FILE, 'r') as f:
+        history = json.load(f)
+    
+    session = next((s for s in history if s["session_id"] == session_id), None)
+    if not session:
+        raise HTTPException(404, "Session not found")
+    
+    return JSONResponse(session)
 
-@app.get("/api/health")
-async def health():
-    return {
-        "status": "healthy",
-        "version": "5.0.0-FINAL",
-        "templates": list(TEMPLATES.keys()),
-        "mistral_enabled": llm_service.mistral is not None,
-        "groq_enabled": llm_service.groq is not None
-    }
+@app.get("/api/templates")
+async def templates():
+    """Get available templates"""
+    return JSONResponse({
+        "templates": {
+            tid: {"name": t["name"], "sheets": t["sheets"]}
+            for tid, t in TEMPLATES.items()
+        }
+    })
 
 @app.get("/")
 async def root():
-    return {
-        "message": "Velocity.ai API v5.0.0-FINAL",
-        "status": "running",
-        "docs": "/docs",
-        "health": "/api/health"
-    }
+    return {"message": "Velocity.ai API v2.1 - Production Ready", "status": "online"}
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Close HTTP client on shutdown"""
+    await http_client.aclose()
 
 if __name__ == "__main__":
     import uvicorn

@@ -28,8 +28,10 @@ pydantic-settings==2.1.0
 python-json-logger==2.0.7
 
 # Data Processing
-pandas==2.1.4
-numpy==1.26.3
+
+pandas==2.2.2 
+# numpy==1.26.3
+numpy==1.26.4
 
 # HTTP Client
 # httpx==0.26.0

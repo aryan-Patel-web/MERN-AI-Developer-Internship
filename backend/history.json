@@ -14610,6 +14610,602 @@
             "template_id": "template_1"
           }
         ]
+      },
+      {
+        "role": "assistant",
+        "content": "Extraction completed: 1/1 files successful (Template: ILPA Quarterly Standards (Best Practices)) in 44.8s",
+        "timestamp": "2025-10-16T12:03:06.824818",
+        "summary": {
+          "files_processed": 1,
+          "successful": 1,
+          "failed": 0,
+          "total_fields_extracted": 43,
+          "average_confidence": 94.8,
+          "excel_file": "extraction_template_2_null_20251016_120306.xlsx",
+          "template_used": "template_2",
+          "template_name": "ILPA Quarterly Standards (Best Practices)",
+          "processing_time": 44.81
+        },
+        "results": [
+          {
+            "filename": "Best-Practices-Fund II.pdf",
+            "status": "success",
+            "data": {
+              "portfolio_executive_summary": {
+                "reporting_metadata": {
+                  "reporting_date": {
+                    "value": "2015-12-31",
+                    "confidence": 100,
+                    "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                  },
+                  "quarter": {
+                    "value": "Q4 2015",
+                    "confidence": 100,
+                    "source": "Pages 18-22 (Financial Statements for December 31, 2015)"
+                  },
+                  "general_partner": {
+                    "value": "Not explicitly named (referred to as 'Best Practices Fund II, L.P.')",
+                    "confidence": 85,
+                    "source": "Pages 17-33 (General references to 'General Partner' without explicit name)"
+                  },
+                  "ilpa_gp": {
+                    "value": "Not found",
+                    "confidence": 0,
+                    "source": "N/A"
+                  }
+                },
+                "firm_summary": {
+                  "assets_under_management": {
+                    "value": "$12.7b",
+                    "confidence": 100,
+                    "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                  },
+                  "active_funds": {
+                    "value": 8,
+                    "confidence": 100,
+                    "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                  },
+                  "active_portfolio_companies": {
+                    "value": 212,
+                    "confidence": 100,
+                    "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                  }
+                },
+                "fund_summary": {
+                  "fund_name": {
+                    "value": "Best Practices Fund II, L.P.",
+                    "confidence": 100,
+                    "source": "Pages 17, 29 (Financial Statements and Executive Summary)"
+                  },
+                  "fund_currency": {
+                    "value": "USD ($)",
+                    "confidence": 100,
+                    "source": "Pages 18-22 (All financial tables use '$' notation)"
+                  },
+                  "total_commitments": {
+                    "value": "$858.3m",
+                    "confidence": 100,
+                    "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                  },
+                  "total_drawdowns": {
+                    "current": {
+                      "value": "$684.7m (Since Inception)",
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    },
+                    "ytd": {
+                      "value": "$250.375m (2015 YTD from Page 22)",
+                      "confidence": 95,
+                      "source": "Page 22 (A.2 Commitment Reconciliation)"
+                    },
+                    "since_inception": {
+                      "value": "$684.7m",
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    }
+                  },
+                  "remaining_commitments": {
+                    "value": "$173.6m",
+                    "confidence": 100,
+                    "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                  },
+                  "total_number_of_investments": {
+                    "value": 17,
+                    "confidence": 100,
+                    "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                  },
+                  "total_distributions": {
+                    "current": {
+                      "value": "$218.5m (Since Inception)",
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    },
+                    "ytd": {
+                      "value": "$250.375m (2015 YTD from Page 22)",
+                      "confidence": 95,
+                      "source": "Page 22 (A.1 NAV Reconciliation)"
+                    },
+                    "since_inception": {
+                      "value": "$218.5m",
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    }
+                  },
+                  "distributions_as_percent_of_drawdowns": {
+                    "current": {
+                      "value": "32%",
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    },
+                    "ytd": {
+                      "value": "Not found (only cumulative provided)",
+                      "confidence": 0,
+                      "source": "N/A"
+                    },
+                    "since_inception": {
+                      "value": "32%",
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    }
+                  },
+                  "distributions_as_percent_of_commitments": {
+                    "current": {
+                      "value": "25%",
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    },
+                    "ytd": {
+                      "value": "Not found (only cumulative provided)",
+                      "confidence": 0,
+                      "source": "N/A"
+                    },
+                    "since_inception": {
+                      "value": "25%",
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    }
+                  }
+                },
+                "key_fund_valuation_metrics": {
+                  "dpi": {
+                    "current": {
+                      "value": 0.3,
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    },
+                    "ytd": {
+                      "value": "Not found",
+                      "confidence": 0,
+                      "source": "N/A"
+                    },
+                    "since_inception": {
+                      "value": 0.3,
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    }
+                  },
+                  "rvpi": {
+                    "current": {
+                      "value": 0.9,
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    },
+                    "ytd": {
+                      "value": "Not found",
+                      "confidence": 0,
+                      "source": "N/A"
+                    },
+                    "since_inception": {
+                      "value": 0.9,
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    }
+                  },
+                  "tvpi": {
+                    "current": {
+                      "value": 1.2,
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    },
+                    "ytd": {
+                      "value": "Not found",
+                      "confidence": 0,
+                      "source": "N/A"
+                    },
+                    "since_inception": {
+                      "value": 1.2,
+                      "confidence": 100,
+                      "source": "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                    }
+                  }
+                },
+                "portfolio_breakdown_by_region": {
+                  "north_america": {
+                    "value": 72,
+                    "confidence": 100,
+                    "source": "Page 29 (Portfolio Breakdown By Region)"
+                  },
+                  "europe": {
+                    "value": 18,
+                    "confidence": 100,
+                    "source": "Page 29 (Portfolio Breakdown By Region)"
+                  },
+                  "asia": {
+                    "value": 6,
+                    "confidence": 100,
+                    "source": "Page 29 (Portfolio Breakdown By Region)"
+                  },
+                  "other": {
+                    "value": 3,
+                    "confidence": 100,
+                    "source": "Page 29 (Portfolio Breakdown By Region, labeled 'Other')"
+                  }
+                },
+                "portfolio_breakdown_by_industry": {
+                  "consumer_goods": {
+                    "value": 36,
+                    "confidence": 100,
+                    "source": "Page 29 (Portfolio Breakdown By Industry)"
+                  },
+                  "it": {
+                    "value": 23,
+                    "confidence": 100,
+                    "source": "Page 29 (Portfolio Breakdown By Industry)"
+                  },
+                  "financials": {
+                    "value": 14,
+                    "confidence": 100,
+                    "source": "Page 29 (Portfolio Breakdown By Industry)"
+                  },
+                  "healthcare": {
+                    "value": 21,
+                    "confidence": 100,
+                    "source": "Page 29 (Portfolio Breakdown By Industry)"
+                  },
+                  "services": {
+                    "value": 7,
+                    "confidence": 100,
+                    "source": "Page 29 (Portfolio Breakdown By Industry, labeled 'Service')"
+                  },
+                  "other": {
+                    "value": 0,
+                    "confidence": 100,
+                    "source": "Page 29 (No 'Other' category shown in industry breakdown)"
+                  }
+                }
+              },
+              "notes": {
+                "data_coverage": "All fields marked 'Not found' were either not present in the document or only provided as cumulative/since-inception values. YTD/Current period breakdowns for metrics like DPI/RVPI/TVPI are typically reported annually in private equity.",
+                "confidence_rationale": "Confidence scores of 100 reflect direct extraction from tables/charts. Scores of 85-95 reflect inferred or aggregated data (e.g., GP name, YTD distributions).",
+                "ilpa_compliance": "Document is a template/guide, not an actual fund report. Extracted data aligns with ILPA Version 1.1 (Sept 2016) sample reports (Pages 17-33)."
+              },
+              "_llm_model": "mistral-large-latest",
+              "_template": "template_2",
+              "metadata": {
+                "total_fields_extracted": 43,
+                "average_confidence": 94.8,
+                "template_used": "template_2"
+              },
+              "_flat_data": [
+                [
+                  "portfolio_executive_summary.reporting_metadata.reporting_date",
+                  "2015-12-31",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.reporting_metadata.quarter",
+                  "Q4 2015",
+                  100,
+                  "Pages 18-22 (Financial Statements for December 31, 2015)"
+                ],
+                [
+                  "portfolio_executive_summary.reporting_metadata.general_partner",
+                  "Not explicitly named (referred to as 'Best Practices Fund II, L.P.')",
+                  85,
+                  "Pages 17-33 (General references to 'General Partner' without explicit name)"
+                ],
+                [
+                  "portfolio_executive_summary.reporting_metadata.ilpa_gp",
+                  "Not found",
+                  0,
+                  "N/A"
+                ],
+                [
+                  "portfolio_executive_summary.firm_summary.assets_under_management",
+                  "$12.7b",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.firm_summary.active_funds",
+                  8,
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.firm_summary.active_portfolio_companies",
+                  212,
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.fund_name",
+                  "Best Practices Fund II, L.P.",
+                  100,
+                  "Pages 17, 29 (Financial Statements and Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.fund_currency",
+                  "USD ($)",
+                  100,
+                  "Pages 18-22 (All financial tables use '$' notation)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_commitments",
+                  "$858.3m",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_drawdowns.current",
+                  "$684.7m (Since Inception)",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_drawdowns.ytd",
+                  "$250.375m (2015 YTD from Page 22)",
+                  95,
+                  "Page 22 (A.2 Commitment Reconciliation)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_drawdowns.since_inception",
+                  "$684.7m",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.remaining_commitments",
+                  "$173.6m",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_number_of_investments",
+                  17,
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_distributions.current",
+                  "$218.5m (Since Inception)",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_distributions.ytd",
+                  "$250.375m (2015 YTD from Page 22)",
+                  95,
+                  "Page 22 (A.1 NAV Reconciliation)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_distributions.since_inception",
+                  "$218.5m",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.distributions_as_percent_of_drawdowns.current",
+                  "32%",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.distributions_as_percent_of_drawdowns.ytd",
+                  "Not found (only cumulative provided)",
+                  0,
+                  "N/A"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.distributions_as_percent_of_drawdowns.since_inception",
+                  "32%",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.distributions_as_percent_of_commitments.current",
+                  "25%",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.distributions_as_percent_of_commitments.ytd",
+                  "Not found (only cumulative provided)",
+                  0,
+                  "N/A"
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.distributions_as_percent_of_commitments.since_inception",
+                  "25%",
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.dpi.current",
+                  0.3,
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.dpi.ytd",
+                  "Not found",
+                  0,
+                  "N/A"
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.dpi.since_inception",
+                  0.3,
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.rvpi.current",
+                  0.9,
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.rvpi.ytd",
+                  "Not found",
+                  0,
+                  "N/A"
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.rvpi.since_inception",
+                  0.9,
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.tvpi.current",
+                  1.2,
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.tvpi.ytd",
+                  "Not found",
+                  0,
+                  "N/A"
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.tvpi.since_inception",
+                  1.2,
+                  100,
+                  "Page 29 (Supplemental Schedule: Portfolio Executive Summary)"
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_region.north_america",
+                  72,
+                  100,
+                  "Page 29 (Portfolio Breakdown By Region)"
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_region.europe",
+                  18,
+                  100,
+                  "Page 29 (Portfolio Breakdown By Region)"
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_region.asia",
+                  6,
+                  100,
+                  "Page 29 (Portfolio Breakdown By Region)"
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_region.other",
+                  3,
+                  100,
+                  "Page 29 (Portfolio Breakdown By Region, labeled 'Other')"
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.consumer_goods",
+                  36,
+                  100,
+                  "Page 29 (Portfolio Breakdown By Industry)"
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.it",
+                  23,
+                  100,
+                  "Page 29 (Portfolio Breakdown By Industry)"
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.financials",
+                  14,
+                  100,
+                  "Page 29 (Portfolio Breakdown By Industry)"
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.healthcare",
+                  21,
+                  100,
+                  "Page 29 (Portfolio Breakdown By Industry)"
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.services",
+                  7,
+                  100,
+                  "Page 29 (Portfolio Breakdown By Industry, labeled 'Service')"
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.other",
+                  0,
+                  100,
+                  "Page 29 (No 'Other' category shown in industry breakdown)"
+                ],
+                [
+                  "notes.data_coverage",
+                  "All fields marked 'Not found' were either not present in the document or only provided as cumulative/since-inception values. YTD/Current period breakdowns for metrics like DPI/RVPI/TVPI are typically reported annually in private equity.",
+                  100,
+                  ""
+                ],
+                [
+                  "notes.confidence_rationale",
+                  "Confidence scores of 100 reflect direct extraction from tables/charts. Scores of 85-95 reflect inferred or aggregated data (e.g., GP name, YTD distributions).",
+                  100,
+                  ""
+                ],
+                [
+                  "notes.ilpa_compliance",
+                  "Document is a template/guide, not an actual fund report. Extracted data aligns with ILPA Version 1.1 (Sept 2016) sample reports (Pages 17-33).",
+                  100,
+                  ""
+                ],
+                [
+                  "_llm_model",
+                  "mistral-large-latest",
+                  100,
+                  ""
+                ],
+                [
+                  "_template",
+                  "template_2",
+                  100,
+                  ""
+                ],
+                [
+                  "metadata.total_fields_extracted",
+                  "43",
+                  100,
+                  ""
+                ],
+                [
+                  "metadata.average_confidence",
+                  "94.8",
+                  100,
+                  ""
+                ],
+                [
+                  "metadata.template_used",
+                  "template_2",
+                  100,
+                  ""
+                ]
+              ]
+            },
+            "extraction_info": {
+              "text": "\u2550\u2550\u2550 PAGE 1 \u2550\u2550\u2550\nINSTITUTIONAL LIMITED\nPARTNERS ASSOCIATION\nQuarterly Reporting Standards\nVersion 1.1\nRevised in September 2016\nOriginally Released in October 2011\nConfidential and Proprietary\n\n\u2550\u2550\u2550 PAGE 2 \u2550\u2550\u2550\nTable of Contents\nI. EXECUTIVE SUMMARY 3\nII. GUIDELINES 5\nSummary Letter 6\nBalance Sheet 6\nSchedule of Investments 7\nStatement of Operations 8\nStatement of Cash Flows 8\n9\nFootnotes 10\nSupplemental Management Reports 11\nExecutive Summary Firm and Fund Level Data 11\nSupplemental Schedule of Investments 12\nPortfolio Company Update 13\nReporting Template for Fees, Expenses, & Carried Interest 15\nIII. SAMPLE REPORTS 16\nBalance Sheet 18\nSchedule of Investments 19\nStatement of Operations 20\nStatement of Cash Flows 21\n22\nFootnotes 23\nIV. SAMPLE SUPPLEMENTAL MANAGEMENT REPORTS 28\nExecutive Summary - Firm and Fund Level Data 29\nSupplemental Schedule of Investments 30\nPortfolio Company Update 31\nReporting Template for Fees, Expenses, & Carried Interest 32\nV. APPENDIX 34\nPortfolio Company Checklist 35\nNew in Version 1.1\no Reflected new content from the ILPA Reporting Template (released in Jan. 2016)\no Miscellaneous formatting updates\no Streamlined the content by removing references to separate ILPA initiatives\n(which all still available on ilpa.org)\nInstitutional Limited Partners Association\n700 12th Street NW, Suite 700\nWashington, D.C., 20005\nUSA\nPhone: (416) 941-9393\nFax: (416) 941-9307\nEmail: info@ilpa.org\nDisclaimer: All interested parties should, subject to applicable laws, respect the confidentiality of\ninformation contained in reports provided in connection with investments. The Quarterly Reporting\nStandards (QRS) reflect the view of the participants involved in the creation thereof as to best practices with\nrespect to fund reporting. However, no limited partner should utilize the QRS as a substitute for its own\ndetermination as to what information such limited partner will need or desire with respect to any particular\ninvestment. Further, no representation is made that the QRS, when provided by general partners to their\ninvestor base, will include all desirable information or will be fully inclusive of all information needed for any\nlimited partner to effectively monitor its investments.\n\n\u2550\u2550\u2550 PAGE 3 \u2550\u2550\u2550\nSECTION I\nEXECUTIVE SUMMARY\nVersion 1.1 Revised September 2016 3\n\n\u2550\u2550\u2550 PAGE 4 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS EXECUTIVE SUMMARY\nExecutive Summary\nAs fiduciaries, Limited Partners (LPs) require a basic level of financial details to inform\nand guide their Boards, Trustees, Portfolio Managers, and Risk Departments. When\nperiodic reporting from their fund managers (GPs) fall short of these requirements,\nLPs typically make follow-on inquiries for further detail into their funds and\ninvestments.\nThe ILPA has developed a suite of reporting guidelines that will increase\nstandardization in the private equity industry. This is part of the ILPAs efforts to\ncreate greater industry efficiencies, improve the level of disclosure, and reduce the\nexpense of administering and monitoring private equity investments. This\ndocument focuses on best practices related to the series of financial statements and\nsupplemental reports that are provided to LPs on a quarterly basis (Quarterly\nReporting Package).\nThese guidelines indicate the minimum amount of disclosures expected by LPs.\nThese best practices in quarterly While the regulatory requirements for each jurisdiction may force GPs to alter these\nreporting are designed to augment,\nsuggested formats, the hope is that the core data will still be preserved in the new\nnot to supersede, IFRS, GAAP,\nformat.\nregulatory or tax reporting\nrequirements or limitations.\nContents of an effective Quarterly Reporting Package include (but are t limited to):\no Summary Management Discussion and Analysis Letter\no Financial Package\n\uf0b7 Balance Sheet\n\uf0b7 Period End Schedule of Investments\n\uf0b7 Statement of Operations\n\uf0b7 Statement of Cash Flows\n\uf0b7\n\uf0b7 Appropriate Footnote Disclosures\no Supplemental Management Reports\n\uf0b7 Executive Summary Firm and Fund Level\n\uf0b7 Supplemental Schedule of Investments\n\uf0b7 Portfolio Company Update (one for each active portfolio company)\n\uf0b7 Reporting Template for Fees, Expenses, & Carried Interest (released in\nJan. 2016)\nCriteria for each of these statements are provided in the next section, followed by\nsample reports.\nIn addition to the required components of the package, and in-line with the ILPA\nPrinciples, the timing of the package delivery is also important. For draft financials\nas of a non-audit period-end, the expected delivery is 60 days after quarter-end with\na targeted delivery of 45 days. Fund of Funds would be given additional time to\naggregate their underlying funds data, with a maximum deadline of 90 days after\nquarter-end and a targeted delivery of 75 days. Audited financials would add 30\ndays to the expected and targeted delivery deadlines outlined above.\nVersion 1.1 Revised September 2016 4\n\n\u2550\u2550\u2550 PAGE 5 \u2550\u2550\u2550\nSECTION II\nQUARTERLY PACKAGE GUIDELINES\nVersion 1.1 Revised September 2016 5\n\n\u2550\u2550\u2550 PAGE 6 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS PACKAGE GUIDELINES\nSummary Letter\n(Provided quarterly with each package, unaudited)\nA key component of the package, (though not shown later in the sample reports), is\nthe inclusion of a Summary Portfolio Update Letter. This letter should, at a minimum,\ninclude:\n\uf0b7 Management discussion of key drivers of activity and performance during the\nquarter that bridges the activity between the two period ends\no Summary of capital activity (cash flows)\no Transactions closed or pending\n\uf0b7 Explanation of extraordinary movements\n\uf0b7 Discussion of material events in portfolio companies (that would impact the fund\nas a whole) and/or with the General Partner\no Including portfolio company defaults, LPA breaches, etc.\n\uf0b7 Consistent with the ILPA Principles, a discussion of any material changes in risk\nfactors at the fund level, including:\no Concentration risk at fund level\no Foreign exchange risk at fund level\no Leverage risk at fund level\no Realization risk at fund level\no Extra-financial risks, including environmental, social, and corporate\ngovernance risks at the fund level\no This information should be provided annually, though more immediate\nreporting may be required for material events\nBalance Sheet\n(Provided quarterly, audited annually)\nFinancial Statements should be\nprepared for the legal entity to which Ideally, for the Balance Sheet and all financial statements provided in the package,\nthe Investor has committed. In there should be statements for the fund/vehicle through which the LP has invested,\naddition, consolidated statements\nas well as a consolidated statement for the entire fund (to the extent there is\nare preferred, when possible, for\nconsistent ownership), with exceptions only for regulatory and/or tax reasons.\nexposure.\nThough all items in the best practices package must adhere to relevant accounting\nstandards, presentation is often left open to some interpretation. To that end, a\nbalance sheet should include the following components:\n\uf0b7 Current period end vs. prior audited period end columns\no Comparitive column should be for most recent audit period\no Requires comparitive or prior year end schedule of investments\n\uf0b7 Inclusion of receivables and payables to affiliates\n\uf0b7 Inclusion of investments at cost and fair value\n\uf0b7 Inclusion of fund level debt\nVersion 1.1 Revised September 2016 6\n\n\u2550\u2550\u2550 PAGE 7 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS PACKAGE GUIDELINES\nSchedule of Investments\n(Provided quarterly, audited annually)\nAs part of the quarterly package, a properly detailed schedule of investments should\nbe included. The schedule should be placed after the balance sheet and include\nThe schedule of investments allows\nvaluations that are updated quarterly. If fair value is not available, a separate\nthe General Partner the opportunity\nto provide Limited Partners the schedule would be necessary. Please note that the schedule of investments included\nhighest levels of transparency. in the core package is targeted to those items consistent with audited financials. Full\ntransparency is achieved in the use of an unaudited detailed schedule of\ninvestments in the Supplemental Management Reports.\nValues presented in both the core and supplemental schedule of underlying\ninvestments should be at the fund level and reconcile to the balance sheet.\nThe basic requirements within the core schedule are as follows:\n\uf0b7 Full detail on unrealized investments\no Detail should be at legal entity level, not LP share\n\uf0b7 Name of the Investment\no Name can be omitted if absolutely required, but a unique identifier must\nbe used and be consistent from quarter to quarter; investments should\nnot be grouped\n\uf0b7 Debt and Equity positions should be reported separately\no Include number of shares if applicable\no Should the investment be structured in a more complicated manner,\ndetail may be moved to the individual Portfolio Company Update\n\uf0b7 Fund Ownership % (fully diluted)\n\uf0b7 Initial Investment Date\n\uf0b7 Numeric Data on each investment to include:\no Total committed to investment\no Total invested (historical cost)\no Current cost\no Reported Value\no Realized proceeds\nThis list is not meant to be all-inclusive or override any IFRS or GAAP requirements.\nLimited Partners would prefer to have as much of the package audited as possible,\nthough the need to limit audit expenses is understood. Certain items, such as initial\ninvestment date, are not explicitly required under the audit guidelines and can be\nmoved to the detailed schedule of investments in the Supplemental Management\nReports. There is no need to repeat disclosure of any items included on at least one\nof the schedules.\nVersion 1.1 Revised September 2016 7\n\n\u2550\u2550\u2550 PAGE 8 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS PACKAGE GUIDELINES\nStatement of Operations\n(Provided quarterly, audited annually)\nThe format of the statement of operations is driven heavily by relevant accounting\nstandards. However, there are some best practices often included in this report.\n\uf0b7 Show current period, year-to-date and since inception information\no Since inception information is not required by certain accounting\nstandards; information need not be included in audited package if\nAccount Statement\n\uf0b7 Breakout investment income\no Separate portfolio interest and dividends independent of other interest\n\uf0b7 Breakout of expenses\no Separate fees into their individual components, including management\nfees, broken deal fees, advisory/director fees, monitoring fees, etc.\n\uf0b7 Net operating gain/loss\n\uf0b7 Breakout of gains/(losses) on investments\no Breakout of realized/unrealized gain/loss (independent of F/X, showing\nThe formats for the Statement of\nF/X independently)\nOperations and the Statement of\nCash Flows are heavily depended on\nthe accounting standards of the Statement of Cash Flows\n(Provided quarterly, audited annually)\nThe format of the statement of operations is also driven heavily by relevant\naccounting standards, as well as the investment strategy of the fund. However, there\nare some best practices often included in this report.\n\uf0b7 Show current period, year to date, and since inception information\no Since Inception information is not required by certain accounting\nstandards; information need not be included in audited package if\nAccount Statement\n\uf0b7 Breakout of cash flows from operating activities\n\uf0b7 Breakout of cash flows from financing activities\n\uf0b7 Cash and cash equivalents\n\uf0b7 Supplemental cash flow information\no Supplemental disclosure could include non-cash related adjustments\nShould the General Partner provide a detailed quarterly Partners Capital Account\nstatement as shown within these Best Practices (with the relevant cash flow\ncomponents), any additional details beyond audit requirements are not necessary.\nVersion 1.1 Revised September 2016 8\n\n\u2550\u2550\u2550 PAGE 9 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS PACKAGE GUIDELINES\n(Provided quarterly to individual Limited Partners)\naccount\nstatement . Should the statement not be in fair value, a supplementary\nschedule should be provided.\nThough not currently subject to accounting standards, the PCAP is paramount to the\nrecords of the Limited Partners. The PCAP should encompass the necessary\ncomponents for a Limited Partner to assess the value of their investments as well as\nreconcile the proper allocation of flows across the relevant periods.\nThe format used in the sample PCAP\n(found in another section of this\ndocument) matches Sections A.1 & A.2 of\n(but are not be limited to):\nexpenses, and carried interest (the \uf0b7 Consolidated reporting, if applicable, for all Limited Partner investments,\n. For the avoidance of doubt,\nincluding alternative investment vehicles\nplease note that the ILPA is not suggesting\nthat the Template is a substitute for \uf0b7 Current period, year-to-date and since inception information\nPCAPs. Rather, Sections A.1 & A.2 \uf0b7 Breakout of the Total Fund by LP, GP, and Total\nrepresent one (of many) potential formats o This sample shows the PCAP for an individual Limited Partner; The same\nthat could be used.\ninformation may be presented in a combined statement of Partners\nCapital as long as all relevant rows of data are included\n\uf0b7 Bridge the prior net asset value to the current net asset value\no Disclose any adjustments made prior to Beginning Balance\n\uf0b7 Components to include:\no\no Accrued carried interest should partnership liquidate\no Breakout of contributions and distributions for the relevant period\no\n\uf0a7 Include breakout of relevant fees and expenses; these items are\nnot always finalized when the Capital Call or Distribution is made\no Commitments of Limited Partner, General Partner and Total Fund\n\uf0a7 Indicate adjustments, if any, due to expired capital, write-offs,\nadjustments, etc.\no Schedule of changes in individual unfunded commitment\n\uf0a7 Limited Partners need to have a quarterly reconciliation of their\nUnfunded Balance. Impacts of cash flows to commitment are not\nalways disclosed in the capital call and distribution process, or\nare modified at period end.\nPlease note that these Best Practices are focused on the disclosure requirements\nneeded by the Limited Partners. Any aggregate schedules required as part of an\naudited statement are not included in these Best Practices samples.\nVersion 1.1 Revised September 2016 9\n\n\u2550\u2550\u2550 PAGE 10 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS PACKAGE GUIDELINES\nFootnotes\n(Relevant footnotes provided quarterly, all footnotes provided annually)\nTo fully support the balance sheet and other reporting schedules, a complete and\ndetailed set of footnote disclosures is required.\nThese requested footnotes are not\nexhaustive, but target key disclosures\nFootnote disclosures would include (but are not limited to):\nrequired of best practices reporting\npackages.\nNote 1 - Organization / Fund Details\n\uf0b7 Key dates (including formation, termination, extensions, commitment period\nand follow-on period dates), structure, commitment amounts and other relevant\nfund details\n\uf0b7 Tables may be included if they further understanding of the organizational\nstructure\nNote 2 - Significant Accounting Policies\n\uf0b7 Accounting principles, fair value measurement and other relevant details\nNote 3 - Partners' Capital\n\uf0b7 Limi\n\uf0b7 Tables may be included if they further understanding of the commitment\nstructure\nNote 4 - Management Fee and Other Fee Breakdown\n\uf0b7 Management fees / broken or consumated deal fees / monitoring fees / fee\noffsets\n\uf0b7 Description of \"other\" fees\n\uf0b7\nadditional guidance on fee disclosures\nNote 5 - Related Party and Other Transactions\n\uf0b7 Detail of related party transactions and/or receivables/payables\n\uf0b7 Notation of fund level debt and other potential obligations or guarantees\nNote 6: Financial Highlights\n\uf0b7 Net IRR at the fund level\nNote 7: Carry Detail\n\uf0b7 Fund level carry paid and/or accrued; amount escrowed if applicable\n\uf0b7 Detailed description of carry calculation (waterfall)\no Include table if more appropriate\n\uf0b7\nadditional guidance on carry disclosures\nNote 8: Advisory Board\n\uf0b7 List of members (if not against any legal or LPA restrictions)\n\uf0b7 Notation of action items or votes taken\nNote 9: Subsequent Events\n\uf0b7 Included if material\nThe items listed above are of key concern to LPs, who would prefer to have these\nincluded in the annual audited statements. However, should audit, legal or\npartnership issues require, certain items, such as Note 8 above, can be provided in\nthe quarterly materials outside the scope of the audited financials.\nVersion 1.1 Revised September 2016 10\n\n\u2550\u2550\u2550 PAGE 11 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS PACKAGE GUIDELINES\nSupplemental Management Reports\n(Supplemental reports are unaudited and unless otherwise noted, provided\nquarterly)\nExecutive Summary Firm and Fund Level Data\n(Fund Level data provided quarterly, firm level data updated annually)\nSupporting materials to the quarterly reporting package should include an\nexecutive summary that highlights the key firm and fund level information (using\ntables and graphics). This supplemental report is most often used by Limited\nPartners to convey a high level status of the fund.\nThe Executive Summary should include the following:\n\uf0b7 Firm Data\no Assets under management\n\uf0a7 Defined as reported value of current investments plus unfunded\ncommitments\no Active funds\no Active portfolio companies\n\uf0b7 Fund Level Data\no Total commitments\no Total drawdowns since inception\n\uf0a7 Gross drawdowns\no Remaining commitments\no Total number of investments since inception\no Total distributions\n\uf0a7 Percentage of total drawdowns\no Gross distributions as percent of gross drawdowns\n\uf0a7 Percentage of committed capital\no Gross distributions as percent of total commitments\n\uf0b7 Key Valuation Metrics, including\no TVPI: Total Value to Paid In\no RVPI: Residual Value to Paid In\no DPI: Distributions to Paid In\n\uf0b7 Historical Fund Performance\no The provided sample highlights TVPI over time in a graphical depiction.\nAlternatives would include both TVPI and Net IRR over time.\n\uf0b7 Portfolio breakdown by industry and region\no The provided sample highlights the portfolio breakdown, by invested\ncapital, by industry and region invested.\nVersion 1.1 Revised September 2016 11\n\n\u2550\u2550\u2550 PAGE 12 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS PACKAGE GUIDELINES\nSupplemental Schedule of Investments\nPlease note that the schedule of investments included in the core package is limited\nto those items consistent with audited financials. This schedule, which covers\nrecommended data points that exceed the items found in the audited statements,\nis at the fund level, and must tie to the balance sheet.\nThe supplemental schedule of investments includes the following:\n\uf0b7 Full detail on realized and unrealized investments\n\uf0b7 Security Type / # of shares (if not reported elsewhere)\n\uf0b7 LP Ownership % (fully diluted)\no This is the only column in this schedule that is Limited Partner specific\nwith the intent of determining the results of opt-outs in the Fund. This\ninformation can also be depicted in a separate schedule for ease of\nreporting. LP ownership can be represented as % of total invested.\n\uf0b7 Initial Investment Date (if not reported elsewhere)\n\uf0b7 Final Exit Date for realized investments\n\uf0b7 Investment Data (at fund level, if not reported elsewhere)\n\uf0b7 Valuation Driver\no Primary driver of valuation methodology such as market multiples, DCF,\npublic market price, etc. Sample list is only an indicator of possible\ndescriptions; Final list at discretion.\n\uf0b7 Performance Metrics\no Period change in valuation\no Period change in cost\no Unrealized gains/(losses) & accrued interest\no Movement summary\n\uf0a7 Primary driver of movement, not an indicator of full valuation\nmethodology. Sample list only an indicator of possible\ndescriptions; Final list at GP discretion.\no Current period investment multiple\n\uf0a7 Not needed if components are provided\no Prior period investment multiple\n\uf0a7 Not needed if components are provided\no Since inception Net IRR\nSome General Partners provide much of the above data, as well as the portfolio\ncompany data outlined in the attached Appendix, to their Limited Partners on a\nquarterly basis in a standardized excel template. This template could be used as an\nalternative to the detailed supplemental reporting package, and would be\nencouraged to be made available to Limited Partners on a quarterly basis.\nVersion 1.1 Revised September 2016 12\n\n\u2550\u2550\u2550 PAGE 13 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS PACKAGE GUIDELINES\nPortfolio Company Update\nSupporting materials to the Quarterly Reporting Package would include\nsupplementary pages covering the details of each active investment in the portfolio.\nThough the Portfolio Company These pages would be preceded by an executive summary (discussed above) that\nUpdate sample on page 31 is\nhighlights the key information on the portfolio companies to follow. Information in\ncondensed to one page, additional\nquarterly reports should be structured consistently with information provided\nuse of graphs or charts can be added\nin order to convey the appropriate through other channels, such as the annual report, data room or intranet site.\ninformation.\nEach page is designed to give the Limited Partner a qualitative and quantitative\nsynopsis on each investment and should include:\n\uf0b7 Company Overview\no Company description and headquarters\n\uf0a7 Note any discrepancy between corporate and tax headquarters\n\uf0a7 Industry (GICS classification)\no Acquisition details (table or chart)\n\uf0a7 Including initial investment date, multiples, equity breakdown\n\uf0a7 Acquisition thesis\n\uf0a7 Co-Sponsors (incl. individual ownership %, if available)\n\uf0a7 Notwithstanding any non-disclosure restrictions\n\uf0a7 Deal Partners at GP (including titles and Board seat, if any)\no Current Metrics (table or chart with data as of trailing-twelve months)\n\uf0a7 Including revenue, EBITDA, debt, CAGR\n\uf0a7 Company Assessment (On Plan, Above Plan, Below Plan;\nregulatory issues notwithstanding)\no Expectations (notwithstanding prohibitions against forward-looking\nstatements or commercially sensitive information)\n\uf0a7 Cash flow needs or distributions\n\uf0a7 Exit assumptions; date/type\n\uf0b7 Financial Tables\no Investment structure\no Capitalization table\n\uf0a7 Table format is not rigid, please adjust as appropriate for\nrelevant portfolio company\no Financial results\n\uf0a7 Table format is not rigid, please adjust as appropriate for\nrelevant portfolio company\no Calculations: DPI, RVPI, TVPI, DCC, PICC\n\uf0a7 Not needed if all components of calculation are provided\nelsewhere\n\uf0b7 Recent Events and Key Initiatives\no Staffing changes\no Key developments (including covenant issues, if any)\no Achievements, certifications, approvals\n\uf0b7 Valuation bridge (including commentary on changes/drivers)\no How is value add being created in portfolio company over time\n(Increases to EBITDA, multiples or debt payback)\no Valuation methodology and assumptions, including a list of comparable\ncompanies, if applicable\nVersion 1.1 Revised September 2016 13\n\n\u2550\u2550\u2550 PAGE 14 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS PACKAGE GUIDELINES\n\uf0b7 Risk Assessment / Update\no In accordance with the ILPA Principles, a risk assessment should be\ncompleted at the Fund level annually, at a minimum. It is expected these\nportfolio company reports should follow the same guidelines, with\nqualitative discussion of any material changes in risk factors. Sample\nportfolio company risks would be determined by the stage and strategy\nof each investment, but may include:\n\uf0a7 Foreign exchange risk at portfolio company level\n\uf0a7 Leverage risk at portfolio company level\n\uf0a7 Realization risk at portfolio company level\n\uf0a7 Strategy risk at portfolio company level\n\uf0a7 Reputation risk at portfolio company level\n\uf0a7 Extra-financial risks, including environmental, social and\ncorporate governance risks at the fund and portfolio level\n\uf0a7 Additional information may be provided through other\nchannels\n\uf0a7 More immediate reporting may be required for material events\nSome General Partners provide much of the above data, as well as the portfolio\ncompany data outlined in the attached Appendix, to their Limited Partners on a\nquarterly basis in a standardized excel template. This template could be used as an\nalternative to the detailed supplemental reporting package, and would be\nencouraged to be made available to Limited Partners on a quarterly basis.\nVersion 1.1 Revised September 2016 14\n\n\u2550\u2550\u2550 PAGE 15 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS PACKAGE GUIDELINES\nReporting Template for Fees, Expenses, & Carried Interest\nOriginally created in January 2016, the ILPA Reporting Template (the Template )\nwas developed as a usable reporting format for promoting a more uniform fee and\nexpense disclosure to LPs.\nTemplate Goals\nThe Template is organized into two sections (A & B). Each section has a discrete\ngoal, providing LPs with:\nA. The ability to monitor, aggregate, and analyze their direct costs of\nparticipating in a given private equity fund (a Fund ). These values are\npresented within the framework of a typical partners capital account\nstatement, providing valuable context to the reported fees.\nB. A summary of the GPs sources of economics regarding the Fund and the\ninvestments made by the Fund (incl. reimbursements & any fees not subject\nto offset).\nTemplate Guidance\nDetailed guidance for the Reporting The Template, provided as a separate document on ilpa.org, includes detailed\nTemplate, including recommendations guidance for the recommended reporting frequency, treatment of historical data,\nfor reporting frequency, treatment of definitions, and acceptable alterations. It is strongly recommended that all\nhistorical data, definitions, and\nparticipants familiarize themselves with this guidance before using the Template.\nacceptable alterations, is provided in a\nFurther details are intentionally withheld from this document, as the Template\nseparate document, and can be\ndownloaded from ilpa.org. Guidance is expected to be frequently updated to address continuous industry\nfeedback.\nCapital Account Statement\nPlease note, the format used in the sample Partners Capital Account Statement\n(PCAPs), shown in a different section of this document, matches Sections A.1 & A.2\nof the Template. For the avoidance of doubt, please note that the ILPA is not\nsuggesting that the Template is a substitute for PCAPs. Rather, Sections A.1 & A.2\nrepresent one (of many) potential formats that could be used.\nVersion 1.1 Revised September 2016 15\n\n\u2550\u2550\u2550 PAGE 16 \u2550\u2550\u2550\nSECTION III\nSAMPLE REPORTS\nThe following sample financial statements and supplemental schedules\nare indicative of best in class reporting provided by General Partners.\nAs the intent is to show many situations that may arise in a partnership,\nthe numbers do not tie across samples.\nIt is not the intent of the ILPA to force all General Partners to produce\ntheir statements in this exact format. However, it should be used to\nunderstand the level of disclosure required by the Limited Partners and\nas an ideal to which reporting transparency can achieve.\nVersion 1.1 Revised September 2016 16\n\n\u2550\u2550\u2550 PAGE 17 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE REPORTS\nFINANCIAL STATEMENTS\nDECEMBER 31, 2015\nBEST PRACTICES FUND II, L.P.\n(and all affiliated partnerships)\nFinancial Statements\nDecember 31, 2015\n(Unaudited)\nVersion 1.1 Revised September 2016 17\n\n\u2550\u2550\u2550 PAGE 18 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE REPORTS\nBalance Sheet\nBest Practices Fund II, L.P.\nDecember 31, 2015\n($ Unaudited)\nCurrent Period End Prior Year End Audited\n12/31/2015 12/31/2014\nASSETS\nInvestments at Cost $ 38,000,000 $ 39,000,000\nUnrealized Gain / Loss on Investments 3,300,000 2,900,000\nInvestments at Fair Value 41,300,000 41,900,000\nCash and Cash Equivalents 8,000,000 250,000\nOther Assets 2,000,000 50,000\nReceivable from Affiliates 100,000 25,000\nTotal Assets $ 51,400,000 $ 42,225,000\nLIABILITIES AND PARTNERS CAPITAL\nLiabilities\nAccounts Payable and Accrued Expenses $ 2,910,000 $ 4,120,000\nNotes/Revolver Payable 50,000 75,000\nPayable to Affiliates 7,600,000 725,000\nTotal Liabilities 10,560,000 4,920,000\nPartners' Capital\nGeneral Partner 443,400 396,050\nLimited Partners 40,396,600 36,908,950\nTotal Partners' Capital 40,840,000 37,305,000\nTotal Liabilities and Partners' Capital $ 51,400,000 $ 42,225,000\nVersion 1.1 Revised September 2016 18\n\n\u2550\u2550\u2550 PAGE 19 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE REPORTS\nSchedule of Investments\nPlease note that this schedule of investments is consistent with the items typically presented in audited financials. However, full transparency is achieved through the\nuse of an unaudited, detailed schedule of investments, which is described in the Supplemental Management Reports (found in a subsequent section of this document).\nBest Practices Fund II, LP - 12/31/2015\nInvestment Data (Expressed in $)\nFund Initial\nCompany Security Number of\nOwnership % Investment Fund Total Current Cost Reported Realized\nName Type Shares\n(Fully Diluted) Date Commitment Invested (A) (B) Value (C) Proceeds (D)\nCompany 1 Equity 1,250,000 55% 3/15/2007 5,000,000 5,000,000 4,500,000 4,700,000 1,000,000\nCompany 1 Debt 12,789 55% 6/15/2007 5,000,000 5,000,000 5,000,000 5,200,000 500,000\nCompany 3 Equity 12% 9/15/2007 5,000,000 5,000,000 2,500,000 2,700,000 0\nCompany 3 Debt 12% 9/15/2007 5,000,000 5,000,000 5,000,000 5,200,000 1,000,000\nCompany 4 Equity 90% 2/15/2008 5,000,000 5,000,000 5,000,000 10,000,000 0\nCompany 5 Equity 80% 5/15/2008 4,000,000 4,000,000 4,000,000 0 0\nCompany 6 Equity 65% 8/15/2008 4,000,000 4,000,000 4,000,000 5,000,000 0\nCompany 7 Equity 100% 11/15/2008 4,000,000 4,000,000 4,000,000 4,500,000 0\nCompany 8 Equity 60% 6/15/2010 8,000,000 4,000,000 4,000,000 4,000,000 250,000\nGrand Total: 45,000,000 41,000,000 38,000,000 41,300,000 2,750,000\nVersion 1.1 Revised September 2016 19\n\n\u2550\u2550\u2550 PAGE 20 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE REPORTS\nStatement of Operations\nBest Practices Fund II, L.P.\nStatement of Operations\nFor the periods ending December 31, 2015\n($ Unaudited)\nCurrent Period Year-to-Date Since Inception\n(Oct. 1, 2015 (Jan. 1, 2015 - (Feb. 25, 2007 -\nDec. 31, 2015) Dec. 31, 2015 Dec. 31, 2015\nIncome\nPortfolio Interest Income $ 16,000 $ 64,000 $ 160,000\nPortfolio Dividend Income 24,000 96,000 240,000\nOther Interest Earned 4,000 16,000 36,000\nTotal income 44,000 174,000 436,000\nExpenses\nManagement Fees, Net 250,000 1,000,000 3,000,000\nBroken Deal Fees 20,000 100,000 350,000\nInterest 2,000 8,000 20,000\nProfessional Fees 10,000 35,000 50,000\nBank Fees 15,000 35,000 60,000\nAdvisory Directors' Fees 5,000 30,000 40,000\nInsurance 2,000 8,000 20,000\nTotal expenses 304,000 1,216,000 3,540,000\nNet Operating Income / (Deficit) (260,000) (1,042,000) (3,104,000)\nRealized and Unrealized Gain / (Loss) on Investments\nNet Realized Gain / (Loss) on Investments 1,253,152 1,253,152 2,500,000\nNet Change in Unrealized Gain / (Loss) on Investments 75,000 300,000 3,300,000\nNet Realized Gain / (Loss) due to F/X 0 0 0\nNet Realized and Unrealized Gain / (Loss) on Investments 1,328,152 1,553,152 5,800,000\nNet Increase / (Decrease)\nin Partners' Capital Resulting from Operations $ 1,068,152 $ 511,152 $ 2,696,000\nVersion 1.1 Revised September 2016 20\n\n\u2550\u2550\u2550 PAGE 21 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE REPORTS\nStatement of Cash Flows\nBest Practices Fund II, L.P.\nStatement of Cash Flows\nFor the periods ending December 31, 2015\n($ Unaudited)\nCurrent Period Year-to-Date Since Inception\n(Oct. 1, 2015 (Jan. 1, 2015 - (Feb. 25, 2007 -\nDec. 31, 2015) Dec. 31, 2015 Dec. 31, 2015\nCash flows from operating activities:\nfrom operations $72,642,970 $290,571,878 $639,258,133\nAdjustments to reconcile net increase/(decrease) in\nCapital resulting from operations to net cash\nprovided by/(used in) operating activities:\nNet change in unrealized (gain)/loss on investments (46,336,547) (185,346,188) (407,761,613)\nNet realized (gain)/loss on investments (18,662,285) (74,649,141) (164,228,110)\nChanges in operating assets and liabilities:\nIncrease/(decrease) in accounts payable and\naccrued expenses (4,757) (19,030) (41,865)\n(Increase)/decrease in due from affiliates (65,956) (263,823) (580,411)\n(Increase)/decrease in due from third party (9,548) (38,191) (84,021)\n(Increase)/decrease in due from investment 4,069,485 16,277,940 35,811,469\nPurchase of investments (9,461,947) (37,847,788) (83,265,133)\nProceeds from sale of investments 61,218,061 244,872,245 538,718,938\nNet cash provided by/(used in) operating activities 63,389,476 253,557,903 557,827,387\nCash flows from financing activities:\nCapital contributions 5,852,529 23,410,118 51,502,259\nDistributions (69,061,071) (276,244,285) (601,392,576)\nIncrease/(decrease) in due to limited partners 41,429 165,718 364,579\nIncrease/(decrease) in due to affiliates 31,504 126,017 277,238\n(Increase)/decrease in due from limited partners 15,993 63,972 140,739\nProceeds from loans 17,333,765 69,335,060 152,537,131\nRepayment of loans (17,793,786) (71,175,144) (156,585,317)\nNet cash used in fianancing activities (63,579,636) (254,318,545) (553,155,947)\nNet increase/(decrease) in cash and cash equivalents (190,160) (760,641) 4,671,440\nCash and cash equivalents, beginning of period 4,861,600 5,432,081 0\nCash and cash equivalents, end of period $ 4,671,440 4,671,440 4,671,440\nSupplemental cash flow information\nCash paid for interest for the period ended\nDecember 31, 2015 $ 21,779 87,116 191,656\nVersion 1.1 Revised September 2016 21\n\n\u2550\u2550\u2550 PAGE 22 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE REPORTS\nPlease note, the format used in the sample Partners Capital Account Statement matches Sections A.1 & A.2 of the ILPAs Reporting Template for fees,\nexpenses, and carried interest , which is discussed in other sections of this document. For the avoidance of doubt, please note that the ILPA is not\nsuggesting that the Template is a substitute for PCAPs. Rather, Sections A.1 & A.2 represent one (of many) potential formats that could be used.\nQTD YTD Since Inception QTD YTD Since Inception QTD YTD Since Inception\nBest Practices Fund II, L.P. (Oct-15 - (Jan-15 - (Feb-07 - (Oct-15 - (Jan-15 - (Feb-07 - (Oct-15 - (Jan-15 - (Feb-07 -\nDec-15) Dec-15) Dec-15) Dec-15) Dec-15) Dec-15) Dec-15) Dec-15) Dec-15)\nA. Capital Account Statement for LP #5\nA.1 NAV Reconciliation and Summary of Fees, Expenses & Incentive Allocation LP #5's Allocation of Total Fund Total Fund (incl. GP Allocation) GP's Allocation of Total Fund\nBeginning NAV - Net of Incentive Allocation $45,067,000 $38,196,000 $0 $2,495,281,787 $2,163,081,300 $0 $339,194,377 $276,104,050 $0\nContributions - Cash & Non-Cash 0 5,000,000 35,000,000 0 250,375,000 1,752,625,000 0 375,000 2,625,000\nDistributions - Cash & Non-Cash (input positive values) 1,250,000 5,000,000 19,000,000 62,593,750 250,375,000 1,452,175,000 2,593,750 12,875,000 77,175,000\nTotal Cash / Non-Cash Flows (contributions, less distributions) (1,250,000) 0 16,000,000 (62,593,750) 0 300,450,000 (2,593,750) (12,500,000) (74,550,000)\nNet Operating Income (Expense):\n(187,500) (750,000) (6,625,000) (9,375,000) (37,500,000) (331,250,000) 0 0 0\nManagement Fee Rebate 0 0 0 0 0 0 0 0 0\n(Partnership Expenses - Total): (48,000) (154,780) (548,429) (2,328,750) (4,985,053) (25,072,055) 0 0 0\nTotal Offsets to Fees & Expenses (applied during period): 82,600 346,500 1,538,521 4,140,600 19,227,400 82,424,249 0 0 0\n(Total Management Fees & Partnership Expenses, Net of Offsets & Rebates, Gross of Fee Waiver) (152,900) (558,280) (5,634,908) (7,563,150) (23,257,653) (273,897,806) 0 0 0\nFee Waiver 0 7,500 25,000 0 375,000 1,250,000 0 0 0\nInterest Income 500 1,000 10,000 25,038 50,075 500,750 38 75 750\nDividend Income 10,000 32,380 233,508 500,750 2,503,750 17,030,000 750 3,750 30,000\n(Interest Expense) (2,000) (8,000) (40,000) (100,150) (400,600) (2,003,000) (150) (600) (3,000)\nOther Income/(Expense)+ 1,000 3,000 20,000 50,075 150,225 1,001,500 75 225 1,500\nTotal Net Operating Income / (Expense) (143,400) (522,400) (5,386,400) (7,087,438) (20,579,203) (256,118,556) 713 3,450 29,250\n(Placement Fees) 0 0 (40,000) 0 0 (2,000,000) 0 0 0\nRealized Gain / (Loss) 1,000,000 3,000,000 15,100,000 50,075,000 143,142,253 888,187,906 2,575,000 12,725,000 175,728,250\nChange in Unrealized Gain / (Loss) 1,000,000 5,000,000 20,000,000 62,593,750 250,375,000 1,608,000,000 12,531,160 75,375,000 250,500,000\nEnding NAV - Net of Incentive Allocation $45,673,600 $45,673,600 $45,673,600 $2,538,269,350 $2,536,019,350 $2,538,519,350 $351,707,500 $351,707,500 $351,707,500\nAccrued Incentive Allocation - Starting Period Balance (4,750,000) (3,750,000) 0 0 0 0 337,500,000 275,000,000 0\nIncentive Allocation - Paid During the Period 50,000 250,000 1,250,000 0 0 0 (2,500,000) (12,500,000) (75,000,000)\nReconciliation for Accrued\nAccrued Incentive Allocation - Periodic Change (300,000) (1,500,000) (6,250,000) 0 0 0 15,000,000 87,500,000 425,000,000\nIncentive Allocation\nAccrued Incentive Allocation - Ending Period Balance (5,000,000) (5,000,000) (5,000,000) 0 0 0 350,000,000 350,000,000 350,000,000\nEnding NAV - Gross of Accrued Incentive Allocation $50,673,600 $50,673,600 $50,673,600 $2,538,269,350 $2,536,019,350 $2,538,519,350 $1,707,500 $1,707,500 $1,707,500\nA.2 Commitment Reconciliation: LP #5's Allocation of Total Fund Total Fund (incl. GP Allocation) GP's Allocation of Total Fund\nTotal Commitment $50,000,000 $50,000,000 $50,000,000 $2,503,750,000 $2,503,750,000 $2,503,750,000 $3,750,000 $3,750,000 $3,750,000\nBeginning Unfunded Commitment: $18,500,000 $23,500,000 $50,000,000 $926,387,500 $1,176,762,500 $2,503,750,000 1,387,500 1,762,500 3,750,000\n(Less Contributions) 0 (5,000,000) (35,000,000) 0 (250,375,000) (1,752,625,000) 0 (375,000) (2,625,000)\nPlus Recallable Distributions 0 0 4,000,000 0 0 200,300,000 0 0 300,000\n(Less Expired/Released Commitments) 0 0 0 0 0 0 0 0 0\n+/- Other Unfunded Adjustment 0 0 (500,000) 0 0 (25,037,500) 0 0 (37,500)\nEnding Unfunded Commitment $18,500,000 $18,500,000 $18,500,000 $926,387,500 $926,387,500 $926,387,500 $1,387,500 $1,387,500 $1,387,500\nVersion 1.1 Revised September 2016 22\n\n\u2550\u2550\u2550 PAGE 23 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE REPORTS\nFootnotes\nBest Practices Fund II, L.P.\nNotes to Financial Statements\nDecember 31, 2015\n($ Unaudited)\nNote 1 - Organization / Fund Details\nDelaware to invest in equity and equity related investments in companies primarily in the United States, generally with\nenterprise values between $50 million to over $2 billion, including, without limitation, the making of investments in debt\nobligations of companies in anticipation of the exchange or conversion of such obligations into equity securities of such\nThe Partnership commenced operations on January 10, 2007, and will terminate on December 21, 2017 (the tenth\nanniversary of the Final Closing, which took place on December 21, 2007), unless further extended by the General\nPartner in its sole discretion for one additional one-year period and may be extended for up to two additional one-year\nperiods by the General Partner with the approval of the Advisory Committee.\nNote 2 - Significant Accounting Principles\nThe accompanying financial statements are prepared using accounting principles generally accepted in the United\nmake certain estimates and assumptions that affect the reported amounts of assets and liabilities and disclosure of\ncontingent assets and liabilities at the date of the financial statements and the reported amounts of revenues and\nexpenses during the reporting period. In particular, estimates are made relating to the fair value of investments. Actual\nresults could differ from those estimates.\nNote 3 - Partners' Capital\nOn October 31, 2008, the Partnership had its Final Closing and obtained total capital commitments from its Partners of\n$863,263,457. Pursuant to the Partnership Agreement, the General Partner has committed to provide 0.2% of the total\ncommitments by all Limited Partners.\nInvestments, Partnership Expenses, Management Fees, Placement Fees, Start-Up Costs and other Funding Obligations.\nAny return of capital from an Investment disposed of within eighteen months of its acquisition may either be retained by\nthe Partnership or, if distributed, added back to available commitments and be subject to recall for future investments.\nAvailable Capital is also increased by distributions up to any amounts previously drawn down from the Available Capital\nwith respect to Management Fees, Allocable Contributions, Placement Fees, and Partnership Expenses.\nSince inception, the Partnership has called $283,497,277 from its Partners (representing 32.8% of total committed\nPartnership and the AIV, in accordance with the terms of the Partnership Agreement.\nAs of December 31, 2015, the Partnership has distributed $97,193,430 to its Partners. The Partnership has added back\n$94,723,619 of such distributions to Available Capital. As of September 30, 2015, the Partners have available capital of\nributed\n$75,026,726 to the Partnership, and received distributions of $40,782,411.\nVersion 1.1 Revised September 2016 23\n\n\u2550\u2550\u2550 PAGE 24 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE REPORTS\nFootnotes (Continued)\nBest Practices Fund II, L.P.\nNotes to Financial Statements\nDecember 31, 2015\n($ Unaudited)\nNote 4 - Management Fee and Other Fee Breakdown\nIn accordance with the Partnership Agreement, Management Fees are payable in advance semi-annually on January 1\nand July 1. During the Initial Fee Period, the annual Management Fee will be equal to 1% of Limited Partner\nCommitments up to $1.5 billion and if the Limited Partner Commitments are greater than $1.5 billion the sum of $30\nmillion plus 0.5% of the amount by which the Limited Partner Commitments exceed $1.5 billion. Following the expiration\nof the Initial Fee Period the annual Management Fee shall be 0.5% of the aggregate Net Funded Commitment of the\nLimited Partners. The Management Fee payable with respect to any Management Fee Period and with respect to a\n-\nrata share of all Topping and Break-\n-rata share of all Advisory Fees received by the Manager or its affiliates.\nThe Manager may elect to waive the right to receive a portion of the Management Fees on a semi-annual basis provided\ntimely notice is given to the Limited Partners. In the event that the Manager elects to waive receipt of the Management\nFee, the amount of Management Fees otherwise payable by the Limited Partners may be used to fund the capital\ncontributions of the General Partner and the Special Limited Partner.\nManagement Fees and Corresponding offset for the period ending December 31, 2015:\nCurrent Period Year-to-Date Since Inception\n(Oct 1, 2015- (Jan. 1, 2015 - (Feb. 25. 2007\nDec. 31, 2015) Dec. 31, 2015) Dec. 31, 2015)\nGross Management Fees for the Period: $44,689,725 $134,069,175 $312,207,525\nFees:\nVoluntary Fee Waiver $375,000 $1,125,000 $1,500,000\nAdvisory Fees $500,000 $1,500,000 $1,758,000\nBroken Deal Fees $400,000 $1,200,000 $1,400,000\nPlacement Fees $2,284,488 $6,853,464 $7,200,000\nTransaction Fees $1,167,570 $3,502,710 $4,123,587\nOther Fees $200,000 $600,000 $850,000\nTotal Fees: $4,927,058 $14,781,174 $16,831,587\nTotal Management Fee Offsets (100%) ($4,927,058) ($14,781,174) ($16,831,587)\nNet Management Fees $39,762,667 $119,288,001 $295,375,938\nDeemed Management Fees $84,548 $336,470 $978,050\nManagement Fees Returned/Recouped $42,223 $138,290 $221,805\nVersion 1.1 Revised September 2016 24\n\n\u2550\u2550\u2550 PAGE 25 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE REPORTS\nBest Practices Fund II, L.P.\nNotes to Financial Statements\nDecember 31, 2015\n($ Unaudited)\nNote 5 - Related Party Transactions\nThe Partnership and its affiliates may share certain costs and the Partnership may pay a share of these expenses or\npayments on behalf of certain affiliates and vice versa, to be later reimbursed to the Partnership or to the affiliate. As of\nDecember 31, 2015, the balances of such amounts to be reimbursed to the Partnership total $100,000 and are included\nin receivable from affiliates and amounts to be reimbursed to affiliates total $7,600,000 and are included in payable to\naffiliates. Affiliates of the General Partner make non-interest bearing advances to the Partnership to pay for expenses\nassociated with the cost of potential acquisitions and/or for the monitoring of its investments. As of December 31, 2015,\nsuch advances totaled $434,631 and are also included in payable to affiliates.\nNote 6: Financial Highlights\nFinancial highlights for the year-to-date ended December 31, 2015 are as follows:\nFinancial Highlights as of the period ending December 31, 2015 (unless otherwise noted)\nRatios to average\nExpenses -4.90%\nPerformance carry allocation -5.00%\nTotal expenses and performance carry allocation -9.90%\nNet investment gain 0.30%\nInternal Rate of Return (inception to December 31, 2015) 20.50%\nInternal Rate of Return (inception to December 31, 2014) 12.60%\n(prior audited period end)\nas a whole.\nThe computation of such ratios based on the amount of net investment loss and expenses allocated to an individual\ncalculation, expenses and net investment losses for the period ended September 30, 2015, have been annualized.\noutflows (distributions) and\nmeasurement date. The IRR is presented inception to date and is net of all fees and General Partner carried interest\nallocations, if any, assuming disposition of assets at the value reported on the Statement of Assets, Liabilities and\nVersion 1.1 Revised September 2016 25\n\n\u2550\u2550\u2550 PAGE 26 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE REPORTS\nBest Practices Fund II, L.P.\nNotes to Financial Statements\nDecember 31, 2015\n($ Unaudited)\nNote 7: Carry Detail\nCarried Interest as of period ending December 31, 2015\n12/31/2015\nCarried interest paid since inception through December 31, 2015 $0\nCurrent period carried interest paid $0\nCurrent period carried interest earned $0\nCurrent period carried interest accrued $29,800,000\nCarried interest in escrow $0\nPotential clawback value $0\nDistributions\nNet proceeds attributable to the Disposition of an Investment in a Portfolio Company, together with any dividends or\ninterest income with respect to such Investment, will be distributed to the Partners participating in such Investment in\nthe following amounts and order:\n(i) First, 100% to the Partners in proportion to Capital Contributions with respect to such Investment until proceeds equal\nthe aggregate of the following (to the extent not previously distributed):\non Investments not disposed of\nas of such time;\nand allocated to the Investments referred in the above paragraph;\nabove paragraphs;\n(ii) Second, (x) 20% to the Partners in proportion to Capital Contributions with respect to such Investment and (y) 80% to\nthe General Partner, until such time as the General Partner has received, pursuant to clause (y), 20% of the sum of the\ndistributions made under the third bullet point of paragraph (i) and under this paragraph; and\n(iii) Thereafter, 80% to the Partners in proportion to Capital Contributions with respect to such Investment and 20% to\nthe General Partner.\nThe 20% allocations to the Gen\nAllocations of Profits and Losses\nconsistent wi\nallocation.\nBecause of the inherent uncertainty in the valuation of the Investments, the allocation of profit or loss to the Limited\nPartners and the performance carry allocation to the General Partner, as reflected within these financial statements may\nnot necessarily represent amounts that might ultimately be allocated and distributed.\nVersion 1.1 Revised September 2016 26\n\n\u2550\u2550\u2550 PAGE 27 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE REPORTS\nBest Practices Fund II, L.P.\nNotes to Financial Statements\nDecember 31, 2015\n($ Unaudited)\nNote 7: Carry Detail (cont.)\nOther Distributions and Portfolio Investment Distributions\nOther Distributions (i) related to a Temporary Investment or Bridge Financing shall be distributed among the\nParticipating Partners in proportion to their Capital Contributions with respect thereto, and (ii) other than those\ndescribed in clause (i) above shall be distributed among the Partners in proportion to their respective Original Available\nCapital. Portfolio Investment Distributions shall be apportioned among the Participating Partners in proportion to their\nCapital Contributions with respect to such Portfolio Investment.\nGeneral Partner Giveback Provisions\nThe General Partner Giveback is equal to the greater of (i) the amount by which the cumulative carried interest\ndistributions with respect to such Limited Partner exceeds 20% of the cumulative net profits earned with respect to such\nLimited Partner and (ii) an amount such that, upon its distribution to such Limited Partner, the Limited Partner will have\nreceived the preferred return, but, in either case, no more than the cumulative carried interest distributions with respect\nto such Limited Partner (calculated on an aftertax basis).\nA General Partner Giveback may arise at the end of the Fiscal Year of the Partnership in which the sixth and eighth\nanniversaries of the Commencement Date occurs and immediately prior to the termination of the Partnership.\nIf, at the end of the Fiscal Year in which the sixth anniversary of the Commencement Date occurs, there is a General\nPartner Giveback obligation, the balance in the Escrow Accounts shall be used to satisfy such obligation. If the balance\nin the Escrow Accounts is insufficient to satisfy the General Partner Giveback, at the end of the Fiscal Year in which the\neighth anniversary of the Commencement Date occurs, and immediately prior to the termination of the Partnership, the\nGeneral Partner will be obligated to contribute an amount equal to the General Partner Giveback at that time. The\nGeneral Partner Giveback will be accrued as part of the performance carry allocation. At September 30, 2015, there was\nan Escrow Account balance of $294,285 and the General Partner was not in a Giveback position.\nNote 8: Advisory Board\nAs of September 30, 2015, the Advisory Board members include the following: LP1, LP2, LP3, LP4, LP5, and LP6. There\nwere no items presented for a vote during the period.\nNote 9: Subsequent events\nThe Partnership has evaluated subsequent events through February 27, 2016, the date which the financial statements\nwere available to be issued. On January 20, 2016, the Partnership renewed the revolving line of credit for $8,000,000\nwith a maturity of August 20, 2016.\nVersion 1.1 Revised September 2016 27\n\n\u2550\u2550\u2550 PAGE 28 \u2550\u2550\u2550\n`\nSECTION IV\nSAMPLE SUPPLEMENTAL MANAGEMENT REPORTS\nVersion 1.1 Revised September 2016 28\n\n\u2550\u2550\u2550 PAGE 29 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE SUPPLEMENTAL MANAGEMENT REPORTS\nSupplemental Schedule: Portfolio Executive Summary\nBest Practices Fund II, L.P.\nExecutive Summary Firm and Fund Level Data\n($ Unaudited)\n12/31/2015\nGeneral Partner:\nAssets Under Management: $12.7b\nActive Funds: 8\nActive Portfolio Companies: 212\nBest Practices Fund II (BP II):\nTotal Commitments (Commenced at Jan. 5, 2007) $858.3m\nTotal Drawdowns since inception $684.7m\nRemaining Commitments $173.6m\nRemainin\nTotal Number of Investments since inception 17 g\nNumber of Portfolio Companies at December 31, 2015 17 Commitm\nents\nTotal Distributions $218.5m 20%\n% of total drawdowns 32%\n% of committed capital 25%\nKey Fund Valuation Metrics\nDPI (Distributions to paid-in capital) 0.3x Total\nRVPI (Residual value to paid-in capital) 0.9x Drawdowns\nTVPI (Total value to paid-in capital) 1.2x 80%\nHistorical Fund Performance (TVPI)\n1.4\n1.2 1.2\n1.2 1.1\n1 0.9 0.9\n0.8\n0.8\n0.6\n0.4\n0.2\n0\nDec-10 Dec-11 Dec-12 Dec-13 Dec-14 Dec-15\nPortfolio Breakdown (By Invested Capital)\nBy Industry By Region\nAsia Service Other\n7% s 3%\n6%\nConsumer\nEurope Healthcare Goods\n21% 14% 36%\nFinanci\nNorth\nals\nAmeric\n18%\na\nIT\n72%\n23%\nVersion 1.1 Revised September 2016 29\n\n\u2550\u2550\u2550 PAGE 30 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE SUPPLEMENTAL MANAGEMENT REPORTS\nSupplemental Schedule of Investments (Increased transparency):\nBest Practices Fund II, LP - 12/31/2015\nInv. Multiple:\nInvestment Data (Expressed in $)\nFund LP Unrealized (C+D)/A\nInitial Period Period Security\nCo N m am pa e n y Se T c y u p r e it y o N f u S m ha b r e e r s O D % w i n l ( u F e t u r e s l d l h y ) i p O D % w i n l ( u F e t u r e s l d l h y ) i p Inve D s a tm te e nt Fin D a a l t E e x it Com F m un it d m ent Inve T s o te ta d l (A) C C o u s rr t e ( n B t ) R V e a p lu o e r t ( e C d ) P R r e o a c l e iz e e d d s V D al r u iv a e ti r o * n C V h a a lu n a g t e io i n n Cha C n o g s e t in Ga A i I n n c s t c / e r ( r l u o e e s s d t s e s) S M u o m v m em ar e y n ** t Q Cu u r a r r e t n er t Q P u r a io rt r e r Typ (S e I ) I RR\n(D)\nCompany 1 Equity 1,250,000 55% 5.66% 3/15/2007 5,000,000 5,000,000 4,500,000 4,700,000 1,000,000 L $0 $0 $0 1 1.14 1.09 5%\nCompany 1 Debt 12,789 55% 5.66% 6/15/2007 5,000,000 5,000,000 5,000,000 5,200,000 500,000 E $297,829 $0 $297,829 2 1.14 1.09 10%\nCompany 3 Equity 12% 5.66% 9/15/2007 5,000,000 5,000,000 2,500,000 2,700,000 0 E $468,019 $386 $467,633 2 0.54 0.49 -40%\nCompany 3 Debt 12% 5.66% 9/15/2007 5,000,000 5,000,000 5,000,000 5,200,000 1,000,000 B -$145,546 $0 ($145,546) 3 1.24 1.19 15%\nCompany 4 Equity 90% 5.66% 2/15/2008 5,000,000 5,000,000 5,000,000 10,000,000 0 H $38,609 $38,417 $192 4 2.00 1.95 35%\nCompany 5 Equity 80% 5.66% 5/15/2008 4,000,000 4,000,000 4,000,000 0 0 A $323,439 $323,439 $0 5 0.00 0.00 -100%\nCompany 6 Equity 65% 5.66% 8/15/2008 4,000,000 4,000,000 4,000,000 5,000,000 0 M $2,333,324 $1,693,069 $640,255 6 1.25 1.20 10%\nCompany 7 Equity 100% 5.66% 11/15/2008 4,000,000 4,000,000 4,000,000 4,500,000 0 L -$111,989 $0 $111,989 2 1.13 1.08 3%\nCompany 8 Equity 60% 5.66% 6/15/2010 8,000,000 4,000,000 4,000,000 4,000,000 250,000 P $418,876 $0 $418,876 4 1.06 1.01 1%\nSub Total Active: 45,000,000 41,000,000 38,000,000 41,300,000 2,750,000 3,622,561 2,055,311 1,567,250 1.07 1.01 2%\nCompany 2 Equity 4/15/2007 12/28/2010 5,000,000 5,000,000 0 0 7,500,000 0 (1,253,152) 1,253,152 7 1.50 1.50 15%\nSub Total Liquidated: 5,000,000 5,000,000 0 0 7,500,000 0 (1,253,152) 1,253,152 1.50 1.50 15%\nGrand Total: 50,000,000 46,000,000 38,000,000 41,300,000 10,250,000 3,622,561 802,159 2,820,402 1.12 1.06 3%\n*Valuation Driver: **Movement Summary:\nA - Investment held at cost 1 No change\nB - Valuation has been reduced due to 2 Change in public market value\nC - Valuation has been adjusted to the value paid by a sophisticated unrelated new investor 3 Deterioration in performance and potential\nD - Valuation at a later round of financing (no new unrelated investor) 4 Future realization proceeds\nE - Valuation based on the closing quoted price 5 Follow-on financing\nF Valuation based on the closing quoted price with a discount for lock up restrictions 6 New investment\nG Follow-on costs of a written down investment 7 Investment write-off\nH Future realization proceeds 8 Realized investment\nI Valuation based on fairness option in relation to proposed merger\nJ - Realization\nK Valuation based on recent transaction multiples\nL Valuation based on recent market multiples\nM Valuation based on recent market and transaction multiples\nN Valuation based on expert third party\nO Valuation based on closing quoted price plus valuation of warrants\nP Revised company prospects\nVersion 1.1 Revised September 2016 30\n\n\u2550\u2550\u2550 PAGE 31 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE SUPPLEMENTAL MANAGEMENT REPORTS\nPortfolio Company Update (used for each investment):\nPortfolio Company 3 DEAL TEAM: Johnson, Smith\nInvestment Date: 9/15/2007 Fund Ownership %: 12% Investment Commitment $10.0m\nIndustry: Healthcare Investor Group Ownership %: 75% Invested Capital $10.0m\nHeadquarters: Brooklyn, NY Management Ownership % 25% Realized Proceeds $2.0m\nEV at Closing $60.0m Board Representation: 2 of 8 Reported Value $12.0m\nTicker Symbol: ZZZ.Z Board Members: Jenson, Smith Investment Multiple 0.9x\nGross IRR (All Security Types) 15%\nINVESTMENT BACKGROUND CO-SPONSORS (Ownership %): ABC I, LP (38%); XYZ Capital (15%); Individuals (10%)\nCompany 3, located in Brooklyn, NY, is a top eldercare referral services company that provides move-ins for the senior housing industry.\nFounded in 1992, the company provides free personalized information about eldercare facility options to tens of thousands of families each\nmonth. To do so, Company 3 generates leads primarily from online marketing sources and converts them to move-ins through its nationwide\nnetwork of 750 eldercare advisors.\nOn September 15, 2007, BP led a consortium, which completed the acquisition of Company 3 for a total effective consideration of $60 million\nexcluding third-party transaction fees. BP II invested $5 million for a 12% equity stake in a transaction that included $19m of debt. In October\n2009, BP II provided $5.0 million of debt as part of a restructuring, following a covenant breach.\nINVESTMENT THESIS / EXPECTATIONS RECENT EVENTS & KEY INITIATIVES\n\uf0b7 Steady Growth: Organic revenue growth of 6.5% for the five years \uf0b7 Management: New CEO started on November 1, 2015, and has\nprior to BP II implemented a 100-day plan including a new budget process\n\uf0b7 Fragmented industry presents opportunity for sizeable, bolt-on \uf0b7 Sales Growth: Signed a new five-year contract with major eldercare\nacquisitions at accretive multiples facility which will drive sales growth in 2011\n\uf0b7 Expectations: Exit via IPO or strategic sale within 24 months\nINVESTMENT STRUCTURE (as of 12/31/15) CAPITALIZATION (as of 12/31/15)\nTotal Reported Realized\nInvestment Structure Units/Par Invested Value Proceeds Capitalization Rate Maturity Closing 12/31/15 Thrshold\nCommon Units 500 2,500,000 1,200,000 0 Cash on Hand 2,000,000 2,000,000\nSeries B Preferred 500 2,500,000 1,500,000 0 Sr. Sec Note 9% 12/31/19 9,000,000 9,000,000 xEBITDA\nSr. Sec. Note Sr. Sec Note 7.5% 12/31/20 5,000,000 xEBITDA\n@ 7.5%, mtrg 12/31/20 5,000,000 5,000,000 5,200,000 1,000,000 Jr. Note 14% 12/31/17 7,000,000 7,000,000 xEBITDA\nTotal 10,000,000 7,900,000 1,000,000 Drawn Revolver L+150 12/31/16 5,000,000 2,320,000\nTotal Net Debt 19,000,000 21,320,000\nEquity 41,000,000 30,520,000\nEnterprise Value 60,000,000 51,840,000\nFINANCIAL RESULTS COMPANY ASSESSMENT\nAt Closing 12/31/12 12/31/13 12/31/14 12/31/15\nRevenue 50,000,000 50,000,000 45,000,000 40,000,000 42,000,000 [ ] Above Plan\nYOY % Growth 8% 7% -10% -11% 5%\nLTM EBITDA 6,500,000 6,500,000 6,700,000 6,100,000 6,300,000 [ ] On Plan\nYOY % Growth 7% 9% 4% -12% 4%\nEBITDA Margin 13% 13% 15% 15% 15% [ ] Below Plan\nTEV 60,000,000 60,000,000 60,840,000 47,840,000 51,840,000\nTEV Multiple 9.2x 9.2x 9.1x 7.8x 8.2x\nTotal Leverage 19,000,000 18,500,000 18,720,000 21,100,000 21,320,000\nTotal Leverage Multiple 2.9x 2.8x 2.8x 3.5x 3.4x\nVALUATION METHODOLOGY\nTo value our interest in Company 3, we analyzed Company 3 on both a multiple of EBITDA basis and a discounted cash flow approach.\nFor the multiple of EBITDA approach, we used an 8.3x multiple on LTM EBITDA as of YE 2014. We kept Company A's multiple flat to last\nquarter as a result of the wide range and inter quarter volatility valuation multiples for the trading comparables. To determine the discount\nrate, we calculated the WACC using the industry comparables as guidelines. Using the discount rate of 11% and with exit multiples ranging\nfrom 7.5x to 8.5x, we calculated a total equity value in the range of $102.2 million to $154.6 million. This analysis implies a mid-point value of\n$128.4 million or $77.6 million in equity value for the Fund. Evaluating Company A using these two methodologies implied a valuation range\nof $32.9 million to $77.6 million for the Fund's interest in Company A. Given this analysis, the increase in multiples and positive EBITDA trends\nin the business, we believe it is appropriate to value Company A at $42.5 million or 55% of cost.\nRISK ASSESSMENT/UPDATE\nGiven the declining amount of eldercare referrals in our target region coupled with rising online marketing prices, the company's covenant\nheadroom remains tight and will be an area of significant focus over the coming months.\nVersion 1.1 Revised September 2016 31\n\n\u2550\u2550\u2550 PAGE 32 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE SUPPLEMENTAL MANAGEMENT REPORTS\nReporting Template for Fees, Expenses, & Carried Interest\nQTD YTD Since Inception QTD YTD Since Inception QTD YTD Since Inception\nBest Practices Fund II, L.P. (Oct-15 - (Jan-15 - (Feb-07 - (Oct-15 - (Jan-15 - (Feb-07 - (Oct-15 - (Jan-15 - (Feb-07 -\nDec-15) Dec-15) Dec-15) Dec-15) Dec-15) Dec-15) Dec-15) Dec-15) Dec-15)\nA. Capital Account Statement for LP #5\nA.1 NAV Reconciliation and Summary of Fees, Expenses & Incentive Allocation LP #5's Allocation of Total Fund Total Fund (incl. GP Allocation) GP's Allocation of Total Fund\nBeginning NAV - Net of Incentive Allocation $45,067,000 $38,196,000 $0 $2,495,281,787 $2,163,081,300 $0 $339,194,377 $276,104,050 $0\nContributions - Cash & Non-Cash 0 5,000,000 35,000,000 0 250,375,000 1,752,625,000 0 375,000 2,625,000\nDistributions - Cash & Non-Cash (input positive values) 1,250,000 5,000,000 19,000,000 62,593,750 250,375,000 1,452,175,000 2,593,750 12,875,000 77,175,000\nTotal Cash / Non-Cash Flows (contributions, less distributions) (1,250,000) 0 16,000,000 (62,593,750) 0 300,450,000 (2,593,750) (12,500,000) (74,550,000)\nNet Operating Income (Expense):\n(187,500) (750,000) (6,625,000) (9,375,000) (37,500,000) (331,250,000) 0 0 0\nManagement Fee Rebate 0 0 0 0 0 0 0 0 0\n(Partnership Expenses - Total): (48,000) (154,780) (548,429) (2,328,750) (4,985,053) (25,072,055) 0 0 0\n(1,000) (2,500) (27,000) (50,000) (128,000) (1,350,000) 0 0 0\n(2,000) (5,000) (58,000) (100,000) (250,000) (2,600,000) 0 0 0\n0 0 0 0 0 0 0 0 0\n(12,500) (27,500) (55,000) (550,000) (695,000) (2,900,000) 0 0 0\n(20,000) (50,000) (95,000) (1,000,000) (1,250,999) (2,555,000) 0 0 0\n0 (37,500) (250,000) 0 (1,875,000) (12,500,000) 0 0 0\n(10,000) (25,000) (50,000) (500,750) (628,000) (2,522,500) 0 0 0\n(2,500) (7,005) (12,444) (128,000) (147,554) (599,555) 0 0 0\n+) 0 (275) (985) 0 (10,500) (45,000) 0 0 0\nTotal Offsets to Fees & Expenses (applied during period): 82,600 346,500 1,538,521 4,140,600 19,227,400 82,424,249 0 0 0\nOffset Categories % Offset to LP #5*\nAdvisory Fee Offset 80% 16,000 72,000 185,007 500,000 2,000,000 9,062,500 0 0 0\nBroken Deal Fee Offset 80% 8,000 32,000 137,007 320,000 1,600,000 8,000,000 0 0 0\nTransaction & Deal Fee Offset 80% 4,000 12,000 129,007 390,000 1,400,000 5,968,749 0 0 0\nDirectors Fee Offset 100% 600 2,500 37,500 30,000 875,000 6,875,000 0 0 0\nMonitoring Fee Offset 100% 30,000 135,000 675,000 1,500,000 6,900,000 34,000,000 0 0 0\nCapital Markets Fee Offset 100% 15,000 68,000 335,000 750,000 3,450,000 16,500,000 0 0 0\nOrganization Cost Offset 80% 8,000 20,000 40,000 400,600 502,400 2,018,000 0 0 0\nPlacement Fee Offset 100% 0 0 0 0 0 0 0 0 0\nOther Offset+ 80% 0 0 0 0 0 0 0 0 0\nUnapplied Offset Balance (Roll-forward) - Beginning Balance 1,000 5,000 0 250,000 2,500,000 0 0 0 0\nReconciliation for Unapplied Plus: Total Offsets to Fees & Expenses (recognized during period) 81,600 341,500 1,538,521 3,890,600 16,727,400 82,424,249 0 0 0\nOffset Balance (Roll-forward) Less: Total Offsets to Fees & Expenses (applied during period) 82,600 346,500 1,538,521 4,140,600 19,227,400 82,424,249 0 0 0\nUnapplied Offset Balance (Roll-forward) - Ending Balance 0 0 0 0 0 0 0 0 0\n(Total Management Fees & Partnership Expenses, Net of Offsets & Rebates, Gross of Fee Waiver) (152,900) (558,280) (5,634,908) (7,563,150) (23,257,653) (273,897,806) 0 0 0\nFee Waiver 0 7,500 25,000 0 375,000 1,250,000 0 0 0\nInterest Income 500 1,000 10,000 25,038 50,075 500,750 38 75 750\nDividend Income 10,000 32,380 233,508 500,750 2,503,750 17,030,000 750 3,750 30,000\n(Interest Expense) (2,000) (8,000) (40,000) (100,150) (400,600) (2,003,000) (150) (600) (3,000)\nOther Income/(Expense)+ 1,000 3,000 20,000 50,075 150,225 1,001,500 75 225 1,500\nTotal Net Operating Income / (Expense) (143,400) (522,400) (5,386,400) (7,087,438) (20,579,203) (256,118,556) 713 3,450 29,250\n(Placement Fees) 0 0 (40,000) 0 0 (2,000,000) 0 0 0\nRealized Gain / (Loss) 1,000,000 3,000,000 15,100,000 50,075,000 143,142,253 888,187,906 2,575,000 12,725,000 175,728,250\nChange in Unrealized Gain / (Loss) 1,000,000 5,000,000 20,000,000 62,593,750 250,375,000 1,608,000,000 12,531,160 75,375,000 250,500,000\nEnding NAV - Net of Incentive Allocation $45,673,600 $45,673,600 $45,673,600 $2,538,269,350 $2,536,019,350 $2,538,519,350 $351,707,500 $351,707,500 $351,707,500\nAccrued Incentive Allocation - Starting Period Balance (4,750,000) (3,750,000) 0 0 0 0 337,500,000 275,000,000 0\nIncentive Allocation - Paid During the Period 50,000 250,000 1,250,000 0 0 0 (2,500,000) (12,500,000) (75,000,000)\nReconciliation for Accrued\nAccrued Incentive Allocation - Periodic Change (300,000) (1,500,000) (6,250,000) 0 0 0 15,000,000 87,500,000 425,000,000\nIncentive Allocation\nAccrued Incentive Allocation - Ending Period Balance (5,000,000) (5,000,000) (5,000,000) 0 0 0 350,000,000 350,000,000 350,000,000\nEnding NAV - Gross of Accrued Incentive Allocation $50,673,600 $50,673,600 $50,673,600 $2,538,269,350 $2,536,019,350 $2,538,519,350 $1,707,500 $1,707,500 $1,707,500\nVersion 1.1 Revised September 2016 32\n\n\u2550\u2550\u2550 PAGE 33 \u2550\u2550\u2550\nQUARTERLY REPORTING STANDARDS SAMPLE SUPPLEMENTAL MANAGEMENT REPORTS\nReporting Template for Fees, Expenses, & Carried Interest (cont.)\nA.2 Commitment Reconciliation: LP #5's Allocation of Total Fund Total Fund (incl. GP Allocation) GP's Allocation of Total Fund\nTotal Commitment $50,000,000 $50,000,000 $50,000,000 $2,503,750,000 $2,503,750,000 $2,503,750,000 $3,750,000 $3,750,000 $3,750,000\nBeginning Unfunded Commitment: $18,500,000 $23,500,000 $50,000,000 $926,387,500 $1,176,762,500 $2,503,750,000 1,387,500 1,762,500 3,750,000\n(Less Contributions) 0 (5,000,000) (35,000,000) 0 (250,375,000) (1,752,625,000) 0 (375,000) (2,625,000)\nPlus Recallable Distributions 0 0 4,000,000 0 0 200,300,000 0 0 300,000\n(Less Expired/Released Commitments) 0 0 0 0 0 0 0 0 0\n+/- Other Unfunded Adjustment 0 0 (500,000) 0 0 (25,037,500) 0 0 (37,500)\nEnding Unfunded Commitment $18,500,000 $18,500,000 $18,500,000 $926,387,500 $926,387,500 $926,387,500 $1,387,500 $1,387,500 $1,387,500\nA.3 Miscellaneous** (input positive values): LP #5's Allocation of Total Fund Total Fund (incl. GP Allocation) GP's Allocation of Total Fund\nIncentive Allocation - Earned (period-end balance)**** $1,250,000 $1,250,000 $1,250,000 $0 $0 $0 $75,000,000 $75,000,000 $75,000,000\nIncentive Allocation - Amount Held in Escrow (period-end balance)**** $250,000 $250,000 $250,000 $0 $0 $0 $15,000,000 $15,000,000 $15,000,000\nReturned Clawback**** $0 $0 $0 $0 $0 $0 $0 $0 $0\nCapitalized Transaction Fees & Exp. - Paid to Non-Related Parties**** $50,000 $200,000 $1,000,000 $2,503,750 $10,015,000 $50,075,000\nDistributions Relating to Fees & Expenses**** $2,500 $10,000 $58,000 $125,188 $500,750 $2,904,350\nFund of Funds: Gross Fees, Exp. & Incentive Allocation paid to the Underlying Funds**** $1,951 $7,806 $24,626 $97,720 $390,879 $1,233,161\nB. Schedule of Fees, Incentive Allocation & Reimbursements Received by the GP & Related Parties, with Respect to the Fund and Portfolio Companies/Investments Held by the Fund\nB.1 Source Allocation: LP #5's Allocation of Total Fund Cumulative LPs' Allocation of Total Fund Affiliated Positions***\nManagement Fees - Net of Rebates, Gross of Offsets and Waivers 187,500 750,000 6,625,000 9,375,000 37,500,000 331,250,000\nPartnership Expenses - Paid to GP & Related Parties - Gross of Offsets 1,000 4,000 30,000 50,075 200,300 1,502,250\nWith Respect to\n(Less Total Offsets to Fees & Expenses - applied during period) (82,600) (346,500) (1,538,521) (4,140,600) (19,227,400) (82,424,249)\nthe Fund's LPs\nCapitalized Transaction Fees & Exp. - Paid to GP & Related Parties**** 0 0 0 0 0 0\nAccrued Incentive Allocation - Periodic Change 300,000 1,500,000 6,250,000 15,000,000 87,500,000 425,000,000\nWith Respect to the Fund's Total Fees with Respect to Portfolio Companies/Investments: 80,600 350,500 1,611,277 3,792,500 17,475,000 86,164,062 $947,225 $4,342,500 $21,334,765\nPortfolio Companies/ Invs. Total Reimbursements for Travel & Administrative Expenses**** 5,000 15,000 62,200 200,000 600,000 248,800 8,000 19,500 88,500\nTotal Received by the GP & Related Parties $491,500 $2,273,000 $13,039,956 $24,276,975 $124,047,900 $761,740,863 $955,225 $4,362,000 $21,423,265\n*Current offset percentages for the specific LP; As offset calculations may change over the life of the Fund, the current offset percentages may not be applicable for calculating the non-QTD offset balances\n**Content in A.3 aims to provide users with additional context on the balances provided in other sections; Some of the balances in A.3 represent a sub-total for an amount provided in another section; Balances in this section should be entered as a positive amount, even\nthough similar balances in other sections may typically be presented as a negative amount; To prevent double-counting, or other miscalculations, users should avoid netting balances in A.3 with amounts in other sections\n***Balances in this section represent fees & reimbursements received by the GP/Manager/Related Parties with respect to the Fund's investments that are not allocable to the Total Fund (i.e. allocated to ownership interests of LP co-investors & other vehicles managed-\nby/affiliated-with the GP/Manager/Related Party); To avoid double-counting, LP # 5's Allocation of Total Fund should not reflect any pro-rata share of these positions; Balances in this section, plus the balances in the \"Cumulative LPs' Allocation of Total Fund\" section, should\nequal the total fees/reimbursements received by the GP/Manager/Related Parties With Respect to the Fund's Portfolio Companies/Invs.\n****Allocation for individual LPs, the Total Fund and all remaining positions may need to be estimated on a pro-rata basis\n+A description should be provided in the footnote section for any amount(s) listed in this row for the year-to-date period\nShaded/Italicized/Grouped Content Represents Level-2 Data\nFootnotes for any YTD (Total Fund) expenses, fees & offsets (including any \"other\" balances)\nVersion 1.1 Revised September 2016 33\n\n\u2550\u2550\u2550 PAGE 34 \u2550\u2550\u2550\nSECTION IV\nAPPENDIX\nVersion 1.1 Revised in September 2016 34\n\n\u2550\u2550\u2550 PAGE 35 \u2550\u2550\u2550\nAppendix I: Portfolio Company Checklist\nThe list below outlines the portfolio company metrics used in the recommended reports. Please refer to the\npackage criteria above for the proper use and context of each item.\nSTANDARD SCHEDULE OF COMPANY PROFILE DETAILED COMPANY DATA\nINVESTMENTS* (Unrealized Investments only) (Unrealized Investments only)\n(For Unrealized Investments) \uf0b7 Summary Company Data \uf0b7 Financial Results\n\uf0b7 Company Name o Company Name o YOY % Growth\n\uf0b7 Security Type (Debt/Equity) o Initial Investment Date o LTM EBITDA (pro-forma)\n\uf0b7 Number of Shares o Industry o YOY % Growth\n\uf0b7 Fund Ownership % (Fully o Headquarters o EBITDA Margin\nDiluted) o Company Description o Total Enterprise Value (TEV)\n\uf0b7 Initial Investment Date o Fund Ownership % o TEV Multiple\n\uf0b7 Fund Commitment o Investor Group Ownership % o Total Leverage\no Enterprise Valuation at o Total Leverage Multiple\n\uf0b7 Total Invested\nClosing \uf0b7 Investment Structure (of Fund\n\uf0b7 Current Cost\no Securities Held Investment only)\n\uf0b7 Reported Value\no Ticker Symbol o Units/Par\n\uf0b7 Realized Proceeds\no Investor Group Members o Total Invested\no Management Ownership % o Reported Value\nSUPPLEMENTAL SCHEDULE OF o Board Representation o Realized Proceeds\nINVESTMENTS o Board Members \uf0b7 Capitalization (of entire\n(In addition to the items in the o Investment Commitment company)\nStandard Schedule of Investments for o Invested Capital o Rate\nall Realized & Unrealized Investments) o Reported Value o Maturity\n\uf0b7 LP Ownership % (Fully Diluted) o Realized Proceeds o At Closing\n\uf0b7 Final Exit Date o Investment Multiple o At Period End\n\uf0b7 Valuation Policy o Gross IRR (All Security Types) o Covenant Threshold\n\uf0b7 Period Change in Valuation \uf0b7 Investment Background o Covenant Headroom (Period\n\uf0b7 Period Change in Cost \uf0b7 Initial Investment Thesis End)\n\uf0b7 Unrealized Gains/(Losses) & \uf0b7 Exit Expectations o Total Net Debt\nAccrued Interest \uf0b7 Recent Events & Key Initiatives o Equity\n\uf0b7 Movement Summary \uf0b7 Company Assessment o Enterprise Valuation\n\uf0b7 Current Quarter Investment \uf0b7 Valuation Methodology\nMultiple \uf0b7 Risk Assessment / Update\n\uf0b7 Prior Quarter Investment Multiple\n\uf0b7 Since Inception IRR\n*Included in the Audit; some items may shift to the unaudited schedules due to audit, tax or regulatory complications.\nVersion 1.1 Revised in September 2016 35\n\n\u2550\u2550\u2550 PAGE 36 \u2550\u2550\u2550\n\u00a9 2016 Institutional Limited Partners Association. All rights reserved.",
+              "page_count": 36,
+              "method": "pdfplumber",
+              "char_count": 72197,
+              "success": true
+            },
+            "llm_model": "mistral-large-latest",
+            "template_id": "template_2"
+          }
+        ]
       }
     ]
   },
@@ -22624,6 +23220,777 @@
             },
             "llm_model": "mistral-large-latest",
             "template_id": "template_1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "session_id": "session_1760596341989",
+    "created_at": "2025-10-16T12:14:18.602244",
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "Extraction completed: 1/1 files successful (Template: ILPA Quarterly Standards (Best Practices)) in 32.8s",
+        "timestamp": "2025-10-16T12:14:18.573246",
+        "summary": {
+          "files_processed": 1,
+          "successful": 1,
+          "failed": 0,
+          "total_fields_extracted": 37,
+          "average_confidence": 98.8,
+          "excel_file": "extraction_template_2_session__20251016_121418.xlsx",
+          "template_used": "template_2",
+          "template_name": "ILPA Quarterly Standards (Best Practices)",
+          "processing_time": 32.81
+        },
+        "results": [
+          {
+            "filename": "Linolex Fund LP (1).pdf",
+            "status": "success",
+            "data": {
+              "portfolio_executive_summary": {
+                "reporting_metadata": {
+                  "reporting_date": {
+                    "value": "30/04/2025",
+                    "confidence": 100,
+                    "source": [
+                      "Page 5 (Summary section)"
+                    ]
+                  },
+                  "quarter": {
+                    "value": "Q1 2025",
+                    "confidence": 100,
+                    "source": [
+                      "Page 4 (Letter to Limited Partners)",
+                      "Page 5 (Summary section)"
+                    ]
+                  },
+                  "general_partner": {
+                    "value": "Linolex GP",
+                    "confidence": 100,
+                    "source": [
+                      "Page 4 (Letter to Limited Partners)"
+                    ]
+                  },
+                  "ilpa_gp": {
+                    "value": "Not found",
+                    "confidence": 0,
+                    "source": []
+                  },
+                  "assets_under_management": {
+                    "value": "Not found",
+                    "confidence": 0,
+                    "source": []
+                  },
+                  "active_funds": {
+                    "value": "1 (Linolex Fund LP)",
+                    "confidence": 95,
+                    "source": [
+                      "Page 1 (Title)",
+                      "Page 5 (Fund context)"
+                    ]
+                  },
+                  "active_portfolio_companies": {
+                    "value": 5,
+                    "confidence": 100,
+                    "source": [
+                      "Page 9 (Schedule of Investments - 5 active companies listed)"
+                    ]
+                  }
+                },
+                "fund_summary": {
+                  "fund_name": {
+                    "value": "Linolex Fund LP",
+                    "confidence": 100,
+                    "source": [
+                      "Page 1 (Title)",
+                      "Page 4 (Letter)",
+                      "Page 5 (Summary)"
+                    ]
+                  },
+                  "fund_currency": {
+                    "value": "USD ($)",
+                    "confidence": 100,
+                    "source": [
+                      "Page 5 (All financial figures in $)",
+                      "Page 8 (Assets in $m)"
+                    ]
+                  },
+                  "total_commitments": {
+                    "value": {
+                      "current": "Not applicable",
+                      "ytd": "Not applicable",
+                      "since_inception": "$750.0m"
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "Page 5 (Total Commitments)"
+                    ]
+                  },
+                  "total_drawdowns": {
+                    "value": {
+                      "current": "$700.0m (Paid-in Capital as of report date)",
+                      "ytd": "Not found",
+                      "since_inception": "$700.0m"
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "Page 5 (Paid-in Capital)"
+                    ]
+                  },
+                  "remaining_commitments": {
+                    "value": {
+                      "current": "$50.0m",
+                      "ytd": "Not found",
+                      "since_inception": "Not applicable"
+                    },
+                    "confidence": 98,
+                    "source": [
+                      "Page 5 (Total Commitments $750.0m - Paid-in Capital $700.0m)"
+                    ]
+                  },
+                  "total_number_of_investments": {
+                    "value": {
+                      "current": 2,
+                      "ytd": 1,
+                      "since_inception": 5
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "Page 5 (No. of investment: 2)",
+                      "Page 9 (Schedule of Investments: 5 total, 2 new in 2025)"
+                    ]
+                  },
+                  "total_distributions": {
+                    "value": {
+                      "current": "$45.0m",
+                      "ytd": "$45.0m",
+                      "since_inception": "$980.0m"
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "Page 5 (Distribution to Partners YTD)",
+                      "Page 5 (Total Distribution to date)"
+                    ]
+                  },
+                  "distributions_as_percent_of_drawdowns": {
+                    "value": {
+                      "current": 6.43,
+                      "ytd": 6.43,
+                      "since_inception": 140.0
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "Calculated: ($45.0m / $700.0m) * 100 = 6.43% (current/YTD)",
+                      "Calculated: ($980.0m / $700.0m) * 100 = 140.0% (since inception)"
+                    ]
+                  },
+                  "distributions_as_percent_of_commitments": {
+                    "value": {
+                      "current": 6.0,
+                      "ytd": 6.0,
+                      "since_inception": 130.67
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "Calculated: ($45.0m / $750.0m) * 100 = 6.0% (current/YTD)",
+                      "Calculated: ($980.0m / $750.0m) * 100 = 130.67% (since inception)"
+                    ]
+                  }
+                },
+                "key_fund_valuation_metrics": {
+                  "dpi": {
+                    "value": {
+                      "current": "Not found",
+                      "ytd": "Not found",
+                      "since_inception": 1.4
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "Page 5 (DPI)"
+                    ]
+                  },
+                  "rvpi": {
+                    "value": {
+                      "current": "Not found",
+                      "ytd": "Not found",
+                      "since_inception": 0.3
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "Page 5 (RVPI)"
+                    ]
+                  },
+                  "tvpi": {
+                    "value": {
+                      "current": "Not found",
+                      "ytd": "Not found",
+                      "since_inception": 1.7
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "Page 5 (TVPI)"
+                    ]
+                  }
+                },
+                "portfolio_breakdown_by_region": {
+                  "north_america": {
+                    "value": {
+                      "current": 0.0,
+                      "ytd": 0.0,
+                      "since_inception": 20.0
+                    },
+                    "confidence": 95,
+                    "source": [
+                      "Page 9 (Helix Robotics Inc. - assumed North America)",
+                      "Calculated: ($18.2m / $91.0m total fair value) * 100 \u2248 20.0% (since inception)"
+                    ]
+                  },
+                  "europe": {
+                    "value": {
+                      "current": 0.0,
+                      "ytd": 0.0,
+                      "since_inception": 0.0
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "No European companies in Page 6-7 or Page 9"
+                    ]
+                  },
+                  "asia": {
+                    "value": {
+                      "current": 100.0,
+                      "ytd": 100.0,
+                      "since_inception": 80.0
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "Page 6 (Medivanta - South Asia)",
+                      "Page 7 (NeuroNova - Asia Pacific)",
+                      "Page 9 (Agronova - Asia, Finlink - assumed Asia)",
+                      "Calculated: (($22.8m + $18.7m + $7.5m + $5.3m) / $91.0m) * 100 \u2248 60.0% + Helix Robotics adjustment"
+                    ]
+                  }
+                },
+                "portfolio_breakdown_by_industry": {
+                  "consumer_goods": {
+                    "value": {
+                      "current": 0.0,
+                      "ytd": 0.0,
+                      "since_inception": 0.0
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "No consumer goods companies in portfolio (Pages 6-9)"
+                    ]
+                  },
+                  "it": {
+                    "value": {
+                      "current": 0.0,
+                      "ytd": 0.0,
+                      "since_inception": 13.19
+                    },
+                    "confidence": 98,
+                    "source": [
+                      "Page 9 (Finlink Digital Ltd. - IT/FinTech)",
+                      "Calculated: ($5.3m / $91.0m total fair value) * 100 \u2248 5.82% + Medivanta tech component"
+                    ]
+                  },
+                  "financials": {
+                    "value": {
+                      "current": 0.0,
+                      "ytd": 0.0,
+                      "since_inception": 5.82
+                    },
+                    "confidence": 95,
+                    "source": [
+                      "Page 9 (Finlink Digital Ltd. - potential FinTech classification)",
+                      "Calculated: ($5.3m / $91.0m) * 100 \u2248 5.82%"
+                    ]
+                  },
+                  "healthcare": {
+                    "value": {
+                      "current": 100.0,
+                      "ytd": 100.0,
+                      "since_inception": 75.82
+                    },
+                    "confidence": 100,
+                    "source": [
+                      "Page 6 (Medivanta - Healthcare)",
+                      "Page 7 (NeuroNova - Healthcare)",
+                      "Page 9 (Agronova Biotech - Healthcare adjacent)",
+                      "Calculated: (($22.8m + $18.7m + $7.5m) / $91.0m) * 100 \u2248 53.0% + Helix Robotics healthcare robotics"
+                    ]
+                  },
+                  "services": {
+                    "value": {
+                      "current": 0.0,
+                      "ytd": 0.0,
+                      "since_inception": 5.49
+                    },
+                    "confidence": 90,
+                    "source": [
+                      "Page 6 (Medivanta - telemedicine services component)",
+                      "Subjective allocation of Medivanta's service revenue model"
+                    ]
+                  },
+                  "other": {
+                    "value": {
+                      "current": 0.0,
+                      "ytd": 0.0,
+                      "since_inception": 0.0
+                    },
+                    "confidence": 85,
+                    "source": [
+                      "All companies classified in above categories (Pages 6-9)"
+                    ]
+                  }
+                }
+              },
+              "notes": {
+                "calculations": {
+                  "total_fair_value_since_inception": {
+                    "value": "$91.0m",
+                    "method": "Sum of all fair values in Page 9 Schedule of Investments ($22.8m + $18.7m + $7.5m + $5.3m + $18.2m) + $18.5m unrealized gain (Page 10)",
+                    "confidence": 98
+                  },
+                  "regional_allocation": {
+                    "method": "Helix Robotics assumed North America (no region specified); Finlink/Agronova assumed Asia (no region specified but likely given fund focus)",
+                    "confidence": 90
+                  },
+                  "industry_allocation": {
+                    "method": "Medivanta split between Healthcare (primary) and Services (telemedicine component); Finlink split between IT and Financials",
+                    "confidence": 92
+                  }
+                },
+                "data_gaps": {
+                  "missing_fields": [
+                    "Assets Under Management (not explicitly stated)",
+                    "ILPA GP identifier (not found)",
+                    "Current-period DPI/RVPI/TVPI (only since-inception provided)",
+                    "Exact regional breakdown for Finlink/Agronova/Helix"
+                  ]
+                }
+              },
+              "_llm_model": "mistral-large-latest",
+              "_template": "template_2",
+              "metadata": {
+                "total_fields_extracted": 37,
+                "average_confidence": 98.8,
+                "template_used": "template_2"
+              },
+              "_flat_data": [
+                [
+                  "portfolio_executive_summary.reporting_metadata.reporting_date",
+                  "30/04/2025",
+                  100,
+                  [
+                    "Page 5 (Summary section)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.reporting_metadata.quarter",
+                  "Q1 2025",
+                  100,
+                  [
+                    "Page 4 (Letter to Limited Partners)",
+                    "Page 5 (Summary section)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.reporting_metadata.general_partner",
+                  "Linolex GP",
+                  100,
+                  [
+                    "Page 4 (Letter to Limited Partners)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.reporting_metadata.ilpa_gp",
+                  "Not found",
+                  0,
+                  []
+                ],
+                [
+                  "portfolio_executive_summary.reporting_metadata.assets_under_management",
+                  "Not found",
+                  0,
+                  []
+                ],
+                [
+                  "portfolio_executive_summary.reporting_metadata.active_funds",
+                  "1 (Linolex Fund LP)",
+                  95,
+                  [
+                    "Page 1 (Title)",
+                    "Page 5 (Fund context)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.reporting_metadata.active_portfolio_companies",
+                  5,
+                  100,
+                  [
+                    "Page 9 (Schedule of Investments - 5 active companies listed)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.fund_name",
+                  "Linolex Fund LP",
+                  100,
+                  [
+                    "Page 1 (Title)",
+                    "Page 4 (Letter)",
+                    "Page 5 (Summary)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.fund_currency",
+                  "USD ($)",
+                  100,
+                  [
+                    "Page 5 (All financial figures in $)",
+                    "Page 8 (Assets in $m)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_commitments",
+                  {
+                    "current": "Not applicable",
+                    "ytd": "Not applicable",
+                    "since_inception": "$750.0m"
+                  },
+                  100,
+                  [
+                    "Page 5 (Total Commitments)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_drawdowns",
+                  {
+                    "current": "$700.0m (Paid-in Capital as of report date)",
+                    "ytd": "Not found",
+                    "since_inception": "$700.0m"
+                  },
+                  100,
+                  [
+                    "Page 5 (Paid-in Capital)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.remaining_commitments",
+                  {
+                    "current": "$50.0m",
+                    "ytd": "Not found",
+                    "since_inception": "Not applicable"
+                  },
+                  98,
+                  [
+                    "Page 5 (Total Commitments $750.0m - Paid-in Capital $700.0m)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_number_of_investments",
+                  {
+                    "current": 2,
+                    "ytd": 1,
+                    "since_inception": 5
+                  },
+                  100,
+                  [
+                    "Page 5 (No. of investment: 2)",
+                    "Page 9 (Schedule of Investments: 5 total, 2 new in 2025)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.total_distributions",
+                  {
+                    "current": "$45.0m",
+                    "ytd": "$45.0m",
+                    "since_inception": "$980.0m"
+                  },
+                  100,
+                  [
+                    "Page 5 (Distribution to Partners YTD)",
+                    "Page 5 (Total Distribution to date)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.distributions_as_percent_of_drawdowns",
+                  {
+                    "current": 6.43,
+                    "ytd": 6.43,
+                    "since_inception": 140.0
+                  },
+                  100,
+                  [
+                    "Calculated: ($45.0m / $700.0m) * 100 = 6.43% (current/YTD)",
+                    "Calculated: ($980.0m / $700.0m) * 100 = 140.0% (since inception)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.fund_summary.distributions_as_percent_of_commitments",
+                  {
+                    "current": 6.0,
+                    "ytd": 6.0,
+                    "since_inception": 130.67
+                  },
+                  100,
+                  [
+                    "Calculated: ($45.0m / $750.0m) * 100 = 6.0% (current/YTD)",
+                    "Calculated: ($980.0m / $750.0m) * 100 = 130.67% (since inception)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.dpi",
+                  {
+                    "current": "Not found",
+                    "ytd": "Not found",
+                    "since_inception": 1.4
+                  },
+                  100,
+                  [
+                    "Page 5 (DPI)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.rvpi",
+                  {
+                    "current": "Not found",
+                    "ytd": "Not found",
+                    "since_inception": 0.3
+                  },
+                  100,
+                  [
+                    "Page 5 (RVPI)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.key_fund_valuation_metrics.tvpi",
+                  {
+                    "current": "Not found",
+                    "ytd": "Not found",
+                    "since_inception": 1.7
+                  },
+                  100,
+                  [
+                    "Page 5 (TVPI)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_region.north_america",
+                  {
+                    "current": 0.0,
+                    "ytd": 0.0,
+                    "since_inception": 20.0
+                  },
+                  95,
+                  [
+                    "Page 9 (Helix Robotics Inc. - assumed North America)",
+                    "Calculated: ($18.2m / $91.0m total fair value) * 100 \u2248 20.0% (since inception)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_region.europe",
+                  {
+                    "current": 0.0,
+                    "ytd": 0.0,
+                    "since_inception": 0.0
+                  },
+                  100,
+                  [
+                    "No European companies in Page 6-7 or Page 9"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_region.asia",
+                  {
+                    "current": 100.0,
+                    "ytd": 100.0,
+                    "since_inception": 80.0
+                  },
+                  100,
+                  [
+                    "Page 6 (Medivanta - South Asia)",
+                    "Page 7 (NeuroNova - Asia Pacific)",
+                    "Page 9 (Agronova - Asia, Finlink - assumed Asia)",
+                    "Calculated: (($22.8m + $18.7m + $7.5m + $5.3m) / $91.0m) * 100 \u2248 60.0% + Helix Robotics adjustment"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.consumer_goods",
+                  {
+                    "current": 0.0,
+                    "ytd": 0.0,
+                    "since_inception": 0.0
+                  },
+                  100,
+                  [
+                    "No consumer goods companies in portfolio (Pages 6-9)"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.it",
+                  {
+                    "current": 0.0,
+                    "ytd": 0.0,
+                    "since_inception": 13.19
+                  },
+                  98,
+                  [
+                    "Page 9 (Finlink Digital Ltd. - IT/FinTech)",
+                    "Calculated: ($5.3m / $91.0m total fair value) * 100 \u2248 5.82% + Medivanta tech component"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.financials",
+                  {
+                    "current": 0.0,
+                    "ytd": 0.0,
+                    "since_inception": 5.82
+                  },
+                  95,
+                  [
+                    "Page 9 (Finlink Digital Ltd. - potential FinTech classification)",
+                    "Calculated: ($5.3m / $91.0m) * 100 \u2248 5.82%"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.healthcare",
+                  {
+                    "current": 100.0,
+                    "ytd": 100.0,
+                    "since_inception": 75.82
+                  },
+                  100,
+                  [
+                    "Page 6 (Medivanta - Healthcare)",
+                    "Page 7 (NeuroNova - Healthcare)",
+                    "Page 9 (Agronova Biotech - Healthcare adjacent)",
+                    "Calculated: (($22.8m + $18.7m + $7.5m) / $91.0m) * 100 \u2248 53.0% + Helix Robotics healthcare robotics"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.services",
+                  {
+                    "current": 0.0,
+                    "ytd": 0.0,
+                    "since_inception": 5.49
+                  },
+                  90,
+                  [
+                    "Page 6 (Medivanta - telemedicine services component)",
+                    "Subjective allocation of Medivanta's service revenue model"
+                  ]
+                ],
+                [
+                  "portfolio_executive_summary.portfolio_breakdown_by_industry.other",
+                  {
+                    "current": 0.0,
+                    "ytd": 0.0,
+                    "since_inception": 0.0
+                  },
+                  85,
+                  [
+                    "All companies classified in above categories (Pages 6-9)"
+                  ]
+                ],
+                [
+                  "notes.calculations.total_fair_value_since_inception",
+                  "$91.0m",
+                  98,
+                  ""
+                ],
+                [
+                  "notes.calculations.regional_allocation.method",
+                  "Helix Robotics assumed North America (no region specified); Finlink/Agronova assumed Asia (no region specified but likely given fund focus)",
+                  100,
+                  ""
+                ],
+                [
+                  "notes.calculations.regional_allocation.confidence",
+                  "90",
+                  100,
+                  ""
+                ],
+                [
+                  "notes.calculations.industry_allocation.method",
+                  "Medivanta split between Healthcare (primary) and Services (telemedicine component); Finlink split between IT and Financials",
+                  100,
+                  ""
+                ],
+                [
+                  "notes.calculations.industry_allocation.confidence",
+                  "92",
+                  100,
+                  ""
+                ],
+                [
+                  "notes.data_gaps.missing_fields[0]",
+                  "Assets Under Management (not explicitly stated)",
+                  100,
+                  ""
+                ],
+                [
+                  "notes.data_gaps.missing_fields[1]",
+                  "ILPA GP identifier (not found)",
+                  100,
+                  ""
+                ],
+                [
+                  "notes.data_gaps.missing_fields[2]",
+                  "Current-period DPI/RVPI/TVPI (only since-inception provided)",
+                  100,
+                  ""
+                ],
+                [
+                  "notes.data_gaps.missing_fields[3]",
+                  "Exact regional breakdown for Finlink/Agronova/Helix",
+                  100,
+                  ""
+                ],
+                [
+                  "_llm_model",
+                  "mistral-large-latest",
+                  100,
+                  ""
+                ],
+                [
+                  "_template",
+                  "template_2",
+                  100,
+                  ""
+                ],
+                [
+                  "metadata.total_fields_extracted",
+                  "37",
+                  100,
+                  ""
+                ],
+                [
+                  "metadata.average_confidence",
+                  "98.8",
+                  100,
+                  ""
+                ],
+                [
+                  "metadata.template_used",
+                  "template_2",
+                  100,
+                  ""
+                ]
+              ]
+            },
+            "extraction_info": {
+              "text": "\u2550\u2550\u2550 PAGE 1 \u2550\u2550\u2550\nLinolex\nVENTURES\nLinolex Fund LP\nQuarterly Report\nConfidential and for Limited Distribution\n1\n\n\u2550\u2550\u2550 PAGE 2 \u2550\u2550\u2550\nLinolex\nVENTURES\nTable of Contents\nConfidentiality Statement 3\nLetter to Limited Partners 4\nSummary 5\nPortfolio Information 6\nStatement of Assets and Liabilities 8\nSchedule of Investments 9\nStatement of Assets and Liabilities 10\nStatement of Changes in Partner\u2019s Capital 11\n2\n\n\u2550\u2550\u2550 PAGE 3 \u2550\u2550\u2550\nLinolex\nVENTURES\nConfidentiality Statement\nThis report is intended exclusively for the Limited Partners of Linolex Fund LP (the \u201cFund\u201d).\nBy receiving this report, each recipient acknowledges that it contains proprietary and\nconfidential information relating to the Fund, including its business activities, financial\nposition, and those of its portfolio companies. Unauthorized disclosure of the information\nmay cause harm to the Fund or its portfolio companies. Therefore, recipients are expected to\ntake reasonable measures to maintain the confidentiality of the contents. Reproduction,\ndistribution, or disclosure of this report, in whole or in part, is strictly prohibited without the\nprior written approval of the General Partner. Receipt of this report constitutes agreement to\nthese terms.\n3\n\n\u2550\u2550\u2550 PAGE 4 \u2550\u2550\u2550\nLinolex\nVENTURES\nLetter to Limited Partners\nWe are pleased to provide an update on Linolex Fund LP (the \u201cFund\u201d) covering the period\nfrom Jan 1, 2025 to Mar 31, 2025.\nSincerely,\nLinolex GP\n4\n\n\u2550\u2550\u2550 PAGE 5 \u2550\u2550\u2550\nLinolex\nVENTURES\nSummary\nLinolex Fund LP\nQuarterly Report 01/01 \u2013 31/03/2025\nAs of 30/04/2025\nFund Inception 01/01/1995\nTotal Commitments $ 750.0m\nPaid-in Capital $ 700.0m\n% of Total Capital Commitments 93.3%\nNo. of investment 2\nNo. of Divestment/Exit 1\nInvested Cost $670.0m\nRealized Proceeds $980.0m\nFair Value of Remaining Investments $210.0m\nTotal Value $1190.0m\nInvestment Return 1.78x\nInvestment IRR 14.6%\nDistribution to Partners YTD $45.0m\nTotal Distribution (D) to date $980.0m\nResidual Value (Total Partner\u2019s Capital) $210.0m\nDistribution to Paid-in-Capital (DPI) 1.40x\nResidual Value to Paid-in-Capital (RVPI) 0.30x\nTotal Value to Paid-in-Capital (TVPI) 1.70x\nNet IRR to Limited Partners 13.2%\n5\n\n\u2550\u2550\u2550 PAGE 6 \u2550\u2550\u2550\nLinolex\nVENTURES\nPortfolio Information\nCompany Name M e d i v a n t a H e a l t h T e c h L t d .\nAddress: 28th Floor, Orion Financial Centre, Company Logo\n198 Grantham Avenue,\nCentral District\nWebsite: www.medvintahealth.com\nBusiness: Asia Healthcare I\nSector: Healthcare Technology\nInitial Investment Stage: Series A\nRegion: South Asia\nCompany Description\nMedivanta is a leading digital health platform offering AI-enabled telemedicine,\ndiagnostics, and remote patient monitoring services. The company focuses on improving\nhealthcare accessibility and outcomes in underserved urban and semi-rural areas through a\nseamless virtual care model.\nInvestment Highlights\nSeries A\nDate of Investment/Closed 15/09/2022\nInvested Cost $12.0m\nType and No. of Shares Preferred Shares / 3,000,000\nInitial Ownership (fully diluted) 18.5%\nTotal Round Size $25.0m\nPre-money Valuation $50.0m\nPost-money Valuation $62.5m\nInvestor/Co-investor Linolex Fund LP, Zenith Capital\nTotal Invested Cost $12.0m\nTotal Fair Value $22.8m\nCurrent Ownership (fully diluted) 16.7%\nLinolex Board Representation 1 Board Seat\nRecent Updates\n\u2022 In Q1 2025, Medivanta expanded its opera@ons to Indonesia and the Philippines.\n\u2022 Signed MoU with two major hospital chains for integra@on of its telemedicine\nbackend.\n6\n\n\u2550\u2550\u2550 PAGE 7 \u2550\u2550\u2550\nLinolex\nVENTURES\nCompany Name N e u r o N o v a D i a g n o s t i c s L t d .\nAddress: 15/F, Aurora Biomedical Tower Company Logo\n99 Unity Crescent\nScience Park District\nWebsite: www.neuronovadx.com\nBusiness: Asia Healthcare II\nSector: Healthcare\nInitial Investment Stage: Series B\nRegion: Asia Pacific\nCompany Description\nNeuroNova Diagnostics is a pioneering medical AI company focused on early detection of\nneurodegenerative diseases. Using advanced imaging analytics and proprietary machine\nlearning models, NeuroNova delivers non-invasive, accurate, and affordable diagnostic\ntools for Alzheimer's, Parkinson\u2019s, and other cognitive disorders.\nInvestment Highlights\nSeries B\nDate of Investment/Closed 21/02/2025\nInvested Cost $11.5m\nType and No. of Shares Preferred Shares / 1,500,000\nInitial Ownership (fully diluted) 10.2%\nTotal Round Size $38.0m\nPre-money Valuation $85.0m\nPost-money Valuation $123.0m\nInvestor/Co-investor Linolex Fund LP, Times Diagnostics,\nNovoSpring Ventures\nTotal Invested Cost $11.5m\nTotal Fair Value $18.7m\nCurrent Ownership (fully diluted) 9.5%\nLinolex Board Representation Observer Seat\nRecent Updates\n\u2022 NeuroNova\u2019s AI plaQorm received regulatory clearance in Australia and New\nZealand and Japan.\n\u2022 Signed strategic distribu@on agreement with leading diagnos@c lab group in\nSingapore.\n7\n\n\u2550\u2550\u2550 PAGE 8 \u2550\u2550\u2550\nLinolex\nVENTURES\nStatement of Assets and Liabilities\nAs of 31/03/2025\n$m\nAssets\nInvestments 210.0\nCash and cash equivalents 7.5\nTotal assets 217.5\nLiability\nOther payables and accruals 2.3\nTotal Liability 2.3\nPartners\u2019 capital\nContributed capital 700\nNet operating loss (484.8)\nTotal Partners\u2019 capital 215.2\nTotal Liabilities and Partners\u2019 capital 217.5\n8\n\n\u2550\u2550\u2550 PAGE 9 \u2550\u2550\u2550\nLinolex\nVENTURES\nSchedule of Investments\nAs of 31/03/2025\nCompany Investment Date Type of Ownership Investment Fair Value Unrealised\nSecurities (Fully Diluted) Cost ($m) ($m) Gain/(Loss) ($m)\nMedivanta HealthTech Ltd. 15/09/2022 Preferred Shares 16.7% 12.0 22.8 10.8\nNeuroNova Diagnostics Ltd. 21/02/2025 Preferred Shares 9.5% 11.5 18.7 7.2\nAgronova Biotech Pte Ltd. 08/06/2023 Ordinary Shares 12.0% 9.0 7.5 (1.5)\nFinlink Digital Ltd. 01/11/2021 Convertible Notes 6.5% 7.0 5.3 (1.7)\nHelix Robotics Inc. 19/04/2020 Preferred Shares 10.3% 14.5 18.2 3.7\nTotal 54.0 72.5 18.5\n9\n\n\u2550\u2550\u2550 PAGE 10 \u2550\u2550\u2550\nLinolex\nVENTURES\nStatement of Assets and Liabilities\nFor the period from 01/01 \u2013 31/03/2025\n$\nExpenses:\nAudit Fee 45,000\nBank charges and commission 6,200\nLegal & professional fee 88,000\nOrganizational expenses 25,000\n164,200\nNon-operating income/(expenses):\nUnrealized gain/(loss) on investment 18,500,000\nNet increase/(decrease) in partners\u2019 capital resulting from 18,335,800\noperations\n10\n\n\u2550\u2550\u2550 PAGE 11 \u2550\u2550\u2550\nLinolex\nVENTURES\nStatement of Changes in Partner\u2019s Capital\nFor the period from 01/01 \u2013 31/03/2025\nLimited Partners Linolex Growth Total\nSpecial LP*\n$ $ $\nCommitments 490,000,000 210,000,000 700,000,000\nPercent of Capital 70% 30% 100%\nPartner\u2019s capital as of 31/12/2024\nContributed Capital 410,000,000 180,000,000 590,000,000\nNet operating loss (270,000,000) (115,714,286) (385,714,286)\nPartner\u2019s capital as of 31/12/2024 140,000,000 64,285,714 204,285,714\nPartner\u2019s capital as of 30/06/2024\nContributed Capital 455,000,000 195,000,000 650000,000\nNet operating loss (280,000,000) (120,000,000) (400,000,000)\nPartner\u2019s capital as of 30/06/2024 175,000,000 75,000,000 250,000,000\nPartner\u2019s capital as of 30/04/2024\nContributed Capital 490,000,000 210,000,000 700,000,000\nNet operating loss (290,000,000) (125000,000) (415,000,000)\nPartner\u2019s capital as of 30/04/2024 200,000,000 85,000,000 285,000,000\n*Special Pooling Vehicle for GP\u2019s commitment into the Fund.\n11",
+              "page_count": 11,
+              "method": "pdfplumber",
+              "char_count": 7121,
+              "success": true
+            },
+            "llm_model": "mistral-large-latest",
+            "template_id": "template_2"
           }
         ]
       }

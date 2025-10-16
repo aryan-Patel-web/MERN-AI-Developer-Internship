@@ -35,7 +35,20 @@ logger = logging.getLogger(__name__)
 
 # FastAPI
 app = FastAPI(title="Velocity.ai PDF Extraction")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+# app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+origins = [
+    "https://velocity-ai-q228.onrender.com",  # frontend URL
+    "https://velocity-ai-1aqo.onrender.com",  # if frontend also needs to call self (rare)
+    "http://localhost:5173",                  # local frontend dev URL
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,      # allow only these URLs
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # API Keys
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")

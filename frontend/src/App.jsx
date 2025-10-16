@@ -18,7 +18,10 @@ const App = () => {
 
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  // const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  // src/config.js or wherever you define API base
+const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onrender.com';
+
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

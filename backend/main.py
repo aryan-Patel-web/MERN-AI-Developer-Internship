@@ -31,8 +31,20 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger("VelocityAI")
 
 app = FastAPI(title="Velocity.ai", version="3.0.0")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"], allow_credentials=True)
 
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://velocity-ai-q228.onrender.com",  # your frontend
+        "https://velocity-ai-1aqo.onrender.com"   # your backend (optional)
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # PDF Extraction (same as before)
 def extract_pdf_text(file_path: Path) -> Dict[str, Any]:
     text = ""

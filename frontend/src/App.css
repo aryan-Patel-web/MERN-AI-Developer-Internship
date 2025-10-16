@@ -6,6 +6,12 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  background-color: #000; /* Black background */
+  color: #fff;            /* Optional: default text color white */
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -30,4 +36,5 @@ input, textarea, select {
 #root {
   height: 100vh;
   overflow: hidden;
+  background-color: #000; /* Ensure the app root is black too */
 }

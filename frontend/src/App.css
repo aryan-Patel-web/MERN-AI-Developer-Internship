@@ -1,4 +1,4 @@
-/* Minimal App.css - Basic resets only */
+/* App.css - Full black background, React-ready, overrides inline styles */
 
 * {
   margin: 0;
@@ -6,35 +6,41 @@
   box-sizing: border-box;
 }
 
+/* Force black background on html and body to prevent white flash */
 html, body {
-  height: 100%;
-  background-color: #000; /* Black background */
-  color: #fff;            /* Optional: default text color white */
-}
-
-body {
-  margin: 0;
+  height: 100% !important;
+  width: 100% !important;
+  background-color: #000 !important;
+  color: #fff !important; /* default text color */
+  margin: 0 !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
-
-button {
-  font-family: inherit;
-}
-
-input, textarea, select {
-  font-family: inherit;
-}
-
+/* Root React element */
 #root {
-  height: 100vh;
-  overflow: hidden;
-  background-color: #000; /* Ensure the app root is black too */
+  height: 100vh !important;
+  width: 100% !important;
+  background-color: #000 !important; /* Ensure root is black */
+  overflow: hidden !important;
+  color: #fff !important;
+}
+
+/* Optional: force all children inside root to black */
+#root * {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+/* Code elements */
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace !important;
+}
+
+/* Buttons and inputs inherit fonts */
+button, input, textarea, select {
+  font-family: inherit !important;
 }

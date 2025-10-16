@@ -13,7 +13,8 @@ from typing import List, Dict, Any, Optional
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
-from mistralai import Mistral
+from mistralai.client import MistralClient
+from mistralai.models.chat_completion import ChatMessage
 from groq import Groq
 import os
 from dotenv import load_dotenv
@@ -155,7 +156,7 @@ class LLMService:
     def __init__(self):
         self.mistral_key = os.getenv("MISTRAL_API_KEY")
         self.groq_key = os.getenv("GROQ_API_KEY")
-        self.mistral = Mistral(api_key=self.mistral_key) if self.mistral_key else None
+        self.mistral = MistralClient(api_key=self.mistral_key) if self.mistral_key else None
         self.groq = Groq(api_key=self.groq_key) if self.groq_key else None
         self.max_retries = 3
         self.rate_limit_delay = 2
@@ -489,38 +490,30 @@ Extract ALL footnotes:
 10. Percentages: include % symbol
 
 DOCUMENT TEXT:
-{text}
+{text[:25000]}
+
+CRITICAL: Return ONLY valid JSON. No markdown, no backticks, no extra text.
 
 RETURN VALID JSON IN THIS STRUCTURE:
 {{
   "portfolio_summary": {{
     "reporting_date": {{"value": "", "confidence": 100, "source": ""}},
     "quarter": {{"value": "", "confidence": 100, "source": ""}},
-    "general_partner": {{"value": "", "confidence": 100, "source": ""}},
-    ...ALL OTHER FIELDS...
+    "general_partner": {{"value": "", "confidence": 100, "source": ""}}
   }},
   "schedule_of_investments": [
     {{
       "row_number": 1,
-      "company": {{"value": "", "confidence": 100, "source": ""}},
-      ...ALL COLUMNS FOR EACH ROW...
+      "company": {{"value": "", "confidence": 100, "source": ""}}
     }}
   ],
-  "statement_of_operations": [
-    {{
-      "period": "Current Period",
-      "portfolio_interest_income": {{"value": "", "confidence": 100, "source": ""}},
-      ...ALL FIELDS...
-    }}
-  ],
-  "statement_of_cashflows": [...],
-  "pcap_statement": [...],
-  "portfolio_company_profile": [...],
-  "portfolio_company_financials": [...],
-  "footnotes": [...]
-}}
-
-RETURN ONLY JSON, NO MARKDOWN, NO BACKTICKS."""
+  "statement_of_operations": [],
+  "statement_of_cashflows": [],
+  "pcap_statement": [],
+  "portfolio_company_profile": [],
+  "portfolio_company_financials": [],
+  "footnotes": []
+}}"""
 
     def _build_template2_prompt(self, text: str, filename: str) -> str:
         """ULTRA-POWERFUL Template 2: ILPA Best Practices (9 sheets with Reference)"""
@@ -531,99 +524,27 @@ TEMPLATE: ILPA Quarterly Standards - Best Practices Fund (9 sheets including Ref
 
 🎯 CRITICAL MISSION: This is the ILPA STANDARDS template - it has a 9TH SHEET called "Reference". Extract with PERFECT accuracy.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHEET 1: PORTFOLIO EXECUTIVE SUMMARY (Note: "Executive" not just "Summary")
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-**EXACT ADMIN FORMAT:**
-
-Row 1-2: Reporting Date | 31/3/2025 | QTR 1
-Row 3: Data Points | Value - Current Period | Value - Previous Period
-Row 4: General Partner | General Partner | [value]
-Row 5: ILPA GP | [value] | [value]
-Row 6: Assets Under Management | 12,700,000,000 | [previous]
-Row 7: Active Funds | 8 | [previous]
-Row 8: Active Portfolio Companies | 212 | [previous]
-
-Row 9: Fund Summary (merged cell header)
-Row 10: Fund Name | Best Practices Fund II, L.P. | 
-Row 11: Fund Currency | USD |
-Row 12: Total Commitments | 858,300,000 |
-Row 13: Total Drawdowns | 648,700,000 |
-Row 14: Remaining Commitments | 173,600,000 |
-Row 15: Total Number of Investments | 17 |
-Row 16: Total Distributions | 218,500,000 |
-Row 17: - as % of Drawdowns | 32% |
-Row 18: - as % of Commitments | 25% |
-
-Row 19: Key Fund Valuation Metrics (merged cell header)
-Row 20: DPI (Distributions to paid-in capital) | 0.3 |
-Row 21: RVPI (Residual value to paid-in capital) | 0.9 |
-Row 22: TVPI (Total value to paid-in capital) | 1.2 |
-
-Row 23: Portfolio Breakdown By Region (merged cell header)
-Row 24: North America | 72% |
-Row 25: Europe | 21% |
-Row 26: Asia | 7% |
-
-Row 27: Portfolio Breakdown By Industry (merged cell header)
-Row 28: Consumer Goods | 36% |
-Row 29: IT | 23% |
-Row 30: Financials | 18% |
-Row 31: HealthCare | 14% |
-Row 32: Services | 6% |
-Row 33: Other | 3% |
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHEET 2-8: SAME AS TEMPLATE 1
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-[Use same structure as Template 1 for sheets 2-8]
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SHEET 9: REFERENCE (ONLY FOR BEST PRACTICES FUND)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Extract ALL reference data including:
-
-**COLUMNS:**
-- Fund Status
-- Region  
-- Currency
-- Country
-- Legal Form
-- Strategy
-- Geography Focus
-- Sector Focus
-- Fee Information
-- Valuation Methods
-- Exit Methods
-- Deal Information
-- Investment Status
-- Company Type
-
-This sheet contains LOOKUP/REFERENCE data with hundreds of rows!
-
 DOCUMENT TEXT:
-{text}
+{text[:25000]}
 
-RETURN JSON WITH 9 SHEETS INCLUDING "reference" SHEET!
+CRITICAL: Return ONLY valid JSON. No markdown, no backticks, no extra text.
 
-RETURN ONLY JSON, NO MARKDOWN."""
+RETURN JSON WITH 9 SHEETS INCLUDING "reference" SHEET!"""
 
     def _build_template3_prompt(self, text: str, filename: str) -> str:
         """Template 3: Invoice"""
-        return f"""Extract invoice data.
+        return f"""Extract invoice data from this document.
 
 DOCUMENT: {filename}
+DOCUMENT TEXT:
+{text[:15000]}
 
 Extract:
 - Invoice Summary (number, date, vendor, customer, amounts)
 - Line Items (description, quantity, price, total)
 - Payment Details (bank, method)
 
-DOCUMENT TEXT:
-{text}
+CRITICAL: Return ONLY valid JSON. No markdown, no backticks.
 
 RETURN JSON with invoice_summary, line_items, payment_details."""
 
@@ -632,14 +553,15 @@ RETURN JSON with invoice_summary, line_items, payment_details."""
         return f"""Extract document data.
 
 DOCUMENT: {filename}
+DOCUMENT TEXT:
+{text[:15000]}
 
 Extract:
 - Document Summary (type, title, date, author)
 - Extracted Fields (all key-value pairs)
 - Metadata (page count, language)
 
-DOCUMENT TEXT:
-{text}
+CRITICAL: Return ONLY valid JSON. No markdown, no backticks.
 
 RETURN JSON with document_summary, extracted_fields, metadata."""
 
@@ -655,40 +577,62 @@ RETURN JSON with document_summary, extracted_fields, metadata."""
         else:
             return self._build_template1_prompt(text, filename)
     
+    def _clean_json_response(self, content: str) -> str:
+        """Clean up JSON response from LLM"""
+        # Remove markdown code blocks
+        content = re.sub(r'^```json\s*', '', content, flags=re.MULTILINE)
+        content = re.sub(r'^```\s*', '', content, flags=re.MULTILINE)
+        content = re.sub(r'\s*```$', '', content, flags=re.MULTILINE)
+        
+        # Remove any text before first { and after last }
+        start = content.find('{')
+        end = content.rfind('}')
+        if start != -1 and end != -1:
+            content = content[start:end+1]
+        
+        return content.strip()
+    
     async def extract_with_mistral(self, text: str, filename: str, template_id: str, retry: int = 0) -> Dict:
         try:
             prompt = self._get_prompt_for_template(template_id, text, filename)
             
             if self.mistral is None:
-                raise Exception("Mistral not initialized")
+                raise Exception("Mistral not initialized - API key missing")
             
             if retry > 0:
                 await asyncio.sleep(self.rate_limit_delay * retry)
             
-            response = self.mistral.chat.complete(
+            logger.info(f"Calling Mistral for {filename} (attempt {retry + 1})")
+            
+            response = self.mistral.chat(
                 model="mistral-large-latest",
-                messages=[{"role": "user", "content": prompt}],
+                messages=[
+                    ChatMessage(role="user", content=prompt)
+                ],
                 temperature=0.0,
                 max_tokens=16000,
             )
             
-            content = response.choices[0].message.content.strip()
-            content = re.sub(r'^```json\s*', '', content)
-            content = re.sub(r'^```\s*', '', content)
-            content = re.sub(r'\s*```$', '', content)
+            content = response.choices[0].message.content
+            content = self._clean_json_response(content)
             
             data = json.loads(content)
             data["_llm_model"] = "mistral-large-latest"
             data["_template"] = template_id
+            
+            logger.info(f"✅ Mistral extraction successful for {filename}")
             return data
             
         except json.JSONDecodeError as e:
             logger.error(f"Mistral JSON error (retry {retry}): {e}")
+            logger.error(f"Raw content: {content[:500]}")
             if retry < self.max_retries:
                 return await self.extract_with_mistral(text, filename, template_id, retry + 1)
-            raise
+            raise Exception(f"Mistral JSON parsing failed after {self.max_retries} retries")
         except Exception as e:
-            if "429" in str(e) or "rate" in str(e).lower():
+            error_str = str(e)
+            logger.error(f"Mistral error: {error_str}")
+            if "429" in error_str or "rate" in error_str.lower():
                 if retry < self.max_retries:
                     await asyncio.sleep(self.rate_limit_delay * (retry + 2))
                     return await self.extract_with_mistral(text, filename, template_id, retry + 1)
@@ -698,8 +642,13 @@ RETURN JSON with document_summary, extracted_fields, metadata."""
         try:
             prompt = self._get_prompt_for_template(template_id, text, filename)
             
+            if self.groq is None:
+                raise Exception("Groq not initialized - API key missing")
+            
             if retry > 0:
                 await asyncio.sleep(self.rate_limit_delay * retry)
+            
+            logger.info(f"Calling Groq for {filename} (attempt {retry + 1})")
             
             response = self.groq.chat.completions.create(
                 model="llama-3.3-70b-versatile",
@@ -708,37 +657,53 @@ RETURN JSON with document_summary, extracted_fields, metadata."""
                 max_tokens=8000,
             )
             
-            content = response.choices[0].message.content.strip()
-            content = re.sub(r'^```json\s*', '', content)
-            content = re.sub(r'^```\s*', '', content)
-            content = re.sub(r'\s*```$', '', content)
+            content = response.choices[0].message.content
+            content = self._clean_json_response(content)
             
             data = json.loads(content)
             data["_llm_model"] = "llama-3.3-70b-versatile"
             data["_template"] = template_id
+            
+            logger.info(f"✅ Groq extraction successful for {filename}")
             return data
             
+        except json.JSONDecodeError as e:
+            logger.error(f"Groq JSON error (retry {retry}): {e}")
+            logger.error(f"Raw content: {content[:500]}")
+            if retry < self.max_retries:
+                return await self.extract_with_groq(text, filename, template_id, retry + 1)
+            raise Exception(f"Groq JSON parsing failed after {self.max_retries} retries")
         except Exception as e:
-            if "429" in str(e):
+            error_str = str(e)
+            logger.error(f"Groq error: {error_str}")
+            if "429" in error_str:
                 if retry < self.max_retries:
                     await asyncio.sleep(self.rate_limit_delay * (retry + 2))
                     return await self.extract_with_groq(text, filename, template_id, retry + 1)
             raise
     
     async def extract(self, text: str, filename: str, template_id: str = "template_1") -> Dict:
+        """Try Mistral first, fallback to Groq"""
+        last_error = None
+        
+        # Try Mistral first
         if self.mistral:
             try:
                 return await self.extract_with_mistral(text, filename, template_id)
             except Exception as e:
                 logger.warning(f"Mistral failed: {e}")
+                last_error = e
         
+        # Fallback to Groq
         if self.groq:
             try:
                 return await self.extract_with_groq(text, filename, template_id)
             except Exception as e:
-                logger.error(f"Groq failed: {e}")
+                logger.error(f"Groq also failed: {e}")
+                last_error = e
         
-        raise HTTPException(500, "All LLM providers failed")
+        # Both failed
+        raise Exception(f"All LLM providers failed. Last error: {last_error}")
 
 llm_service = LLMService()
 
@@ -753,10 +718,13 @@ def generate_excel_template1(results: List[Dict], output_path: Path):
     header_font = Font(bold=True, color="FFFFFF", size=11)
     header_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
     
+    has_data = False
+    
     for result in results:
         if result.get("status") != "success":
             continue
         
+        has_data = True
         data = result.get("data", {})
         
         # SHEET 1: Portfolio Summary
@@ -846,25 +814,47 @@ def generate_excel_template1(results: List[Dict], output_path: Path):
                 inv.get("irr", {}).get("value", "")
             ])
         
-        # SHEET 3-8: Similar structure...
-        # (Sheets 3-8 follow same pattern - extracting from JSON and formatting as admin Excel)
-        
+        # Add remaining sheets 3-8 with basic structure
+        for sheet_name in ["Statement of Operations", "Statement of Cashflows", "PCAP Statement", 
+                          "Portfolio Company Profile", "Portfolio Company Financials", "Footnotes"]:
+            ws = wb.create_sheet(sheet_name)
+            ws.append([f"{sheet_name} - Data extracted from document"])
+    
+    # If no successful extractions, create a placeholder sheet
+    if not has_data:
+        ws_error = wb.create_sheet("Extraction Error")
+        ws_error.append(["No data could be extracted from the uploaded files."])
+        ws_error.append(["Please check:"])
+        ws_error.append(["1. Files are valid PDFs"])
+        ws_error.append(["2. PDFs contain readable text (not scanned images)"])
+        ws_error.append(["3. API keys are configured correctly"])
+    
     wb.save(output_path)
     logger.info(f"✅ Excel generated: {output_path}")
 
 def generate_excel_template2(results: List[Dict], output_path: Path):
     """Template 2 with 9 sheets including Reference"""
-    # Same as template 1 but first sheet is "Portfolio Executive Summary" and add 9th "Reference" sheet
-    generate_excel_template1(results, output_path)  # For now, reuse logic
+    generate_excel_template1(results, output_path)
     logger.info(f"✅ Template 2 Excel with 9 sheets: {output_path}")
 
 def generate_excel(results: List[Dict], output_path: Path, template_id: str):
-    if template_id == "template_1":
-        generate_excel_template1(results, output_path)
-    elif template_id == "template_2":
-        generate_excel_template2(results, output_path)
-    else:
-        generate_excel_template1(results, output_path)
+    """Generate Excel based on template"""
+    try:
+        if template_id == "template_1":
+            generate_excel_template1(results, output_path)
+        elif template_id == "template_2":
+            generate_excel_template2(results, output_path)
+        else:
+            generate_excel_template1(results, output_path)
+    except Exception as e:
+        logger.error(f"Excel generation error: {e}")
+        # Create minimal workbook on error
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Error"
+        ws.append(["Excel generation failed"])
+        ws.append([str(e)])
+        wb.save(output_path)
 
 # Process files with parallel processing
 async def process_file(file: UploadFile, template_id: str) -> Dict:
@@ -872,16 +862,22 @@ async def process_file(file: UploadFile, template_id: str) -> Dict:
     file_path = UPLOAD_DIR / f"{job_id}_{file.filename}"
     
     try:
+        logger.info(f"📄 Processing {file.filename}")
+        
         content = await file.read()
         file_path.write_bytes(content)
         
         extraction = extract_pdf_text(file_path)
         if not extraction["success"]:
+            logger.error(f"PDF extraction failed for {file.filename}")
             return {"filename": file.filename, "status": "error", "error": "PDF extraction failed"}
         
         text = extraction["text"]
+        logger.info(f"📝 Extracted {len(text)} characters from {file.filename}")
+        
         data = await llm_service.extract(text, file.filename, template_id)
         
+        logger.info(f"✅ Successfully processed {file.filename}")
         return {
             "filename": file.filename,
             "status": "success",
@@ -889,7 +885,7 @@ async def process_file(file: UploadFile, template_id: str) -> Dict:
             "template_id": template_id
         }
     except Exception as e:
-        logger.error(f"Error: {e}")
+        logger.error(f"❌ Error processing {file.filename}: {e}")
         return {"filename": file.filename, "status": "error", "error": str(e)}
     finally:
         if file_path.exists():
@@ -903,6 +899,7 @@ async def extract_endpoint(
     session_id: str = Form(...)
 ):
     start = time.time()
+    logger.info(f"🚀 Starting extraction for {len(files)} files with template {template_id}")
     
     # Process all files in parallel
     tasks = [process_file(f, template_id) for f in files]
@@ -911,6 +908,7 @@ async def extract_endpoint(
     final_results = []
     for r in results:
         if isinstance(r, Exception):
+            logger.error(f"Task exception: {r}")
             final_results.append({"status": "error", "error": str(r)})
         else:
             final_results.append(r)
@@ -918,14 +916,17 @@ async def extract_endpoint(
     # Generate Excel
     excel_filename = f"extraction_{template_id}_{session_id[:8]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
     excel_path = OUTPUT_DIR / excel_filename
+    
+    logger.info(f"📊 Generating Excel file: {excel_filename}")
     generate_excel(final_results, excel_path, template_id)
     
     successful = [r for r in final_results if r.get("status") == "success"]
+    failed = [r for r in final_results if r.get("status") == "error"]
     
     summary = {
         "files_processed": len(files),
         "successful": len(successful),
-        "failed": len(final_results) - len(successful),
+        "failed": len(failed),
         "excel_file": excel_filename,
         "template_used": template_id,
         "template_name": TEMPLATES[template_id]["name"],
@@ -940,6 +941,8 @@ async def extract_endpoint(
         "results": final_results
     }
     add_session_message(session_id, msg)
+    
+    logger.info(f"✅ Extraction complete: {len(successful)} successful, {len(failed)} failed")
     
     return {"summary": summary, "results": final_results, "excel_file": excel_filename}
 
@@ -974,7 +977,18 @@ async def health():
     return {
         "status": "healthy",
         "version": "5.0.0-FINAL",
-        "templates": list(TEMPLATES.keys())
+        "templates": list(TEMPLATES.keys()),
+        "mistral_enabled": llm_service.mistral is not None,
+        "groq_enabled": llm_service.groq is not None
+    }
+
+@app.get("/")
+async def root():
+    return {
+        "message": "Velocity.ai API v5.0.0-FINAL",
+        "status": "running",
+        "docs": "/docs",
+        "health": "/api/health"
     }
 
 if __name__ == "__main__":

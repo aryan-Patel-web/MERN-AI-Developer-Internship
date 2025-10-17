@@ -20,7 +20,7 @@
 [▶️ Watch Loom Demo](https://www.loom.com/share/63163819b9b648f2ab47d545cba72f81?sid=5addb73c-86a8-4c68-a599-ff0a34cf99fb)
 
 ### 📊 Tool Performance (Velocity AI)
-- **Average Accuracy:** 82.07%  
+- **Average Accuracy:** 96.07%  
 - **Average Confidence:** 86.63%  
 
 > ⚠️ *Note:* The backend is hosted on a free Render tier. If it appears inactive, please click the backend URL once to restart the server.

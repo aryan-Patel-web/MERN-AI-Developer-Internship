@@ -35,16 +35,16 @@ logger = logging.getLogger(__name__)
 
 # FastAPI
 app = FastAPI(title="Velocity.ai PDF Extraction")
-# app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+
 origins = [
-    "https://velocity-ai-q228.onrender.com",  # frontend URL
-    "https://velocity-ai-1aqo.onrender.com",  # if frontend also needs to call self (rare)
-    "http://localhost:5173",                  # local frontend dev URL
+    "https://velocity-ai-q228.onrender.com",
+    "https://velocity-ai-1aqo.onrender.com",
+    "http://localhost:5173",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,      # allow only these URLs
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -52,16 +52,12 @@ app.add_middleware(
 
 # API Keys
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")  # Optional: Get free key at console.groq.com
 
-# Rate limiter: 2 requests per second to avoid 429 errors
-rate_limiter = AsyncLimiter(max_rate=2, time_period=1)
-
-# Semaphore: Max 3 concurrent LLM calls
-semaphore = asyncio.Semaphore(3)
+# Rate limiter: 1 request per 3 seconds for Mistral free tier (20 req/min)
+rate_limiter = AsyncLimiter(max_rate=1, time_period=3)
 
 # HTTP client with connection pooling
-http_client = httpx.AsyncClient(timeout=60.0, limits=httpx.Limits(max_connections=10))
+http_client = httpx.AsyncClient(timeout=90.0, limits=httpx.Limits(max_connections=5))
 
 # Template configs
 TEMPLATES = {
@@ -92,271 +88,245 @@ TEMPLATES = {
 }
 
 def extract_pdf_text(pdf_path: Path) -> str:
-    """Ultra-fast PDF extraction"""
+    """Ultra-fast PDF extraction - 15 pages max"""
     start = time.time()
     text = ""
     
     with pdfplumber.open(pdf_path) as pdf:
-        for i, page in enumerate(pdf.pages[:30]):  # Max 30 pages for speed
+        for i, page in enumerate(pdf.pages[:15]):  # Max 15 pages for speed
             page_text = page.extract_text() or ""
             if page_text.strip():
                 text += f"\n=== PAGE {i+1} ===\n{page_text}"
     
     logger.info(f"PDF extracted in {time.time()-start:.2f}s ({len(text)} chars)")
-    return text[:80000]  # Limit to 80K chars for fast processing
+    return text[:40000]  # Limit to 40K chars for fast LLM processing
 
-def sanitize_json(text: str) -> str:
-    """Clean LLM response to extract valid JSON"""
+def aggressive_json_sanitization(text: str) -> str:
+    """Aggressive JSON cleaning to handle all edge cases"""
+    
     # Remove markdown code blocks
     text = re.sub(r'```json\s*', '', text)
     text = re.sub(r'```\s*', '', text)
+    text = re.sub(r'`', '', text)
     
-    # Extract JSON from text
-    json_match = re.search(r'(\{.*\}|\[.*\])', text, re.DOTALL)
-    if json_match:
-        text = json_match.group(1)
+    # Find first { or [ and last } or ]
+    start_brace = text.find('{')
+    start_bracket = text.find('[')
     
-    # Fix common JSON issues
-    text = text.replace("'", '"')  # Single quotes to double
-    text = re.sub(r',(\s*[}\]])', r'\1', text)  # Remove trailing commas
-    text = re.sub(r':\s*None', ': null', text)  # Python None to JSON null
-    text = re.sub(r':\s*True', ': true', text)  # Python True to JSON true
-    text = re.sub(r':\s*False', ': false', text)  # Python False to JSON false
+    if start_brace == -1 and start_bracket == -1:
+        return "{}"
+    
+    # Determine which comes first
+    if start_brace != -1 and (start_bracket == -1 or start_brace < start_bracket):
+        start = start_brace
+        end_char = '}'
+    else:
+        start = start_bracket
+        end_char = ']'
+    
+    # Find matching closing brace/bracket
+    end = text.rfind(end_char)
+    if end == -1:
+        return "{}"
+    
+    text = text[start:end+1]
+    
+    # Fix Python-style syntax
+    text = re.sub(r':\s*None\b', ': null', text)
+    text = re.sub(r':\s*True\b', ': true', text)
+    text = re.sub(r':\s*False\b', ': false', text)
+    
+    # Fix single quotes to double quotes (carefully)
+    text = text.replace("'", '"')
+    
+    # Remove trailing commas before closing brackets/braces
+    text = re.sub(r',(\s*[}\]])', r'\1', text)
+    
+    # Fix unescaped quotes in strings (basic attempt)
+    # This is tricky - doing a simple replacement
+    text = re.sub(r'(?<!\\)"([^"]*)"([^"]*)"', r'"\1\"\2"', text)
+    
+    # Remove comments
+    text = re.sub(r'//.*?\n', '', text)
+    text = re.sub(r'/\*.*?\*/', '', text, flags=re.DOTALL)
     
     return text.strip()
 
-@retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=2, min=2, max=10),
-    retry=retry_if_exception_type(httpx.HTTPStatusError)
-)
-async def call_groq_fast(prompt: str, max_tokens: int = 2000) -> Dict:
-    """Fast LLM call using Groq (sub-second latency)"""
-    if not GROQ_API_KEY:
-        raise Exception("Groq API key not found")
+def fallback_json_extraction(text: str) -> Dict:
+    """Fallback: Extract key-value pairs when JSON fails"""
+    try:
+        # Try to extract any key-value patterns
+        result = {}
+        
+        # Pattern: "key": "value" or "key": number
+        patterns = re.findall(r'"([^"]+)":\s*("(?:[^"\\]|\\.)*"|[\d.]+|true|false|null)', text)
+        
+        for key, value in patterns:
+            # Clean value
+            value = value.strip('"')
+            
+            # Try to convert to appropriate type
+            if value in ('true', 'false'):
+                result[key] = value == 'true'
+            elif value == 'null':
+                result[key] = None
+            elif value.replace('.', '').replace('-', '').isdigit():
+                result[key] = float(value) if '.' in value else int(value)
+            else:
+                result[key] = value
+        
+        return result if result else {}
     
-    async with rate_limiter:
-        async with semaphore:
-            try:
-                response = await http_client.post(
-                    "https://api.groq.com/openai/v1/chat/completions",
-                    headers={
-                        "Authorization": f"Bearer {GROQ_API_KEY}",
-                        "Content-Type": "application/json"
-                    },
-                    json={
-                        "model": "llama-3.1-8b-instant",
-                        "messages": [{"role": "user", "content": prompt}],
-                        "temperature": 0.1,
-                        "max_tokens": max_tokens
-                    }
-                )
-                
-                response.raise_for_status()
-                data = response.json()
-                content = data["choices"][0]["message"]["content"]
-                
-                # Sanitize and parse JSON
-                clean_json = sanitize_json(content)
-                return json.loads(clean_json)
-                
-            except json.JSONDecodeError as e:
-                logger.warning(f"Groq JSON parse error: {e}")
-                return {}
-            except Exception as e:
-                logger.error(f"Groq error: {e}")
-                raise
+    except Exception as e:
+        logger.warning(f"Fallback extraction failed: {e}")
+        return {}
 
 @retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=2, min=2, max=10),
+    stop=stop_after_attempt(2),  # Only 2 retries (not 3)
+    wait=wait_exponential(multiplier=2, min=2, max=4),  # Max 4 sec wait
     retry=retry_if_exception_type(httpx.HTTPStatusError)
 )
-async def call_mistral_safe(prompt: str, max_tokens: int = 3000) -> Dict:
-    """Safe Mistral call with rate limiting and retry"""
-    async with rate_limiter:
-        async with semaphore:
+async def call_mistral_optimized(prompt: str, max_tokens: int = 4000) -> Dict:
+    """Optimized Mistral call with better error handling"""
+    async with rate_limiter:  # 1 request per 3 seconds
+        try:
+            response = await http_client.post(
+                "https://api.mistral.ai/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {MISTRAL_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "mistral-large-latest",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": 0.1,
+                    "max_tokens": max_tokens,
+                    "response_format": {"type": "json_object"}  # Request JSON format
+                }
+            )
+            
+            response.raise_for_status()
+            data = response.json()
+            content = data["choices"][0]["message"]["content"]
+            
+            # Try standard JSON parse
             try:
-                response = await http_client.post(
-                    "https://api.mistral.ai/v1/chat/completions",
-                    headers={
-                        "Authorization": f"Bearer {MISTRAL_API_KEY}",
-                        "Content-Type": "application/json"
-                    },
-                    json={
-                        "model": "mistral-large-latest",
-                        "messages": [{"role": "user", "content": prompt}],
-                        "temperature": 0.1,
-                        "max_tokens": max_tokens
-                    }
-                )
-                
-                response.raise_for_status()
-                data = response.json()
-                content = data["choices"][0]["message"]["content"]
-                
-                # Sanitize and parse JSON
-                clean_json = sanitize_json(content)
-                return json.loads(clean_json)
-                
-            except httpx.HTTPStatusError as e:
-                if e.response.status_code == 429:
-                    logger.warning("Mistral 429: Rate limit hit, retrying...")
-                    raise  # Let tenacity retry
-                logger.error(f"Mistral HTTP error: {e}")
-                return {}
-            except json.JSONDecodeError as e:
-                logger.warning(f"Mistral JSON parse error: {e}")
-                return {}
-            except Exception as e:
-                logger.error(f"Mistral error: {e}")
-                return {}
+                return json.loads(content)
+            except json.JSONDecodeError:
+                # Try aggressive sanitization
+                logger.info("Standard JSON parse failed, trying sanitization...")
+                clean_json = aggressive_json_sanitization(content)
+                try:
+                    return json.loads(clean_json)
+                except json.JSONDecodeError:
+                    # Final fallback: extract key-value pairs
+                    logger.warning("JSON sanitization failed, using fallback extraction")
+                    return fallback_json_extraction(content)
+        
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 429:
+                logger.warning("⚠️ Mistral 429: Rate limit hit, retrying with backoff...")
+                raise  # Let tenacity retry
+            logger.error(f"Mistral HTTP {e.response.status_code}: {e}")
+            return {}
+        
+        except Exception as e:
+            logger.error(f"Mistral error: {e}")
+            return {}
 
-async def call_llm_smart(prompt: str, max_tokens: int = 3000) -> Dict:
-    """Smart LLM router: Try Groq first (fast), fallback to Mistral"""
+def get_batch_prompt(sheet_names: List[str], pdf_text: str) -> str:
+    """Generate batched prompt for multiple sheets at once"""
+    
+    # Truncate for speed
+    text_sample = pdf_text[:35000]
+    
+    sheets_json = {}
+    for sheet in sheet_names:
+        if sheet == "Portfolio Summary":
+            sheets_json[sheet] = {
+                "Reporting Date": "string",
+                "QTR": "string",
+                "General Partner": "string",
+                "Assets Under Management": "number",
+                "Active Funds": "number",
+                "Active Portfolio Companies": "number",
+                "Total Commitments": "number",
+                "Total Drawdowns": "number",
+                "DPI": "number",
+                "RVPI": "number",
+                "TVPI": "number"
+            }
+        elif sheet == "Schedule of Investments":
+            sheets_json[sheet] = [
+                {
+                    "number": "number",
+                    "Company": "string",
+                    "Fund": "string",
+                    "Investment Status": "string",
+                    "Fund Ownership percentage": "string",
+                    "Total Invested": "number",
+                    "Reported Value": "number",
+                    "Investment Multiple": "number"
+                }
+            ]
+        elif sheet == "Statement of Operations":
+            sheets_json[sheet] = [
+                {
+                    "Period": "string",
+                    "Portfolio Interest Income": "number",
+                    "Total income": "number",
+                    "Management Fees Net": "number",
+                    "Total expenses": "number",
+                    "Net Operating Income": "number"
+                }
+            ]
+        else:
+            sheets_json[sheet] = {"description": "Extract all relevant data"}
+    
+    prompt = f"""You are a financial data extraction expert. Extract data from this PDF and structure it EXACTLY as specified.
+
+CRITICAL INSTRUCTIONS:
+1. Return ONLY a single valid JSON object
+2. No explanations, no text before or after the JSON
+3. Do not include trailing commas
+4. Wrap all strings in double quotes
+5. Use null for missing values (not "Not found" or empty strings)
+6. Ensure all brackets and braces are properly closed
+
+PDF TEXT:
+{text_sample}
+
+REQUIRED OUTPUT STRUCTURE:
+{json.dumps(sheets_json, indent=2)}
+
+Return ONLY valid JSON matching this exact structure. Fill in actual values from the PDF, use null for missing data."""
+
+    return prompt
+
+async def extract_batch_sheets(sheet_names: List[str], pdf_text: str) -> Dict:
+    """Extract multiple sheets in a single LLM call"""
     try:
-        if GROQ_API_KEY:
-            logger.info("Using Groq (fast)")
-            return await call_groq_fast(prompt, max_tokens)
+        prompt = get_batch_prompt(sheet_names, pdf_text)
+        result = await call_mistral_optimized(prompt, max_tokens=5000)
+        
+        if not result:
+            logger.warning(f"Empty result for batch {sheet_names}")
+            return {sheet: {} for sheet in sheet_names}
+        
+        # Ensure all requested sheets are in result
+        for sheet in sheet_names:
+            if sheet not in result:
+                result[sheet] = {}
+        
+        return result
+    
     except Exception as e:
-        logger.warning(f"Groq failed: {e}, falling back to Mistral")
-    
-    # Fallback to Mistral
-    logger.info("Using Mistral")
-    return await call_mistral_safe(prompt, max_tokens)
-
-def get_sheet_prompt(sheet_name: str, pdf_text: str) -> str:
-    """Generate focused prompt for each sheet"""
-    
-    # Truncate text for speed
-    text_sample = pdf_text[:40000]
-    
-    prompts = {
-        "Portfolio Summary": f"""Extract Portfolio Summary from PDF. Return ONLY valid JSON:
-
-{{
-  "Reporting Date": "...",
-  "QTR": "...",
-  "General Partner": "...",
-  "ILPA GP": "...",
-  "Assets Under Management": 0,
-  "Active Funds": 0,
-  "Active Portfolio Companies": 0,
-  "Fund Name": "...",
-  "Fund Currency": "...",
-  "Total Commitments": 0,
-  "Total Drawdowns": 0,
-  "Remaining Commitments": 0,
-  "Total Number of Investments": 0,
-  "Total Distributions": 0,
-  "DPI": 0.0,
-  "RVPI": 0.0,
-  "TVPI": 0.0
-}}
-
-PDF: {text_sample}
-
-Return ONLY JSON. Use "Not found" for missing fields.""",
-
-        "Schedule of Investments": f"""Extract ALL investments/companies. Return JSON array:
-
-[
-  {{
-    "#": 1,
-    "Company": "...",
-    "Fund": "...",
-    "Investment Status": "...",
-    "Security Type": "...",
-    "Fund Ownership %": "0%",
-    "Initial Investment Date": "...",
-    "Fund Commitment": 0,
-    "Total Invested (A)": 0,
-    "Reported Value (C)": 0,
-    "Investment Multiple": 0.0,
-    "Since Inception IRR": "0%"
-  }}
-]
-
-PDF: {text_sample}
-
-Return ONLY JSON array.""",
-
-        "Statement of Operations": f"""Extract operations for 3 periods. Return JSON array:
-
-[
-  {{
-    "Period": "Current Period",
-    "Portfolio Interest Income": 0,
-    "Portfolio Dividend Income": 0,
-    "Total income": 0,
-    "Management Fees, Net": 0,
-    "Total expenses": 0,
-    "Net Operating Income / (Deficit)": 0
-  }}
-]
-
-PDF: {text_sample}""",
-
-        "Portfolio Company Profile": f"""Extract ALL company profiles. Return JSON array:
-
-[
-  {{
-    "#": 1,
-    "Company Name": "...",
-    "Initial Investment Date": "...",
-    "Industry": "...",
-    "Headquarters": "...",
-    "Company Description": "...",
-    "Fund Ownership %": "0%",
-    "Investment Commitment": 0,
-    "Invested Capital": 0
-  }}
-]
-
-PDF: {text_sample}""",
-
-        "Portfolio Company Financials": f"""Extract company financials. Return JSON array:
-
-[
-  {{
-    "Company": "...",
-    "Company Currency": "USD",
-    "LTM Revenue": 0,
-    "LTM EBITDA": 0,
-    "EBITDA Margin": "0%"
-  }}
-]
-
-PDF: {text_sample}""",
-
-        "Footnotes": f"""Extract ALL footnotes. Return JSON array:
-
-[
-  {{
-    "Note #": 1,
-    "Note Header": "...",
-    "Description": "..."
-  }}
-]
-
-PDF: {text_sample}"""
-    }
-    
-    return prompts.get(sheet_name, f"Extract {sheet_name} data. Return JSON.\n\nPDF: {text_sample}")
-
-async def extract_sheet_parallel(sheet_name: str, pdf_text: str) -> Dict:
-    """Extract single sheet with rate limiting"""
-    try:
-        prompt = get_sheet_prompt(sheet_name, pdf_text)
-        result = await call_llm_smart(prompt, max_tokens=2500)
-        return {sheet_name: result}
-    except Exception as e:
-        logger.error(f"Sheet {sheet_name} extraction failed: {e}")
-        return {sheet_name: {}}
+        logger.error(f"Batch extraction failed for {sheet_names}: {e}")
+        return {sheet: {} for sheet in sheet_names}
 
 def safe_excel_value(value: Any) -> Any:
     """Convert any value to Excel-safe format"""
-    if value is None:
+    if value is None or value == "null":
         return "Not found"
     
     # Convert complex types to strings
@@ -365,7 +335,7 @@ def safe_excel_value(value: Any) -> Any:
     
     # Convert to string if too long
     str_val = str(value)
-    if len(str_val) > 32000:  # Excel cell limit
+    if len(str_val) > 32000:
         return str_val[:32000] + "..."
     
     return value
@@ -380,7 +350,7 @@ def calculate_accuracy(data: Dict, template_id: str) -> float:
         if isinstance(obj, dict):
             for v in obj.values():
                 total_fields += 1
-                if v and str(v).strip() and v != "Not found":
+                if v and str(v).strip() and v not in ("Not found", "null", None):
                     filled_fields += 1
                 if isinstance(v, (dict, list)):
                     count_fields(v)
@@ -391,7 +361,7 @@ def calculate_accuracy(data: Dict, template_id: str) -> float:
     count_fields(data)
     
     accuracy = (filled_fields / total_fields * 100) if total_fields > 0 else 0
-    logger.info(f"Accuracy: {accuracy:.1f}% ({filled_fields}/{total_fields} fields filled)")
+    logger.info(f"✅ Accuracy: {accuracy:.1f}% ({filled_fields}/{total_fields} fields filled)")
     return round(accuracy, 2)
 
 def create_excel(data: Dict, template_id: str, output_path: Path, metadata: Dict):
@@ -411,35 +381,36 @@ def create_excel(data: Dict, template_id: str, output_path: Path, metadata: Dict
     DEFAULT_HEADERS = {
         "Portfolio Summary": ["Field", "Value"],
         "Schedule of Investments": [
-            "#", "Company", "Fund", "Reported Date", "Investment Status", "Security Type",
+            "#", "Company", "Fund", "Investment Status", "Security Type",
             "Fund Ownership %", "Initial Investment Date", "Fund Commitment",
-            "Total Invested (A)", "Current Cost (B)", "Reported Value (C)", "Realized Proceeds (D)",
-            "Investment Multiple", "Since Inception IRR"
+            "Total Invested (A)", "Reported Value (C)", "Investment Multiple", "Since Inception IRR"
         ],
         "Statement of Operations": [
             "Period", "Portfolio Interest Income", "Portfolio Dividend Income", "Total income",
             "Management Fees, Net", "Total expenses", "Net Operating Income / (Deficit)"
         ],
         "Statement of Cashflows": [
-            "Description", "Net increase/(decrease) in partners' capital",
-            "Purchase of investments", "Capital contributions", "Distributions",
-            "Cash and cash equivalents, end of period"
+            "Description", "Net increase in partners capital", "Purchase of investments",
+            "Capital contributions", "Distributions", "Cash at end of period"
         ],
         "PCAP Statement": [
-            "Description", "Beginning NAV", "Contributions", "Distributions",
-            "Ending NAV", "Total Commitment"
+            "Description", "Beginning NAV", "Contributions", "Distributions", "Ending NAV"
         ],
         "Portfolio Company Profile": [
             "#", "Company Name", "Initial Investment Date", "Industry", "Headquarters",
-            "Company Description", "Fund Ownership %", "Investment Commitment",
-            "Invested Capital", "Reported Value"
+            "Company Description", "Fund Ownership %", "Investment Commitment"
         ],
         "Portfolio Company Financials": [
-            "Company", "Company Currency", "LTM Revenue", "LTM EBITDA",
-            "EBITDA Margin", "Gross Debt"
+            "Company", "Company Currency", "LTM Revenue", "LTM EBITDA", "EBITDA Margin"
         ],
         "Footnotes": ["Note #", "Note Header", "Description"],
-        "Reference": ["Field", "Value"]
+        "Reference": ["Field", "Value"],
+        "Invoice Details": ["Field", "Value"],
+        "Line Items": ["Item", "Description", "Quantity", "Price", "Amount"],
+        "Summary": ["Field", "Value"],
+        "Document Info": ["Field", "Value"],
+        "Content": ["Section", "Content"],
+        "Metadata": ["Property", "Value"]
     }
     
     for sheet_name in sheet_names:
@@ -499,7 +470,7 @@ def create_excel(data: Dict, template_id: str, output_path: Path, metadata: Dict
     ws_meta.append(["Template", TEMPLATES[template_id]["name"]])
     ws_meta.append(["Processed At", metadata.get("timestamp", "")])
     ws_meta.append(["Processing Time (s)", metadata.get("processing_time", "")])
-    ws_meta.append(["LLM Model", metadata.get("llm_model", "Groq/Mistral")])
+    ws_meta.append(["LLM Model", "Mistral Large"])
     ws_meta.append(["Accuracy (%)", metadata.get("accuracy", "")])
     ws_meta.append(["Confidence (%)", metadata.get("confidence", "")])
     
@@ -509,16 +480,16 @@ def create_excel(data: Dict, template_id: str, output_path: Path, metadata: Dict
         cell.border = border
     
     wb.save(output_path)
-    logger.info(f"Excel created: {output_path}")
+    logger.info(f"📊 Excel created: {output_path}")
 
 # API endpoints
 @app.post("/api/extract")
 async def extract(files: List[UploadFile] = File(...), template_id: str = Form(...)):
-    """Main extraction endpoint with rate limiting and retry"""
+    """Optimized extraction with batching and better error handling"""
     start_time = time.time()
     session_id = str(uuid.uuid4())[:8]
     
-    logger.info(f"Session {session_id}: Starting extraction with {template_id}")
+    logger.info(f"🚀 Session {session_id}: Starting OPTIMIZED extraction with {template_id}")
     
     try:
         if template_id not in TEMPLATES:
@@ -537,7 +508,7 @@ async def extract(files: List[UploadFile] = File(...), template_id: str = Form(.
         if not pdf_paths:
             raise HTTPException(400, "No PDF files found")
         
-        # Extract text (2-3s)
+        # Extract text (1-2s with 15 page limit)
         extract_start = time.time()
         texts = []
         for path, name in pdf_paths:
@@ -547,33 +518,40 @@ async def extract(files: List[UploadFile] = File(...), template_id: str = Form(.
         combined_text = "\n\n=== NEXT DOCUMENT ===\n\n".join(texts)
         extraction_time = time.time() - extract_start
         
-        # CONTROLLED PARALLEL EXTRACTION (8-12s)
-        # Process sheets in batches to avoid overwhelming API
+        # BATCHED EXTRACTION: Process 3 sheets per LLM call (9 sheets → 3 calls)
         llm_start = time.time()
         sheet_names = TEMPLATES[template_id]["sheet_names"]
         
-        # Process 3 sheets at a time (controlled by semaphore)
-        all_results = []
+        logger.info(f"📋 Processing {len(sheet_names)} sheets in batches of 3...")
+        
+        # Process in batches of 3
+        all_results = {}
         for i in range(0, len(sheet_names), 3):
             batch = sheet_names[i:i+3]
-            tasks = [extract_sheet_parallel(sheet, combined_text) for sheet in batch]
-            batch_results = await asyncio.gather(*tasks, return_exceptions=True)
-            all_results.extend(batch_results)
+            batch_num = (i // 3) + 1
+            total_batches = (len(sheet_names) + 2) // 3
             
-            # Small delay between batches to avoid rate limits
+            logger.info(f"⏳ Batch {batch_num}/{total_batches}: {', '.join(batch)}")
+            
+            try:
+                batch_result = await extract_batch_sheets(batch, combined_text)
+                all_results.update(batch_result)
+                logger.info(f"✅ Batch {batch_num} complete")
+            except Exception as e:
+                logger.error(f"❌ Batch {batch_num} failed: {e}")
+                # Graceful degradation: Add empty sheets
+                for sheet in batch:
+                    all_results[sheet] = {}
+            
+            # Wait between batches (except last one)
             if i + 3 < len(sheet_names):
-                await asyncio.sleep(1)
-        
-        # Merge results
-        extracted = {}
-        for result in all_results:
-            if isinstance(result, dict):
-                extracted.update(result)
+                logger.info("⏸️  Waiting 3 seconds before next batch...")
+                await asyncio.sleep(3)
         
         llm_time = time.time() - llm_start
         
         # Calculate accuracy
-        accuracy = calculate_accuracy(extracted, template_id)
+        accuracy = calculate_accuracy(all_results, template_id)
         confidence = min(accuracy + 5, 100)
         
         # Create Excel (2-3s)
@@ -588,10 +566,10 @@ async def extract(files: List[UploadFile] = File(...), template_id: str = Form(.
             "accuracy": accuracy,
             "confidence": confidence,
             "files_processed": len(pdf_paths),
-            "llm_model": "Groq/Mistral"
+            "llm_model": "Mistral Large"
         }
         
-        create_excel(extracted, template_id, output_path, metadata)
+        create_excel(all_results, template_id, output_path, metadata)
         
         # Save history
         history = []
@@ -628,7 +606,7 @@ async def extract(files: List[UploadFile] = File(...), template_id: str = Form(.
             json.dump(history, f, indent=2)
         
         total_time = time.time() - start_time
-        logger.info(f"Session {session_id}: Complete in {total_time:.2f}s (Acc: {accuracy}%)")
+        logger.info(f"🎉 Session {session_id}: Complete in {total_time:.2f}s (Acc: {accuracy}%, Conf: {confidence}%)")
         
         return JSONResponse({
             "success": True,
@@ -646,7 +624,7 @@ async def extract(files: List[UploadFile] = File(...), template_id: str = Form(.
         })
     
     except Exception as e:
-        logger.error(f"Extraction failed: {e}", exc_info=True)
+        logger.error(f"💥 Extraction failed: {e}", exc_info=True)
         raise HTTPException(500, str(e))
 
 @app.get("/api/download/{filename}")
@@ -685,15 +663,16 @@ async def chat(message: str = Form(...), session_id: str = Form(...), pdf_contex
             data_summary[sheet] = [[str(cell.value) for cell in row] for row in ws.iter_rows(max_row=10)]
         
         # Query LLM
-        prompt = f"""Based on this data:
+        prompt = f"""Based on this extracted financial data, answer the question clearly and concisely.
 
+DATA:
 {json.dumps(data_summary, indent=2)}
 
-Question: {message}
+QUESTION: {message}
 
-Provide a clear answer."""
+Provide a direct answer with specific numbers or facts from the data. Return as JSON: {{"answer": "your answer here"}}"""
 
-        response = await call_llm_smart(prompt, max_tokens=500)
+        response = await call_mistral_optimized(prompt, max_tokens=500)
         answer = response.get("answer", str(response)) if isinstance(response, dict) else str(response)
         
         return JSONResponse({"response": answer})
@@ -740,7 +719,7 @@ async def templates():
 
 @app.get("/")
 async def root():
-    return {"message": "Velocity.ai API v2.1 - Production Ready", "status": "online"}
+    return {"message": "Velocity.ai API v2.2 - OPTIMIZED", "status": "online"}
 
 @app.on_event("shutdown")
 async def shutdown_event():

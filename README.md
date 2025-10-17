@@ -10,6 +10,31 @@
 
 ---
 
+## 🚀 Velocity AI – PDF Extraction Tool
+
+### 🔗 Live Project Links
+- **Frontend:** https://velocity-ai-q228.onrender.com  
+- **Backend:** https://velocity-ai-1aqo.onrender.com  
+
+### 🎥 Demo Video
+[▶️ Watch Loom Demo](https://www.loom.com/share/63163819b9b648f2ab47d545cba72f81?sid=5addb73c-86a8-4c68-a599-ff0a34cf99fb)
+
+### 📊 Tool Performance (Velocity AI)
+- **Average Accuracy:** 82.07%  
+- **Average Confidence:** 86.63%  
+
+> ⚠️ *Note:* The backend is hosted on a free Render tier. If it appears inactive, please click the backend URL once to restart the server.
+
+---
+
+### 👨‍💻 Author & Contact
+**Developer:** Aryan Patel  
+**Email:** aryanpatel77462@gmail.com  
+**LinkedIn:** [https://www.linkedin.com/in/aryan-patel-97396524b](https://www.linkedin.com/in/aryan-patel-97396524b)  
+**GitHub:** [https://github.com/aryan-Patel-web](https://github.com/aryan-Patel-web)  
+**Portfolio:** [https://professional-certificati-t3sz2p5.gamma.site/](https://professional-certificati-t3sz2p5.gamma.site/)
+
+
 ## 🎯 **Project Overview**
 
 ### **Problem Statement**

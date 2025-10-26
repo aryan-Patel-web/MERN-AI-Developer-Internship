@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Upload, FileText, Download, Loader2, Send, Plus, X } from 'lucide-react';
+import { Upload, FileText, Download, Loader2, Send, Plus, X, Menu } from 'lucide-react';
 
 const App = () => {
   const [sessions, setSessions] = useState([]);
@@ -18,10 +18,7 @@ const App = () => {
 
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
-  // const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-  // src/config.js or wherever you define API base
-const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onrender.com';
-
+  const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onrender.com';
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -31,7 +28,11 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onren
     loadSessions();
     loadTemplates();
     
-    const handleResize = () => setSidebarOpen(window.innerWidth > 768);
+    const handleResize = () => {
+      if (window.innerWidth > 768 && !sidebarOpen) {
+        setSidebarOpen(true);
+      }
+    };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -67,6 +68,11 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onren
     setFiles([]);
     setExtractionComplete(false);
     setPdfContext(null);
+    
+    // Close sidebar on mobile after creating session
+    if (window.innerWidth <= 768) {
+      setSidebarOpen(false);
+    }
   };
 
   const loadSession = async (sid) => {
@@ -81,6 +87,11 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onren
       if (hasExtraction) {
         const extractionMsg = data.messages.find(m => m.excelFile);
         setPdfContext(extractionMsg?.summary?.pdf_names?.join(', '));
+      }
+      
+      // Close sidebar on mobile after loading session
+      if (window.innerWidth <= 768) {
+        setSidebarOpen(false);
       }
     } catch (e) {
       console.error('Failed to load session:', e);
@@ -152,7 +163,6 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onren
       content += `• Files: ${sum.successful || 0}/${sum.files_processed || 0} extracted\n`;
       content += `• Time: ${sum.processing_time || 0}s\n`;
       
-      // DISPLAY ACCURACY AND CONFIDENCE
       if (sum.accuracy !== undefined) {
         content += `• Accuracy: ${sum.accuracy}%\n`;
       }
@@ -223,116 +233,100 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onren
     }
   };
 
-  const handleDownload = async (filename) => {
+  const handleDownloadExcel = async (fileName) => {
     try {
-      const res = await fetch(`${API_BASE}/api/download/${encodeURIComponent(filename)}`);
-      if (!res.ok) throw new Error('Download failed');
-
+      const res = await fetch(`${API_BASE}/api/download/${fileName}`);
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
+      a.download = fileName;
       a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-
-      addMessage('system', `✅ Downloaded: ${filename}`);
-    } catch (err) {
-      addMessage('system', '❌ Download failed');
+    } catch (e) {
+      console.error('Download error:', e);
     }
   };
 
-  const formatTime = (ts) => new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-  const FormattedText = ({ content }) => {
-    const format = (txt) => {
-      txt = txt.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      txt = txt.replace(/\n/g, '<br/>');
-      return txt;
-    };
-    return <div dangerouslySetInnerHTML={{ __html: format(content) }} />;
+  const formatTime = (iso) => {
+    const d = new Date(iso);
+    const now = new Date();
+    const diff = now - d;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    if (days === 0) return 'Today';
+    if (days === 1) return 'Yesterday';
+    if (days < 7) return `${days}d ago`;
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
   const renderMessage = (msg, idx) => {
     const isUser = msg.role === 'user';
-    const isSys = msg.role === 'system';
-
+    const isSystem = msg.role === 'system';
+    
     return (
       <div key={idx} style={{
         display: 'flex',
-        gap: '12px',
-        maxWidth: '900px',
-        margin: '0 auto 20px',
-        padding: '0 16px'
+        justifyContent: isUser ? 'flex-end' : 'flex-start',
+        marginBottom: '16px',
+        padding: '0 16px',
+        animation: 'messageSlide 0.3s ease-out'
       }}>
         <div style={{
-          width: '32px',
-          height: '32px',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-          background: isUser ? '#10a37f' : isSys ? '#ef4444' : '#667eea',
-          color: '#fff',
-          fontSize: '12px',
-          fontWeight: 600
+          maxWidth: window.innerWidth <= 768 ? '85%' : '70%',
+          padding: '12px 16px',
+          borderRadius: isUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+          background: isUser ? '#10a37f' : isSystem ? '#2a2a2a' : '#2a2a2a',
+          color: '#ececf1',
+          fontSize: '14px',
+          lineHeight: '1.6',
+          wordWrap: 'break-word',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
         }}>
-          {isUser ? 'U' : isSys ? '!' : 'AI'}
-        </div>
-
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#ececf1' }}>
-              {isUser ? 'You' : isSys ? 'System' : 'Velocity.ai'}
-            </span>
-            <span style={{ fontSize: '11px', color: '#6e6e80' }}>
-              {formatTime(msg.timestamp)}
-            </span>
-          </div>
-
-          <div style={{ fontSize: '14px', lineHeight: '1.6', color: '#c5c5d2', wordWrap: 'break-word' }}>
-            {msg.isLoading ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} />
-                <span>Processing with AI...</span>
-              </div>
-            ) : (
-              <FormattedText content={msg.content} />
-            )}
-          </div>
-
-          {msg.isResult && msg.excelFile && (
-            <div style={{
-              marginTop: '16px',
-              padding: '12px',
-              background: '#1a1a1a',
-              border: '1px solid #2e2e2e',
-              borderRadius: '8px'
-            }}>
-              <button
-                onClick={() => handleDownload(msg.excelFile)}
-                style={{
-                  padding: '8px 16px',
-                  background: '#10a37f',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '6px',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <Download size={14} />
-                Download Excel
-              </button>
+          {msg.isLoading ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />
+              <span>{msg.content}</span>
+            </div>
+          ) : (
+            <div style={{ whiteSpace: 'pre-wrap' }}>
+              {msg.content.split('\n').map((line, i) => {
+                if (line.startsWith('**') && line.endsWith('**')) {
+                  return <div key={i} style={{ fontWeight: 700, marginBottom: '8px' }}>{line.slice(2, -2)}</div>;
+                }
+                return <div key={i}>{line}</div>;
+              })}
             </div>
           )}
+
+          {msg.excelFile && (
+            <button onClick={() => handleDownloadExcel(msg.excelFile)} style={{
+              marginTop: '12px',
+              padding: '8px 16px',
+              background: '#10a37f',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '13px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              width: '100%',
+              justifyContent: 'center'
+            }}>
+              <Download size={14} />
+              Download Excel
+            </button>
+          )}
+
+          <div style={{ 
+            fontSize: '10px', 
+            color: isUser ? 'rgba(255,255,255,0.7)' : '#6e6e80', 
+            marginTop: '6px',
+            textAlign: 'right'
+          }}>
+            {new Date(msg.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+          </div>
         </div>
       </div>
     );
@@ -342,85 +336,198 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onren
     <div style={{
       display: 'flex',
       height: '100vh',
-      background: '#0f0f0f',
+      background: '#0d0d0d',
       color: '#ececf1',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      position: 'relative',
       overflow: 'hidden'
     }}>
+      {/* Add CSS animations */}
       <style>{`
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        * { box-sizing: border-box; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-        @media (max-width: 768px) {
-          .sidebar { position: fixed; z-index: 1000; height: 100%; }
-          .sidebar-closed { transform: translateX(-100%); }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes messageSlide {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes slideIn {
+          from {
+            transform: translateX(-100%);
+          }
+          to {
+            transform: translateX(0);
+          }
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+          background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #3a3a3a;
+          border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #4a4a4a;
+        }
+
+        /* Button hover effects */
+        button:hover:not(:disabled) {
+          opacity: 0.9;
+          transform: translateY(-1px);
+          transition: all 0.2s ease;
+        }
+        button:active:not(:disabled) {
+          transform: translateY(0);
+        }
+
+        /* Input focus effects */
+        input:focus, select:focus {
+          border-color: #10a37f !important;
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.1);
         }
       `}</style>
 
+      {/* Mobile overlay */}
+      {sidebarOpen && window.innerWidth <= 768 && (
+        <div 
+          onClick={() => setSidebarOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 999,
+            backdropFilter: 'blur(2px)'
+          }}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className={`sidebar ${!sidebarOpen && 'sidebar-closed'}`} style={{
-        width: '280px',
-        background: '#1a1a1a',
+      <aside style={{
+        width: window.innerWidth <= 768 ? '280px' : '300px',
+        background: '#0d0d0d',
         borderRight: '1px solid #2e2e2e',
         display: 'flex',
         flexDirection: 'column',
-        transition: 'transform 0.3s'
+        position: window.innerWidth <= 768 ? 'fixed' : 'relative',
+        left: 0,
+        top: 0,
+        height: '100vh',
+        zIndex: 1000,
+        transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        boxShadow: sidebarOpen && window.innerWidth <= 768 ? '2px 0 8px rgba(0, 0, 0, 0.3)' : 'none'
       }}>
-        <div style={{ padding: '16px', borderBottom: '1px solid #2e2e2e' }}>
-          <div style={{ fontSize: '16px', fontWeight: 700, marginBottom: '12px', color: '#10a37f' }}>
+        {/* Sidebar Header */}
+        <div style={{
+          padding: '16px',
+          borderBottom: '1px solid #2e2e2e',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <h2 style={{
+            fontSize: '16px',
+            fontWeight: 700,
+            margin: 0,
+            color: '#10a37f'
+          }}>
             Velocity.ai
-          </div>
+          </h2>
+          {window.innerWidth <= 768 && (
+            <button 
+              onClick={() => setSidebarOpen(false)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#8e8ea0',
+                cursor: 'pointer',
+                padding: '4px',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <X size={20} />
+            </button>
+          )}
+        </div>
+
+        {/* New Session Button */}
+        <div style={{ padding: '12px 16px' }}>
           <button onClick={createNewSession} style={{
             width: '100%',
-            padding: '10px',
-            background: '#2a2a2a',
-            border: '1px solid #3a3a3a',
-            borderRadius: '6px',
-            color: '#ececf1',
-            fontSize: '13px',
+            padding: '12px',
+            background: '#10a37f',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '14px',
+            fontWeight: 600,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '6px'
+            gap: '8px',
+            transition: 'all 0.2s ease'
           }}>
-            <Plus size={16} />
-            New Chat
+            <Plus size={18} />
+            New Session
           </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '12px' }}>
+        {/* Session List */}
+        <div style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '8px 12px'
+        }}>
           {sessions.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '24px 12px', color: '#6e6e80' }}>
-              <FileText size={24} style={{ opacity: 0.5, marginBottom: '8px' }} />
-              <p style={{ fontSize: '12px' }}>No sessions yet</p>
+            <div style={{
+              textAlign: 'center',
+              padding: '20px',
+              color: '#6e6e80',
+              fontSize: '13px'
+            }}>
+              No sessions yet
             </div>
           ) : (
-            sessions.slice().reverse().map(s => {
-              const lastMsg = s.messages?.[s.messages.length - 1];
-              const sessionName = lastMsg?.summary?.session_name || `Session ${s.session_id.slice(-8)}`;
+            sessions.map((s) => {
+              const firstMsg = s.messages?.[0]?.content || 'New Session';
+              const sessionName = firstMsg.length > 40 ? firstMsg.substring(0, 40) + '...' : firstMsg;
               
               return (
-                <div key={s.session_id} onClick={() => {
-                  loadSession(s.session_id);
-                  if (window.innerWidth <= 768) setSidebarOpen(false);
-                }} style={{
+                <div key={s.session_id} onClick={() => loadSession(s.session_id)} style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '10px',
-                  padding: '10px',
-                  borderRadius: '6px',
+                  gap: '12px',
+                  padding: '12px',
+                  borderRadius: '8px',
                   cursor: 'pointer',
-                  border: currentSessionId === s.session_id ? '1px solid #10a37f' : 'none',
+                  border: currentSessionId === s.session_id ? '1px solid #10a37f' : '1px solid transparent',
                   background: currentSessionId === s.session_id ? '#1a2a24' : 'transparent',
-                  marginBottom: '4px'
+                  marginBottom: '6px',
+                  transition: 'all 0.2s ease'
                 }}>
-                  <FileText size={14} style={{ color: '#10a37f', flexShrink: 0 }} />
+                  <FileText size={16} style={{ color: '#10a37f', flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
-                      fontSize: '12px',
+                      fontSize: '13px',
                       fontWeight: 500,
                       color: '#ececf1',
                       overflow: 'hidden',
@@ -429,7 +536,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onren
                     }}>
                       {sessionName}
                     </div>
-                    <div style={{ fontSize: '10px', color: '#6e6e80' }}>
+                    <div style={{ fontSize: '11px', color: '#6e6e80', marginTop: '2px' }}>
                       {formatTime(s.created_at)}
                     </div>
                   </div>
@@ -438,36 +545,78 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onren
             })
           )}
         </div>
+
+        {/* Sidebar Footer */}
+        <div style={{
+          padding: '12px 16px',
+          borderTop: '1px solid #2e2e2e',
+          fontSize: '11px',
+          color: '#6e6e80',
+          textAlign: 'center'
+        }}>
+          Made with ❤️ by Velocity.ai
+        </div>
       </aside>
 
-      {/* Main */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+      {/* Main Content */}
+      <main style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        minWidth: 0,
+        width: '100%',
+        position: 'relative'
+      }}>
+        {/* Header */}
         <header style={{
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
-          padding: '12px 16px',
+          padding: '14px 16px',
           borderBottom: '1px solid #2e2e2e',
-          background: '#1a1a1a'
+          background: '#0d0d0d',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100
         }}>
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{
-            width: '32px',
-            height: '32px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '1px solid #3a3a3a',
-            borderRadius: '6px',
-            background: 'transparent',
-            color: '#8e8ea0',
-            cursor: 'pointer'
-          }}>☰</button>
-          <span style={{ fontSize: '14px', fontWeight: 500, flex: 1 }}>
+          <button 
+            onClick={() => setSidebarOpen(!sidebarOpen)} 
+            style={{
+              width: '36px',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid #3a3a3a',
+              borderRadius: '8px',
+              background: 'transparent',
+              color: '#8e8ea0',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <Menu size={18} />
+          </button>
+          <span style={{ 
+            fontSize: '15px', 
+            fontWeight: 600, 
+            flex: 1,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            color: '#ececf1'
+          }}>
             {pdfContext || 'Velocity.ai'}
           </span>
         </header>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 0' }}>
+        {/* Messages Area */}
+        <div style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '20px 0',
+          background: '#0d0d0d'
+        }}>
           {messages.length === 0 ? (
             <div style={{
               display: 'flex',
@@ -478,19 +627,36 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onren
               textAlign: 'center',
               padding: '20px'
             }}>
-              <h1 style={{ fontSize: '32px', fontWeight: 700, marginBottom: '8px' }}>Velocity.ai</h1>
-              <p style={{ fontSize: '14px', color: '#8e8ea0', marginBottom: '32px' }}>
-                AI-powered PDF to Excel in 15-20 seconds
+              <h1 style={{
+                fontSize: window.innerWidth <= 768 ? '28px' : '36px',
+                fontWeight: 700,
+                marginBottom: '12px',
+                background: 'linear-gradient(135deg, #10a37f 0%, #0d8c6a 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                Velocity.ai
+              </h1>
+              <p style={{
+                fontSize: '15px',
+                color: '#8e8ea0',
+                marginBottom: '32px',
+                maxWidth: '400px'
+              }}>
+                AI-powered PDF to Excel conversion in 15-20 seconds
               </p>
               <button onClick={createNewSession} style={{
-                padding: '12px 24px',
+                padding: '14px 32px',
                 background: '#10a37f',
                 color: '#fff',
                 border: 'none',
-                borderRadius: '6px',
-                fontSize: '14px',
+                borderRadius: '10px',
+                fontSize: '15px',
                 fontWeight: 600,
-                cursor: 'pointer'
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 4px 12px rgba(16, 163, 127, 0.2)'
               }}>
                 Get Started
               </button>
@@ -503,126 +669,223 @@ const API_BASE = import.meta.env.VITE_API_URL || 'https://velocity-ai-1aqo.onren
           )}
         </div>
 
+        {/* File Chips */}
         {files.length > 0 && (
-          <div style={{ padding: '8px 16px', background: '#1a1a1a', borderTop: '1px solid #2e2e2e', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+          <div style={{
+            padding: '10px 16px',
+            background: '#0d0d0d',
+            borderTop: '1px solid #2e2e2e',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '8px'
+          }}>
             {files.map((f, i) => (
               <div key={i} style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                padding: '6px 10px',
+                gap: '8px',
+                padding: '8px 12px',
                 background: '#2a2a2a',
                 border: '1px solid #3a3a3a',
-                borderRadius: '4px',
-                fontSize: '12px'
+                borderRadius: '8px',
+                fontSize: '13px',
+                maxWidth: '200px'
               }}>
-                <FileText size={12} style={{ color: '#10a37f' }} />
-                <span>{f.name}</span>
+                <FileText size={14} style={{ color: '#10a37f', flexShrink: 0 }} />
+                <span style={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  flex: 1
+                }}>
+                  {f.name}
+                </span>
                 <button onClick={() => removeFile(i)} style={{
                   background: 'none',
                   border: 'none',
                   color: '#ef4444',
                   cursor: 'pointer',
                   padding: '0',
-                  display: 'flex'
+                  display: 'flex',
+                  flexShrink: 0
                 }}>
-                  <X size={12} />
+                  <X size={14} />
                 </button>
               </div>
             ))}
           </div>
         )}
 
+        {/* Progress Bar */}
         {isProcessing && progress > 0 && (
-          <div style={{ padding: '10px 16px', background: '#1a1a1a', borderTop: '1px solid #2e2e2e' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <Loader2 size={14} style={{ color: '#10a37f', animation: 'spin 1s linear infinite' }} />
-              <span style={{ fontSize: '12px', color: '#ececf1' }}>{statusMessage}</span>
+          <div style={{
+            padding: '12px 16px',
+            background: '#0d0d0d',
+            borderTop: '1px solid #2e2e2e'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              marginBottom: '8px'
+            }}>
+              <Loader2 size={16} style={{ color: '#10a37f', animation: 'spin 1s linear infinite' }} />
+              <span style={{ fontSize: '13px', color: '#ececf1' }}>{statusMessage}</span>
             </div>
-            <div style={{ height: '3px', background: '#2a2a2a', borderRadius: '2px', overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${progress}%`, background: '#10a37f', transition: 'width 0.3s' }} />
+            <div style={{
+              height: '4px',
+              background: '#2a2a2a',
+              borderRadius: '4px',
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                height: '100%',
+                width: `${progress}%`,
+                background: 'linear-gradient(90deg, #10a37f 0%, #0d8c6a 100%)',
+                transition: 'width 0.3s ease',
+                borderRadius: '4px'
+              }} />
             </div>
           </div>
         )}
 
-        <div style={{ padding: '12px 16px', background: '#1a1a1a', borderTop: '1px solid #2e2e2e' }}>
-          <input type="file" ref={fileInputRef} multiple accept=".pdf" onChange={handleFileSelect} style={{ display: 'none' }} />
+        {/* Input Area */}
+        <div style={{
+          padding: '16px',
+          background: '#0d0d0d',
+          borderTop: '1px solid #2e2e2e'
+        }}>
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            multiple 
+            accept=".pdf" 
+            onChange={handleFileSelect} 
+            style={{ display: 'none' }} 
+          />
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <select value={selectedTemplate} onChange={(e) => setSelectedTemplate(e.target.value)} disabled={isProcessing} style={{
-              flex: 1,
-              padding: '6px 10px',
-              background: '#2a2a2a',
-              border: '1px solid #3a3a3a',
-              borderRadius: '4px',
-              color: '#ececf1',
-              fontSize: '12px',
-              cursor: 'pointer'
-            }}>
+          {/* Template Selector */}
+          <div style={{
+            marginBottom: '12px'
+          }}>
+            <select 
+              value={selectedTemplate} 
+              onChange={(e) => setSelectedTemplate(e.target.value)} 
+              disabled={isProcessing} 
+              style={{
+                width: '100%',
+                padding: '10px 12px',
+                background: '#1a1a1a',
+                border: '1px solid #3a3a3a',
+                borderRadius: '8px',
+                color: '#ececf1',
+                fontSize: '13px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
               {Object.entries(templates).map(([id, info]) => (
                 <option key={id} value={id}>{info.name}</option>
               ))}
             </select>
           </div>
 
-          <div style={{ display: 'flex', gap: '6px' }}>
-            <button onClick={() => fileInputRef.current?.click()} disabled={isProcessing} style={{
-              width: '36px',
-              height: '36px',
-              background: '#2a2a2a',
-              border: '1px solid #3a3a3a',
-              borderRadius: '6px',
-              color: '#ececf1',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <Upload size={16} />
+          {/* Input Row */}
+          <div style={{
+            display: 'flex',
+            gap: '8px',
+            alignItems: 'flex-end'
+          }}>
+            <button 
+              onClick={() => fileInputRef.current?.click()} 
+              disabled={isProcessing} 
+              style={{
+                width: '44px',
+                height: '44px',
+                background: '#1a1a1a',
+                border: '1px solid #3a3a3a',
+                borderRadius: '10px',
+                color: '#ececf1',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <Upload size={18} />
             </button>
 
-            <input type="text" value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyPress={e => {
-              if (e.key === 'Enter') {
+            <input 
+              type="text" 
+              value={inputMessage} 
+              onChange={e => setInputMessage(e.target.value)} 
+              onKeyPress={e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  if (files.length > 0) handleExtraction();
+                  else if (inputMessage.trim()) handleChat();
+                }
+              }} 
+              disabled={isProcessing} 
+              placeholder={extractionComplete ? "Ask about the data..." : "Upload PDFs to start..."} 
+              style={{
+                flex: 1,
+                padding: '12px 16px',
+                background: '#1a1a1a',
+                border: '1px solid #3a3a3a',
+                borderRadius: '10px',
+                color: '#ececf1',
+                fontSize: '14px',
+                outline: 'none',
+                transition: 'all 0.2s ease'
+              }} 
+            />
+
+            <button 
+              onClick={() => {
                 if (files.length > 0) handleExtraction();
                 else if (inputMessage.trim()) handleChat();
-              }
-            }} disabled={isProcessing} placeholder={extractionComplete ? "Ask about the data..." : "Upload PDFs..."} style={{
-              flex: 1,
-              padding: '10px 12px',
-              background: '#2a2a2a',
-              border: '1px solid #3a3a3a',
-              borderRadius: '6px',
-              color: '#ececf1',
-              fontSize: '13px',
-              outline: 'none'
-            }} />
-
-            <button onClick={() => {
-              if (files.length > 0) handleExtraction();
-              else if (inputMessage.trim()) handleChat();
-            }} disabled={isProcessing || (files.length === 0 && !inputMessage.trim())} style={{
-              width: '36px',
-              height: '36px',
-              background: '#10a37f',
-              border: 'none',
-              borderRadius: '6px',
-              color: '#fff',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: isProcessing || (files.length === 0 && !inputMessage.trim()) ? 0.5 : 1
-            }}>
-              {isProcessing ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Send size={16} />}
+              }} 
+              disabled={isProcessing || (files.length === 0 && !inputMessage.trim())} 
+              style={{
+                width: '44px',
+                height: '44px',
+                background: '#10a37f',
+                border: 'none',
+                borderRadius: '10px',
+                color: '#fff',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                opacity: isProcessing || (files.length === 0 && !inputMessage.trim()) ? 0.5 : 1,
+                transition: 'all 0.2s ease',
+                boxShadow: '0 2px 8px rgba(16, 163, 127, 0.2)'
+              }}
+            >
+              {isProcessing ? (
+                <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />
+              ) : (
+                <Send size={18} />
+              )}
             </button>
           </div>
 
-          <div style={{ marginTop: '6px', fontSize: '11px', color: '#6e6e80', textAlign: 'center' }}>
+          {/* Status Text */}
+          <div style={{
+            marginTop: '10px',
+            fontSize: '12px',
+            color: '#6e6e80',
+            textAlign: 'center'
+          }}>
             {extractionComplete 
               ? '💡 Excel ready - Download or ask questions'
               : files.length > 0
-              ? `${files.length} file(s) ready - Extraction in 15-20 sec`
-              : 'Upload PDFs to start'}
+              ? `${files.length} file(s) ready - Press Enter to extract`
+              : 'Upload PDFs to start extraction'}
           </div>
         </div>
       </main>

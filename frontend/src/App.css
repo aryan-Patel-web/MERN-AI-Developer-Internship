@@ -29,12 +29,6 @@ html, body {
   color: #fff !important;
 }
 
-/* Optional: force all children inside root to black */
-#root * {
-  background-color: #000 !important;
-  color: #fff !important;
-}
-
 /* Code elements */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace !important;
@@ -43,4 +37,29 @@ code {
 /* Buttons and inputs inherit fonts */
 button, input, textarea, select {
   font-family: inherit !important;
+}
+
+/* Smooth scrolling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3a3a3a #1a1a1a;
+}
+
+/* Webkit scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
 }

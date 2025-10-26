@@ -332,6 +332,8 @@ const App = () => {
     );
   };
 
+  const isMobile = window.innerWidth <= 768;
+
   return (
     <div style={{
       display: 'flex',
@@ -356,14 +358,6 @@ const App = () => {
           to {
             opacity: 1;
             transform: translateY(0);
-          }
-        }
-        @keyframes slideIn {
-          from {
-            transform: translateX(-100%);
-          }
-          to {
-            transform: translateX(0);
           }
         }
         
@@ -402,7 +396,7 @@ const App = () => {
       `}</style>
 
       {/* Mobile overlay */}
-      {sidebarOpen && window.innerWidth <= 768 && (
+      {sidebarOpen && isMobile && (
         <div 
           onClick={() => setSidebarOpen(false)}
           style={{
@@ -418,39 +412,43 @@ const App = () => {
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Desktop uses flex, Mobile uses fixed overlay */}
       <aside style={{
-        width: window.innerWidth <= 768 ? '280px' : '300px',
+        width: isMobile ? '280px' : (sidebarOpen ? '300px' : '0'),
         background: '#0d0d0d',
-        borderRight: '1px solid #2e2e2e',
+        borderRight: sidebarOpen ? '1px solid #2e2e2e' : 'none',
         display: 'flex',
         flexDirection: 'column',
-        position: window.innerWidth <= 768 ? 'fixed' : 'relative',
+        position: isMobile ? 'fixed' : 'relative',
         left: 0,
         top: 0,
         height: '100vh',
         zIndex: 1000,
-        transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
-        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        boxShadow: sidebarOpen && window.innerWidth <= 768 ? '2px 0 8px rgba(0, 0, 0, 0.3)' : 'none'
+        transform: isMobile ? (sidebarOpen ? 'translateX(0)' : 'translateX(-100%)') : 'none',
+        transition: isMobile ? 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)' : 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        overflow: 'hidden',
+        boxShadow: sidebarOpen && isMobile ? '2px 0 8px rgba(0, 0, 0, 0.3)' : 'none',
+        flexShrink: 0
       }}>
         {/* Sidebar Header */}
         <div style={{
           padding: '16px',
           borderBottom: '1px solid #2e2e2e',
-          display: 'flex',
+          display: sidebarOpen ? 'flex' : 'none',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          minHeight: '60px'
         }}>
           <h2 style={{
             fontSize: '16px',
             fontWeight: 700,
             margin: 0,
-            color: '#10a37f'
+            color: '#10a37f',
+            whiteSpace: 'nowrap'
           }}>
             Velocity.ai
           </h2>
-          {window.innerWidth <= 768 && (
+          {isMobile && (
             <button 
               onClick={() => setSidebarOpen(false)}
               style={{
@@ -469,7 +467,10 @@ const App = () => {
         </div>
 
         {/* New Session Button */}
-        <div style={{ padding: '12px 16px' }}>
+        <div style={{ 
+          padding: sidebarOpen ? '12px 16px' : '0', 
+          display: sidebarOpen ? 'block' : 'none' 
+        }}>
           <button onClick={createNewSession} style={{
             width: '100%',
             padding: '12px',
@@ -484,7 +485,8 @@ const App = () => {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '8px',
-            transition: 'all 0.2s ease'
+            transition: 'all 0.2s ease',
+            whiteSpace: 'nowrap'
           }}>
             <Plus size={18} />
             New Session
@@ -495,7 +497,8 @@ const App = () => {
         <div style={{
           flex: 1,
           overflowY: 'auto',
-          padding: '8px 12px'
+          padding: sidebarOpen ? '8px 12px' : '0',
+          display: sidebarOpen ? 'block' : 'none'
         }}>
           {sessions.length === 0 ? (
             <div style={{
@@ -548,24 +551,26 @@ const App = () => {
 
         {/* Sidebar Footer */}
         <div style={{
-          padding: '12px 16px',
+          padding: sidebarOpen ? '12px 16px' : '0',
           borderTop: '1px solid #2e2e2e',
           fontSize: '11px',
           color: '#6e6e80',
-          textAlign: 'center'
+          textAlign: 'center',
+          display: sidebarOpen ? 'block' : 'none'
         }}>
           Made with ❤️ by Velocity.ai
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* Main Content - Expands to full width when sidebar is closed */}
       <main style={{
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
         minWidth: 0,
-        width: '100%',
-        position: 'relative'
+        width: isMobile ? '100%' : (sidebarOpen ? 'calc(100% - 300px)' : '100%'),
+        position: 'relative',
+        transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
       }}>
         {/* Header */}
         <header style={{
@@ -592,7 +597,8 @@ const App = () => {
               background: 'transparent',
               color: '#8e8ea0',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
+              flexShrink: 0
             }}
           >
             <Menu size={18} />
